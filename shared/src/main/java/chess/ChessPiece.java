@@ -51,11 +51,17 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
         ArrayList<ChessMove> PossibleMoves = new ArrayList<>();
-        ChessPosition startPos = myPosition;
+
         int col = myPosition.getColumn();
         int row = myPosition.getRow();
-        ChessPosition endPos = new ChessPosition(row+1,col+1);
-        PossibleMoves.add(new ChessMove(startPos,endPos,null));
+        int y = row;
+        for (var x = row; x <= 8; x++) {
+            if (y == 9) {break;}
+
+
+        ChessPosition endPos = new ChessPosition(x,y);
+        PossibleMoves.add(new ChessMove(myPosition,endPos,null));
+        y++;}
 
 
         return PossibleMoves;
