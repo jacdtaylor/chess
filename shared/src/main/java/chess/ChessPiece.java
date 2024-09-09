@@ -11,8 +11,8 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessPiece {
-
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+
     }
 
     /**
@@ -50,9 +50,15 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
-        ArrayList<ChessMove> PossMoves = new ArrayList<>();
+        ArrayList<ChessMove> PossibleMoves = new ArrayList<>();
+        ChessPosition startPos = myPosition;
+        int col = myPosition.getColumn();
+        int row = myPosition.getRow();
+        ChessPosition endPos = new ChessPosition(row+1,col+1);
+        PossibleMoves.add(new ChessMove(startPos,endPos,null));
 
-        return PossMoves;
+
+        return PossibleMoves;
 
 
     }
