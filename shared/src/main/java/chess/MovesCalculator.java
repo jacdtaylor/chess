@@ -20,9 +20,32 @@ public class MovesCalculator {
             newrow++;
             ChessPosition endPosition = new ChessPosition(newrow,newcol);
             PossibleMoves.add(new ChessMove(startPosition,endPosition,null));
-
-
         }
+        newrow = row;
+        newcol = col;
+        while (newcol > 1 && newrow < 8) {
+            newcol--;
+            newrow++;
+            ChessPosition endPosition = new ChessPosition(newrow,newcol);
+            PossibleMoves.add(new ChessMove(startPosition,endPosition,null));
+        }
+        newrow = row;
+        newcol = col;
+        while (newcol > 1 && newrow > 1) {
+            newcol--;
+            newrow--;
+            ChessPosition endPosition = new ChessPosition(newrow,newcol);
+            PossibleMoves.add(new ChessMove(startPosition,endPosition,null));
+        }
+        newrow = row;
+        newcol = col;
+        while (newcol < 8 && newrow > 1) {
+            newcol++;
+            newrow--;
+            ChessPosition endPosition = new ChessPosition(newrow,newcol);
+            PossibleMoves.add(new ChessMove(startPosition,endPosition,null));
+        }
+
 
     return PossibleMoves;
     }
