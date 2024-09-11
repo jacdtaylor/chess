@@ -35,4 +35,10 @@ public class ChessPosition {
     public String toString() {
         return "{%d,%d}".formatted(row, col);
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPosition pos = (ChessPosition) o;
+        return row == pos.row && col == pos.col;}
 }
