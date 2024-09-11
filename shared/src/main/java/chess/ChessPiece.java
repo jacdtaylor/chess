@@ -11,8 +11,10 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessPiece {
-    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+    private final ChessPiece.PieceType PieceType;
 
+    public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
+    this.PieceType = type;
     }
 
     /**
@@ -38,7 +40,7 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        throw new RuntimeException("Not implemented");
+        return PieceType;
     }
 
     /**
@@ -50,18 +52,18 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 
+        PieceType CurrentPiece = board.getPiece(myPosition).getPieceType();
+        
         ArrayList<ChessMove> PossibleMoves = new ArrayList<>();
-
         int col = myPosition.getColumn();
         int row = myPosition.getRow();
         int y = row;
         for (var x = row; x <= 8; x++) {
             if (y == 9) {break;}
-
-
         ChessPosition endPos = new ChessPosition(x,y);
         PossibleMoves.add(new ChessMove(myPosition,endPos,null));
         y++;}
+
 
 
         return PossibleMoves;
