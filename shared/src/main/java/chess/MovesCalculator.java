@@ -15,7 +15,7 @@ public class MovesCalculator {
         ChessPosition startPosition = new ChessPosition(row,col);
         int newrow = row;
         int newcol = col;
-        while (newcol <= 8 && newrow <= 8) {
+        while (newcol < 8 && newrow < 8) {
             newcol++;
             newrow++;
             ChessPosition endPosition = new ChessPosition(newrow,newcol);
