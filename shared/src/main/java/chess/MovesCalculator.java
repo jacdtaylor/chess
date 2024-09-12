@@ -13,15 +13,16 @@ public class MovesCalculator {
         if (row == 0 || row == 9 || col == 0 || col == 9) {
             return;
         }
-
         ChessPosition endPosition = new ChessPosition(row,col);
-
+        ChessPiece current = board.getPiece(startPosition);
         if (startPosition.getRow() != row || startPosition.getColumn() != col) {
             ChessPiece target = board.getPiece(endPosition);
-
             if (target != null && target.getTeamColor() == currentColor) {return;}
             PossibleMoves.add(new ChessMove(startPosition,endPosition,null));
-            if (target != null && target.getTeamColor() != currentColor) return; }
+            if (target != null && target.getTeamColor() != currentColor) return;
+            if (current.getPieceType() == ChessPiece.PieceType.KING) {return;}}
+
+
 
         if (direction == "LD") {
             DiagonalRecursion(--row,--col,board,startPosition,"LD", PossibleMoves,currentColor);
@@ -45,15 +46,15 @@ public class MovesCalculator {
         if (row == 0 || row == 9 || col == 0 || col == 9) {
             return;
         }
-
         ChessPosition endPosition = new ChessPosition(row,col);
-
+        ChessPiece current = board.getPiece(startPosition);
         if (startPosition.getRow() != row || startPosition.getColumn() != col) {
             ChessPiece target = board.getPiece(endPosition);
-
             if (target != null && target.getTeamColor() == currentColor) {return;}
             PossibleMoves.add(new ChessMove(startPosition,endPosition,null));
-            if (target != null && target.getTeamColor() != currentColor) return; }
+            if (target != null && target.getTeamColor() != currentColor) return;
+            if (current.getPieceType() == ChessPiece.PieceType.KING) {return;}}
+
 
         if (direction == "L") {
             StraightRecursion(row,--col,board,startPosition,"L", PossibleMoves,currentColor);
@@ -117,6 +118,11 @@ public class MovesCalculator {
         StraightRecursion(row,col,board,myPosition,"L",PossibleMoves,currentColor);
         StraightRecursion(row,col,board,myPosition,"D",PossibleMoves,currentColor);
         StraightRecursion(row,col,board,myPosition,"U",PossibleMoves,currentColor);
+        DiagonalRecursion(row,col,board,myPosition,"RU",PossibleMoves,currentColor);
+        DiagonalRecursion(row,col,board,myPosition,"RD",PossibleMoves,currentColor);
+        DiagonalRecursion(row,col,board,myPosition,"LD",PossibleMoves,currentColor);
+        DiagonalRecursion(row,col,board,myPosition,"LU",PossibleMoves,currentColor);
+
 
 
         return PossibleMoves;
@@ -168,6 +174,10 @@ public class MovesCalculator {
         StraightRecursion(row,col,board,myPosition,"L",PossibleMoves,currentColor);
         StraightRecursion(row,col,board,myPosition,"D",PossibleMoves,currentColor);
         StraightRecursion(row,col,board,myPosition,"U",PossibleMoves,currentColor);
+        DiagonalRecursion(row,col,board,myPosition,"RU",PossibleMoves,currentColor);
+        DiagonalRecursion(row,col,board,myPosition,"RD",PossibleMoves,currentColor);
+        DiagonalRecursion(row,col,board,myPosition,"LD",PossibleMoves,currentColor);
+        DiagonalRecursion(row,col,board,myPosition,"LU",PossibleMoves,currentColor);
 
 
         return PossibleMoves;
