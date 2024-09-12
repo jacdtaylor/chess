@@ -76,4 +76,9 @@ public class ChessPiece {
     public int hashCode() {
         return (17 * PieceType.hashCode()) + pieceColor.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return PieceType.toString();
+    }
 }

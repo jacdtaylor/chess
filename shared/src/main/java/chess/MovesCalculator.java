@@ -47,13 +47,14 @@ public class MovesCalculator {
         int col = myPosition.getColumn();
         int row = myPosition.getRow();
 
-
+        DiagonalRecursion(row,col,board,myPosition,"RU",PossibleMoves,currentColor);
+        DiagonalRecursion(row,col,board,myPosition,"RD",PossibleMoves,currentColor);
         DiagonalRecursion(row,col,board,myPosition,"LD",PossibleMoves,currentColor);
         DiagonalRecursion(row,col,board,myPosition,"LU",PossibleMoves,currentColor);
-        DiagonalRecursion(row,col,board,myPosition,"RD",PossibleMoves,currentColor);
-        DiagonalRecursion(row,col,board,myPosition,"RU",PossibleMoves,currentColor);
 
 
     return PossibleMoves;
     }
+
+
 }
