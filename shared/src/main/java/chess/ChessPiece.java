@@ -3,6 +3,7 @@ package chess;
 import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 
 /**
  * Represents a single chess piece
@@ -12,9 +13,11 @@ import java.util.Collection;
  */
 public class ChessPiece {
     private final ChessPiece.PieceType PieceType;
+    private final ChessGame.TeamColor pieceColor;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
     this.PieceType = type;
+    this.pieceColor = pieceColor;
     }
 
     /**
@@ -33,7 +36,7 @@ public class ChessPiece {
      * @return Which team this chess piece belongs to
      */
     public ChessGame.TeamColor getTeamColor() {
-        throw new RuntimeException("Not implemented");
+        return pieceColor;
     }
 
     /**
@@ -54,14 +57,23 @@ public class ChessPiece {
 
         PieceType CurrentPiece = board.getPiece(myPosition).getPieceType();
 
-
-
-
-
-
-
         return MovesCalculator.BishopMovesCalculator(board, myPosition);
 
 
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece move = (ChessPiece) o;
+        return PieceType.equals(move.PieceType) &&
+                pieceColor.equals(move.pieceColor);
+    }
+
+    @Override
+    public int hashCode() {
+        return (17 * PieceType.hashCode()) + pieceColor.hashCode();
     }
 }
