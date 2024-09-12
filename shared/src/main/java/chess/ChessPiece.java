@@ -57,12 +57,17 @@ public class ChessPiece {
 
         PieceType CurrentPiece = board.getPiece(myPosition).getPieceType();
 
-        return MovesCalculator.BishopMovesCalculator(board, myPosition);
 
+        return switch (CurrentPiece) {
+            case KING -> MovesCalculator.kingMovesCalculator(board, myPosition);
+            case QUEEN -> MovesCalculator.queenMovesCalculator(board, myPosition);
+            case BISHOP -> MovesCalculator.bishopMovesCalculator(board, myPosition);
+            case KNIGHT -> MovesCalculator.knightMovesCalculator(board, myPosition);
+            case ROOK -> MovesCalculator.rookMovesCalculator(board, myPosition);
+            case PAWN -> MovesCalculator.pawnMovesCalculator(board, myPosition);
+        };
 
     }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
