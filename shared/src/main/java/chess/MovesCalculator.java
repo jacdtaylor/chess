@@ -5,7 +5,19 @@ import java.util.Collection;
 
 public class MovesCalculator {
 
-
+    public static void moveCheck(int row, int col, ChessBoard board, ChessPosition startPosition,
+                                     ArrayList<ChessMove> PossibleMoves, ChessGame.TeamColor currentColor) {
+        if (row <= 0 || row >= 9 || col <= 0 || col >= 9) {
+            return;
+        }
+        ChessPosition endPosition = new ChessPosition(row,col);
+        ChessPiece current = board.getPiece(startPosition);
+        if (startPosition.getRow() != row || startPosition.getColumn() != col) {
+            ChessPiece target = board.getPiece(endPosition);
+            if (target != null && target.getTeamColor() == currentColor) {return;}
+            PossibleMoves.add(new ChessMove(startPosition,endPosition,null));
+            }
+    }
 
 
     public static void DiagonalRecursion(int row, int col, ChessBoard board, ChessPosition startPosition, String direction,
@@ -136,10 +148,21 @@ public class MovesCalculator {
         int col = myPosition.getColumn();
         int row = myPosition.getRow();
 
-        StraightRecursion(row,col,board,myPosition,"R",PossibleMoves,currentColor);
-        StraightRecursion(row,col,board,myPosition,"L",PossibleMoves,currentColor);
-        StraightRecursion(row,col,board,myPosition,"D",PossibleMoves,currentColor);
-        StraightRecursion(row,col,board,myPosition,"U",PossibleMoves,currentColor);
+        moveCheck(row+2,col+1,board,myPosition,PossibleMoves,currentColor);
+        moveCheck(row-2,col+1,board,myPosition,PossibleMoves,currentColor);
+        moveCheck(row-2,col-1,board,myPosition,PossibleMoves,currentColor);
+        moveCheck(row+2,col-1,board,myPosition,PossibleMoves,currentColor);
+        moveCheck(row+1,col+2,board,myPosition,PossibleMoves,currentColor);
+        moveCheck(row-1,col-2,board,myPosition,PossibleMoves,currentColor);
+        moveCheck(row-1,col+2,board,myPosition,PossibleMoves,currentColor);
+        moveCheck(row+1,col-2,board,myPosition,PossibleMoves,currentColor);
+
+
+
+
+
+
+
 
 
         return PossibleMoves;
