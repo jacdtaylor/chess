@@ -21,16 +21,24 @@ public class MovesCalculator {
         if (row <= 0 || row >= 9 || col <= 0 || col >= 9) {
             return;
         }
+
         ChessPosition endPosition = new ChessPosition(row,col);
-        if (MoveOrTake=="double" && board.getPiece(endPosition) == null) {PossibleMoves.add(new ChessMove(startPosition, endPosition, null));}
-        if (MoveOrTake=="move" && board.getPiece(endPosition) == null) {
+        if (MoveOrTake.equals("double") && board.getPiece(endPosition) == null)
+        {PossibleMoves.add(new ChessMove(startPosition, endPosition, null));
+        return;}
+        if (MoveOrTake.equals("move") && board.getPiece(endPosition) == null) {
             for (ChessPiece.PieceType type : pieces) {
                 PossibleMoves.add(new ChessMove(startPosition, endPosition, type));
             }
-            if (row == 2 || colorModifier==1) PawnCheck(row+colorModifier,col,board,startPosition,PossibleMoves,currentColor,"double");
-            if (row == 7 || colorModifier==-1) {PawnCheck(row+colorModifier,col,board,startPosition,PossibleMoves,currentColor,"double");}}
+            if (row == 3 && colorModifier==1)
+            {PawnCheck(row+colorModifier,col,board,startPosition,PossibleMoves,currentColor,"double");
+            return;}
+            if (row == 6 && colorModifier==-1)
+            {PawnCheck(row+colorModifier,col,board,startPosition,PossibleMoves,currentColor,"double");}
+        return;}
 
-        else if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != currentColor)
+
+        else if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != currentColor && MoveOrTake.equals("take"))
         {for (ChessPiece.PieceType type : pieces) {
             PossibleMoves.add(new ChessMove(startPosition, endPosition, type));
         }}
