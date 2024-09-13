@@ -5,16 +5,50 @@ import java.util.Collection;
 
 public class MovesCalculator {
 
+    public static void PawnCheck(int row, int col, ChessBoard board, ChessPosition startPosition,
+                                 ArrayList<ChessMove> PossibleMoves, ChessGame.TeamColor currentColor, String MoveOrTake) {
+        int colorModifier = currentColor == ChessGame.TeamColor.BLACK ? -1 : 1;
+
+
+        ArrayList<ChessPiece.PieceType> pieces = new ArrayList<ChessPiece.PieceType>();
+        if (row==8 || row==1) {
+        pieces.add(ChessPiece.PieceType.ROOK);
+        pieces.add(ChessPiece.PieceType.QUEEN);
+        pieces.add(ChessPiece.PieceType.KNIGHT);
+        pieces.add(ChessPiece.PieceType.BISHOP);}
+       else pieces.add(null);
+
+        if (row <= 0 || row >= 9 || col <= 0 || col >= 9) {
+            return;
+        }
+        ChessPosition endPosition = new ChessPosition(row,col);
+        if (MoveOrTake=="double" && board.getPiece(endPosition) == null) {PossibleMoves.add(new ChessMove(startPosition, endPosition, null));}
+        if (MoveOrTake=="move" && board.getPiece(endPosition) == null) {
+            for (ChessPiece.PieceType type : pieces) {
+                PossibleMoves.add(new ChessMove(startPosition, endPosition, type));
+            }
+            if (row == 2 || colorModifier==1) PawnCheck(row+colorModifier,col,board,startPosition,PossibleMoves,currentColor,"double");
+            if (row == 7 || colorModifier==-1) {PawnCheck(row+colorModifier,col,board,startPosition,PossibleMoves,currentColor,"double");}}
+
+        else if (board.getPiece(endPosition) != null && board.getPiece(endPosition).getTeamColor() != currentColor)
+        {for (ChessPiece.PieceType type : pieces) {
+            PossibleMoves.add(new ChessMove(startPosition, endPosition, type));
+        }}
+    }
+
+
     public static void moveCheck(int row, int col, ChessBoard board, ChessPosition startPosition,
                                      ArrayList<ChessMove> PossibleMoves, ChessGame.TeamColor currentColor) {
         if (row <= 0 || row >= 9 || col <= 0 || col >= 9) {
             return;
         }
+
         ChessPosition endPosition = new ChessPosition(row,col);
         ChessPiece current = board.getPiece(startPosition);
         if (startPosition.getRow() != row || startPosition.getColumn() != col) {
             ChessPiece target = board.getPiece(endPosition);
             if (target != null && target.getTeamColor() == currentColor) {return;}
+
             PossibleMoves.add(new ChessMove(startPosition,endPosition,null));
             }
     }
@@ -175,11 +209,13 @@ public class MovesCalculator {
         ChessGame.TeamColor currentColor = currentPiece.getTeamColor();
         int col = myPosition.getColumn();
         int row = myPosition.getRow();
+        int colorModifier = currentColor == ChessGame.TeamColor.BLACK ? -1 : 1;
 
-        StraightRecursion(row,col,board,myPosition,"R",PossibleMoves,currentColor);
-        StraightRecursion(row,col,board,myPosition,"L",PossibleMoves,currentColor);
-        StraightRecursion(row,col,board,myPosition,"D",PossibleMoves,currentColor);
-        StraightRecursion(row,col,board,myPosition,"U",PossibleMoves,currentColor);
+        PawnCheck(row+colorModifier,col,board,myPosition,PossibleMoves,currentColor,"move");
+        PawnCheck(row+colorModifier,col-1,board,myPosition,PossibleMoves,currentColor,"take");
+        PawnCheck(row+colorModifier,col+1,board,myPosition,PossibleMoves,currentColor,"take");
+
+
 
 
         return PossibleMoves;
