@@ -1,9 +1,11 @@
 package chess;
 
-import java.sql.Array;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+
+import static chess.MoveCalculator.*;
 
 /**
  * Represents a single chess piece
@@ -12,12 +14,26 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessPiece {
-    private final ChessPiece.PieceType PieceType;
-    private final ChessGame.TeamColor pieceColor;
+
+    private ChessGame.TeamColor pieceColor;
+    private ChessPiece.PieceType type;
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
-    this.PieceType = type;
-    this.pieceColor = pieceColor;
+        this.pieceColor = pieceColor;
+        this.type = type;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && type == that.type;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, type);
     }
 
     /**
@@ -43,7 +59,7 @@ public class ChessPiece {
      * @return which type of chess piece this piece is
      */
     public PieceType getPieceType() {
-        return PieceType;
+        return type;
     }
 
     /**
@@ -54,36 +70,29 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+        ArrayList<ChessMove> PossibleMoves = new ArrayList<ChessMove>();
 
-        PieceType CurrentPiece = board.getPiece(myPosition).getPieceType();
+        switch (board.getPiece(myPosition).getPieceType()) {
+            case BISHOP:
+                BishopMoveCalculator(board,myPosition,PossibleMoves);
+                return PossibleMoves;
+            case ROOK:
+                RookMoveCalculator(board,myPosition,PossibleMoves);
+                return PossibleMoves;
+            case QUEEN:
+                QueenMoveCalculator(board,myPosition,PossibleMoves);
+                return PossibleMoves;
+            case KING:
+                KingMoveCalculator(board,myPosition,PossibleMoves);
+                return PossibleMoves;
+            case KNIGHT:
+                KnightMoveCalculator(board,myPosition,PossibleMoves);
+                return PossibleMoves;
+            case PAWN:
+                PawnMoveCalculator(board,myPosition,PossibleMoves);
+                return PossibleMoves;
 
-
-        return switch (CurrentPiece) {
-            case KING -> MovesCalculator.kingMovesCalculator(board, myPosition);
-            case QUEEN -> MovesCalculator.queenMovesCalculator(board, myPosition);
-            case BISHOP -> MovesCalculator.bishopMovesCalculator(board, myPosition);
-            case KNIGHT -> MovesCalculator.knightMovesCalculator(board, myPosition);
-            case ROOK -> MovesCalculator.rookMovesCalculator(board, myPosition);
-            case PAWN -> MovesCalculator.pawnMovesCalculator(board, myPosition);
-        };
-
-    }
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChessPiece move = (ChessPiece) o;
-        return PieceType.equals(move.PieceType) &&
-                pieceColor.equals(move.pieceColor);
-    }
-
-    @Override
-    public int hashCode() {
-        return (17 * PieceType.hashCode()) + pieceColor.hashCode();
-    }
-
-    @Override
-    public String toString() {
-        return PieceType.toString();
+        }
+        return PossibleMoves;
     }
 }
