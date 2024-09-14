@@ -9,7 +9,7 @@ import static chess.MoveCalculator.*;
 
 /**
  * Represents a single chess piece
- * <p>
+ * <p>Test
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
