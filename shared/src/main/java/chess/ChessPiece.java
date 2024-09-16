@@ -69,7 +69,7 @@ public class ChessPiece {
      *
      * @return Collection of valid moves
      */
-    public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
+    public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> PossibleMoves = new ArrayList<ChessMove>();
 
         switch (board.getPiece(myPosition).getPieceType()) {

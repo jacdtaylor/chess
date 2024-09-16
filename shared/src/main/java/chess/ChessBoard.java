@@ -17,6 +17,10 @@ public class ChessBoard {
         
     }
 
+    public ChessBoard(ChessBoard copy) {
+
+
+    }
     /**
      * Adds a chess piece to the chessboard
      *
