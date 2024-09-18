@@ -18,6 +18,7 @@ public class ChessGame {
 
     public ChessGame() {
         this.board = new ChessBoard();
+        this.turn = TeamColor.WHITE;
     }
 
 
@@ -111,16 +112,19 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
 
+        ChessBoard PossibleBoard = getBoard();
         for (int y = 1; y <=8; y++) {
             for (int x = 1; x<= 8; x++) {
-                for (ChessMove move : pieceMoves(getBoard(),new ChessPosition(y,x)))
-                {
-                    ChessPosition examinedMove = move.getEndPosition();
-                    if (getBoard().getPiece(examinedMove) != null &&
-                            getBoard().getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
-                            getBoard().getPiece(examinedMove).getTeamColor() != teamColor) return true;
-                }
-            }
+                if (PossibleBoard.getPiece(new ChessPosition(y,x))!=null &&
+                        PossibleBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
+                    for (ChessMove move : pieceMoves(PossibleBoard,new ChessPosition(y,x)))
+                    {
+                        ChessPosition examinedMove = move.getEndPosition();
+                        if (PossibleBoard.getPiece(examinedMove) != null &&
+                                PossibleBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
+                                PossibleBoard.getPiece(examinedMove).getTeamColor() == teamColor) return true;
+                    }
+                }}
         }
 
         return false;
