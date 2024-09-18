@@ -18,6 +18,7 @@ public class ChessBoard {
     }
 
     public ChessBoard(ChessBoard copy) {
+        squares = copy.squares;
 
 
     }

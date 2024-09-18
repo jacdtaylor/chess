@@ -72,27 +72,31 @@ public class ChessPiece {
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ArrayList<ChessMove> PossibleMoves = new ArrayList<ChessMove>();
 
-        switch (board.getPiece(myPosition).getPieceType()) {
-            case BISHOP:
-                BishopMoveCalculator(board,myPosition,PossibleMoves);
-                return PossibleMoves;
-            case ROOK:
-                RookMoveCalculator(board,myPosition,PossibleMoves);
-                return PossibleMoves;
-            case QUEEN:
-                QueenMoveCalculator(board,myPosition,PossibleMoves);
-                return PossibleMoves;
-            case KING:
-                KingMoveCalculator(board,myPosition,PossibleMoves);
-                return PossibleMoves;
-            case KNIGHT:
-                KnightMoveCalculator(board,myPosition,PossibleMoves);
-                return PossibleMoves;
-            case PAWN:
-                PawnMoveCalculator(board,myPosition,PossibleMoves);
-                return PossibleMoves;
-
-        }
-        return PossibleMoves;
+        return switch (board.getPiece(myPosition).getPieceType()) {
+            case BISHOP -> {
+                BishopMoveCalculator(board, myPosition, PossibleMoves);
+                yield PossibleMoves;
+            }
+            case ROOK -> {
+                RookMoveCalculator(board, myPosition, PossibleMoves);
+                yield PossibleMoves;
+            }
+            case QUEEN -> {
+                QueenMoveCalculator(board, myPosition, PossibleMoves);
+                yield PossibleMoves;
+            }
+            case KING -> {
+                KingMoveCalculator(board, myPosition, PossibleMoves);
+                yield PossibleMoves;
+            }
+            case KNIGHT -> {
+                KnightMoveCalculator(board, myPosition, PossibleMoves);
+                yield PossibleMoves;
+            }
+            case PAWN -> {
+                PawnMoveCalculator(board, myPosition, PossibleMoves);
+                yield PossibleMoves;
+            }
+        };
     }
 }
