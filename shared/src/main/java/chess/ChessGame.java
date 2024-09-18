@@ -17,6 +17,7 @@ public class ChessGame {
 
 
     public ChessGame() {
+        this.board = new ChessBoard();
     }
 
 
@@ -53,7 +54,7 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-
+        if (getBoard().getPiece(startPosition) == null)  {return new ArrayList<ChessMove>();}
         ChessGame.TeamColor currentColor = getBoard().getPiece(startPosition).getTeamColor();
         ArrayList<ChessMove> preCheckMoves = (ArrayList<ChessMove>) pieceMoves(getBoard(), startPosition);
         ArrayList<ChessMove> CheckMoves = new ArrayList<ChessMove>();
@@ -90,6 +91,7 @@ public class ChessGame {
         if (validMoves(start).contains(move)) {
             getBoard().addPiece(end,getBoard().getPiece(start));
             getBoard().addPiece(start,null);
+            if (move.getPromotionPiece() != null) {getBoard().getPiece(end).Promote(move.getPromotionPiece());}
         } else {throw new InvalidMoveException();}
 
 
