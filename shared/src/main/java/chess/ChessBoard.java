@@ -18,7 +18,13 @@ public class ChessBoard {
     }
 
     public ChessBoard(ChessBoard copy) {
-        squares = copy.squares;
+        squares = new ChessPiece[8][8];
+        for (int x = 0; x < 8; x++) {
+            for (int y = 0; y < 8; y++) {
+                squares[x][y] = copy.squares[x][y];
+            }
+        }
+
 
 
     }
