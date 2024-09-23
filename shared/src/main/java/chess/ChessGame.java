@@ -121,15 +121,14 @@ public class ChessGame {
         ChessBoard myBoard = getBoard();
 
         for (int y = 1; y <=8; y++) {for (int x = 1; x<= 8; x++) {
-            if (myBoard.getPiece(new ChessPosition(y,x))!=null &&
-                myBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
+            if (myBoard.getPiece(new ChessPosition(y,x))==null) {continue;}
+            if (myBoard.getPiece(new ChessPosition(y,x)).getTeamColor() == teamColor) {continue;}
 
             for (ChessMove move : pieceMoves(myBoard,new ChessPosition(y,x)))
                 {ChessPosition examinedMove = move.getEndPosition();
-
             if (myBoard.getPiece(examinedMove) != null &&
                 myBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
-                    myBoard.getPiece(examinedMove).getTeamColor() == teamColor) {return true;}}}}}
+                    myBoard.getPiece(examinedMove).getTeamColor() == teamColor) {return true;}}}}
 
             return false;}
 
