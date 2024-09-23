@@ -70,7 +70,7 @@ public class MoveCalculator {
                                          ArrayList<ChessMove> possibleMoves) {
         ChessPosition endPosition = new ChessPosition(row,col);
         ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
-        if (checkMove(row, col, board, myColor)) return;
+        if (checkMove(row, col, board, myColor)) {return;}
         possibleMoves.add(new ChessMove(myPosition,endPosition,null));
     }
 
