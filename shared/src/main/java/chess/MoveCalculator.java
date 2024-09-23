@@ -115,7 +115,7 @@ public class MoveCalculator {
         straightRecursion(row + 1,col,board,myPosition,possibleMoves,"U");
     }
 
-    public static void queenMoveCalculator(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves) {
+    public static void royaltyMoveCalculator(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves) {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
 
@@ -128,20 +128,6 @@ public class MoveCalculator {
         straightRecursion(row - 1,col,board,myPosition,possibleMoves,"D");
         straightRecursion(row + 1,col,board,myPosition,possibleMoves,"U");
 
-    }
-
-    public static void kingMoveCalculator(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves) {
-        int row = myPosition.getRow();
-        int col = myPosition.getColumn();
-
-        diagonalRecursion(row + 1, col + 1, board, myPosition,possibleMoves, "UR");
-        diagonalRecursion(row - 1, col - 1, board, myPosition,possibleMoves, "DL");
-        diagonalRecursion(row + 1, col - 1, board, myPosition,possibleMoves, "UL");
-        diagonalRecursion(row - 1, col + 1, board, myPosition,possibleMoves, "DR");
-        straightRecursion(row,col + 1,board,myPosition,possibleMoves,"R");
-        straightRecursion(row,col - 1,board,myPosition,possibleMoves,"L");
-        straightRecursion(row - 1,col,board,myPosition,possibleMoves,"D");
-        straightRecursion(row + 1,col,board,myPosition,possibleMoves,"U");
     }
 
     public static void knightMoveCalculator(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves) {

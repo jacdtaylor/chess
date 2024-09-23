@@ -118,37 +118,29 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
 
-        ChessBoard possibleBoard = getBoard();
+        ChessBoard myBoard = getBoard();
 
         for (int y = 1; y <=8; y++) {for (int x = 1; x<= 8; x++) {
-            if (possibleBoard.getPiece(new ChessPosition(y,x))!=null &&
-                possibleBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
+            if (myBoard.getPiece(new ChessPosition(y,x))!=null &&
+                myBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
 
-            for (ChessMove move : pieceMoves(possibleBoard,new ChessPosition(y,x)))
+            for (ChessMove move : pieceMoves(myBoard,new ChessPosition(y,x)))
                 {ChessPosition examinedMove = move.getEndPosition();
 
-            if (possibleBoard.getPiece(examinedMove) != null &&
-                possibleBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
-                    possibleBoard.getPiece(examinedMove).getTeamColor() == teamColor) {return true;}}}}}
+            if (myBoard.getPiece(examinedMove) != null &&
+                myBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
+                    myBoard.getPiece(examinedMove).getTeamColor() == teamColor) {return true;}}}}}
 
             return false;}
 
 
     public boolean isInCheckHelper(TeamColor teamColor, ChessBoard possibleBoard) {
-
-        for (int y = 1; y <=8; y++) {for (int x = 1; x<= 8; x++) {
-
-            if (possibleBoard.getPiece(new ChessPosition(y,x))!=null &&
-                possibleBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
-
-                for (ChessMove move : pieceMoves(possibleBoard,new ChessPosition(y,x)))
-        {ChessPosition examinedMove = move.getEndPosition();
-
-            if (possibleBoard.getPiece(examinedMove) != null &&
-                possibleBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
-                    possibleBoard.getPiece(examinedMove).getTeamColor() == teamColor) {return true;}}}}}
-
-        return false;}
+        ChessBoard storeBoard = getBoard();
+        setBoard(possibleBoard);
+        boolean checkChecker = isInCheck(teamColor);
+        setBoard(storeBoard);
+        return checkChecker;
+    }
 
     /**
      * Determines if the given team is in checkmate

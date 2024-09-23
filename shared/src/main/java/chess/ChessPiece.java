@@ -80,12 +80,8 @@ public class ChessPiece {
                 rookMoveCalculator(board, myPosition, possibleMoves);
                 yield possibleMoves;
             }
-            case QUEEN -> {
-                queenMoveCalculator(board, myPosition, possibleMoves);
-                yield possibleMoves;
-            }
-            case KING -> {
-                kingMoveCalculator(board, myPosition, possibleMoves);
+            case QUEEN, KING -> {
+                royaltyMoveCalculator(board, myPosition, possibleMoves);
                 yield possibleMoves;
             }
             case KNIGHT -> {
