@@ -1,6 +1,5 @@
 package chess;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -70,32 +69,32 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
     public static Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> PossibleMoves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> possibleMoves = new ArrayList<ChessMove>();
 
         return switch (board.getPiece(myPosition).getPieceType()) {
             case BISHOP -> {
-                BishopMoveCalculator(board, myPosition, PossibleMoves);
-                yield PossibleMoves;
+                bishopMoveCalculator(board, myPosition, possibleMoves);
+                yield possibleMoves;
             }
             case ROOK -> {
-                RookMoveCalculator(board, myPosition, PossibleMoves);
-                yield PossibleMoves;
+                rookMoveCalculator(board, myPosition, possibleMoves);
+                yield possibleMoves;
             }
             case QUEEN -> {
-                QueenMoveCalculator(board, myPosition, PossibleMoves);
-                yield PossibleMoves;
+                queenMoveCalculator(board, myPosition, possibleMoves);
+                yield possibleMoves;
             }
             case KING -> {
-                KingMoveCalculator(board, myPosition, PossibleMoves);
-                yield PossibleMoves;
+                kingMoveCalculator(board, myPosition, possibleMoves);
+                yield possibleMoves;
             }
             case KNIGHT -> {
-                KnightMoveCalculator(board, myPosition, PossibleMoves);
-                yield PossibleMoves;
+                knightMoveCalculator(board, myPosition, possibleMoves);
+                yield possibleMoves;
             }
             case PAWN -> {
-                PawnMoveCalculator(board, myPosition, PossibleMoves);
-                yield PossibleMoves;
+                pawnMoveCalculator(board, myPosition, possibleMoves);
+                yield possibleMoves;
             }
         };
     }

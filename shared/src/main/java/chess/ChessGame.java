@@ -64,18 +64,20 @@ public class ChessGame {
         for (ChessMove possibleMove: preCheckMoves) {
             ChessBoard copy = new ChessBoard(getBoard());
             makePossibleMove(possibleMove,copy);
-            if (!isInCheckHelper(currentColor,copy)) {
-                CheckMoves.add(possibleMove);
-            }
 
-        }
+            if (!isInCheckHelper(currentColor,copy)) {
+                CheckMoves.add(possibleMove);}}
+
+
         return CheckMoves;
     }
 
     public void makePossibleMove(ChessMove move, ChessBoard boardCopy) {
         ChessPosition start = move.getStartPosition();
         ChessPosition end = move.getEndPosition();
+
         if (boardCopy.getPiece(start) == null) {return;}
+
         boardCopy.addPiece(end,boardCopy.getPiece(start));
         boardCopy.addPiece(start,null);
     }
@@ -88,27 +90,25 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-
-
         ChessPosition start = move.getStartPosition();
-        if (getBoard().getPiece(start) == null || getBoard().getPiece(start).getTeamColor() != getTeamTurn()) {throw new InvalidMoveException();}
-        ChessPosition end = move.getEndPosition();
 
+        if (getBoard().getPiece(start) == null || getBoard().getPiece(start).getTeamColor() != getTeamTurn())
+            {throw new InvalidMoveException();}
+
+        ChessPosition end = move.getEndPosition();
         TeamColor currentTurn= getBoard().getPiece(start).getTeamColor();
 
         if (validMoves(start).contains(move)) {
             getBoard().addPiece(end,getBoard().getPiece(start));
             getBoard().addPiece(start,null);
-            if (move.getPromotionPiece() != null) {getBoard().getPiece(end).Promote(move.getPromotionPiece());}
+
+            if (move.getPromotionPiece() != null)
+                {getBoard().getPiece(end).Promote(move.getPromotionPiece());}
 
             if (currentTurn == TeamColor.WHITE) {setTeamTurn(TeamColor.BLACK);}
-            else {setTeamTurn(TeamColor.WHITE);}
-        } else {throw new InvalidMoveException();}
+                else {setTeamTurn(TeamColor.WHITE);}
 
-
-
-
-    }
+        } else {throw new InvalidMoveException();}}
 
     /**
      * Determines if the given team is in check
@@ -118,43 +118,37 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
 
-        ChessBoard PossibleBoard = getBoard();
-        for (int y = 1; y <=8; y++) {
-            for (int x = 1; x<= 8; x++) {
-                if (PossibleBoard.getPiece(new ChessPosition(y,x))!=null &&
-                        PossibleBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
-                    for (ChessMove move : pieceMoves(PossibleBoard,new ChessPosition(y,x)))
-                    {
-                        ChessPosition examinedMove = move.getEndPosition();
-                        if (PossibleBoard.getPiece(examinedMove) != null &&
-                                PossibleBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
-                                PossibleBoard.getPiece(examinedMove).getTeamColor() == teamColor) return true;
-                    }
-                }}
-        }
+        ChessBoard possibleBoard = getBoard();
 
-        return false;
+        for (int y = 1; y <=8; y++) {for (int x = 1; x<= 8; x++) {
+            if (possibleBoard.getPiece(new ChessPosition(y,x))!=null &&
+                possibleBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
 
-    }
+            for (ChessMove move : pieceMoves(possibleBoard,new ChessPosition(y,x)))
+                {ChessPosition examinedMove = move.getEndPosition();
+
+            if (possibleBoard.getPiece(examinedMove) != null &&
+                possibleBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
+                    possibleBoard.getPiece(examinedMove).getTeamColor() == teamColor) {return true;}}}}}
+
+            return false;}
+
+
     public boolean isInCheckHelper(TeamColor teamColor, ChessBoard PossibleBoard) {
 
-        for (int y = 1; y <=8; y++) {
-            for (int x = 1; x<= 8; x++) {
-                if (PossibleBoard.getPiece(new ChessPosition(y,x))!=null &&
-                        PossibleBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
+        for (int y = 1; y <=8; y++) {for (int x = 1; x<= 8; x++) {
+
+            if (PossibleBoard.getPiece(new ChessPosition(y,x))!=null &&
+                PossibleBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
+
                 for (ChessMove move : pieceMoves(PossibleBoard,new ChessPosition(y,x)))
-                {
-                    ChessPosition examinedMove = move.getEndPosition();
-                    if (PossibleBoard.getPiece(examinedMove) != null &&
-                            PossibleBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
-                            PossibleBoard.getPiece(examinedMove).getTeamColor() == teamColor) return true;
-                }
-            }}
-        }
+        {ChessPosition examinedMove = move.getEndPosition();
 
-        return false;
+            if (PossibleBoard.getPiece(examinedMove) != null &&
+                PossibleBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
+                    PossibleBoard.getPiece(examinedMove).getTeamColor() == teamColor) {return true;}}}}}
 
-    }
+        return false;}
 
     /**
      * Determines if the given team is in checkmate
@@ -163,19 +157,16 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        for (int y = 1; y <=8; y++) {
-            for (int x = 1; x<= 8; x++) {
-                ChessPosition current = new ChessPosition(y,x);
-                if (getBoard().getPiece(current) != null
-                && getBoard().getPiece(current).getTeamColor() == teamColor) {
-                    if (!validMoves(current).isEmpty()) {return false;}
-                }
-                }
-            }
 
+        for (int y = 1; y <=8; y++) {for (int x = 1; x<= 8; x++) {
+            ChessPosition current = new ChessPosition(y,x);
 
-        return true;
-    }
+        if (getBoard().getPiece(current) != null
+            && getBoard().getPiece(current).getTeamColor() == teamColor) {
+
+            if (!validMoves(current).isEmpty()) {return false;}}}}
+
+    return true;}
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
@@ -185,28 +176,23 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        for (int y = 1; y <=8; y++) {
-            for (int x = 1; x<= 8; x++) {
-                ChessPosition current = new ChessPosition(y,x);
-                if (getBoard().getPiece(current) != null
-                        && getBoard().getPiece(current).getTeamColor() == teamColor) {
-                    if (!validMoves(current).isEmpty()) {return false;}
-                }
-            }
-        }
-        if (isInCheck(teamColor)) return false;
+        for (int y = 1; y <=8; y++) {for (int x = 1; x<= 8; x++) {
 
-        return true;
-    }
+    ChessPosition current = new ChessPosition(y,x);
+
+    if (getBoard().getPiece(current) != null
+        && getBoard().getPiece(current).getTeamColor() == teamColor) {
+            if (!validMoves(current).isEmpty()) {return false;}}}}
+
+        return !isInCheck(teamColor);}
 
     /**
      * Sets this game's chessboard with a given board
      *
      * @param board the new board to use
      */
-    public void setBoard(ChessBoard board) { this.board = board;
-
-    }
+    public void setBoard(ChessBoard board) {
+        this.board = board;}
 
     /**
      * Gets the current chessboard
@@ -214,6 +200,4 @@ public class ChessGame {
      * @return the chessboard
      */
     public ChessBoard getBoard() {
-        return board;
-    }
-}
+        return board;}}
