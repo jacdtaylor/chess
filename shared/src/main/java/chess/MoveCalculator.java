@@ -13,10 +13,12 @@ public class MoveCalculator {
                 board.getPiece(endPosition).getTeamColor().equals(myColor);
     }
 
-    public static void diagonalRecursion(int row, int col, ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves, String direction) {
+    public static void diagonalRecursion(int row, int col, ChessBoard board, ChessPosition myPosition,
+                                         ArrayList<ChessMove> possibleMoves, String direction) {
+
         ChessPosition endPosition = new ChessPosition(row,col);
         ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
-        if (checkMove(row, col, board, myColor)) return;
+        if (checkMove(row, col, board, myColor)) {return;}
 
         possibleMoves.add(new ChessMove(myPosition,endPosition,null));
         if (board.getPiece(endPosition) == null && board.getPiece(myPosition).getPieceType() != ChessPiece.PieceType.KING) {
@@ -37,10 +39,11 @@ public class MoveCalculator {
         }
     }
 
-    public static void straightRecursion(int row, int col, ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves, String direction) {
+    public static void straightRecursion(int row, int col, ChessBoard board, ChessPosition myPosition,
+                                         ArrayList<ChessMove> possibleMoves, String direction) {
         ChessPosition endPosition = new ChessPosition(row,col);
         ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
-        if (checkMove(row, col, board, myColor)) return;
+        if (checkMove(row, col, board, myColor)) {return;}
 
 
         possibleMoves.add(new ChessMove(myPosition,endPosition,null));
@@ -58,19 +61,21 @@ public class MoveCalculator {
                     return;
                 case "U":
                     straightRecursion(++row,col,board,myPosition, possibleMoves,direction);
-                    return;
+
             }
         }
     }
 
-    public static void knightHelper(int row, int col, ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves) {
+    public static void knightHelper(int row, int col, ChessBoard board, ChessPosition myPosition,
+                                         ArrayList<ChessMove> possibleMoves) {
         ChessPosition endPosition = new ChessPosition(row,col);
         ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();
         if (checkMove(row, col, board, myColor)) return;
         possibleMoves.add(new ChessMove(myPosition,endPosition,null));
     }
 
-    public static void pawnHelperTake(int row, int col, ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves, ArrayList<ChessPiece.PieceType> promotion, ChessGame.TeamColor myColor) {
+    public static void pawnHelperTake(int row, int col, ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves,
+                                         ArrayList<ChessPiece.PieceType> promotion, ChessGame.TeamColor myColor) {
         if (row <=0 || col <= 0 || row >= 9 || col >= 9) {return;}
         ChessPosition endPosition = new ChessPosition(row,col);
         if (board.getPiece(endPosition) == null ||
@@ -80,7 +85,8 @@ public class MoveCalculator {
         possibleMoves.add(new ChessMove(myPosition,endPosition,pro));}
     }
 
-    public static void pawnHelper(int row, int col, ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves, ArrayList<ChessPiece.PieceType> promotion, ChessGame.TeamColor myColor) {
+    public static void pawnHelper(int row, int col, ChessBoard board, ChessPosition myPosition,
+                                         ArrayList<ChessMove> possibleMoves, ArrayList<ChessPiece.PieceType> promotion, ChessGame.TeamColor myColor) {
         if (row <=0 || col <= 0 || row >= 9 || col >= 9) {return;}
         ChessPosition endPosition = new ChessPosition(row,col);
         if (board.getPiece(endPosition) != null)
