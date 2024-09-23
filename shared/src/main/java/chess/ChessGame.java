@@ -59,17 +59,17 @@ public class ChessGame {
         if (getBoard().getPiece(startPosition) == null)  {return new ArrayList<ChessMove>();}
         ChessGame.TeamColor currentColor = getBoard().getPiece(startPosition).getTeamColor();
         ArrayList<ChessMove> preCheckMoves = (ArrayList<ChessMove>) pieceMoves(getBoard(), startPosition);
-        ArrayList<ChessMove> CheckMoves = new ArrayList<ChessMove>();
+        ArrayList<ChessMove> checkMoves = new ArrayList<ChessMove>();
 
         for (ChessMove possibleMove: preCheckMoves) {
             ChessBoard copy = new ChessBoard(getBoard());
             makePossibleMove(possibleMove,copy);
 
             if (!isInCheckHelper(currentColor,copy)) {
-                CheckMoves.add(possibleMove);}}
+                checkMoves.add(possibleMove);}}
 
 
-        return CheckMoves;
+        return checkMoves;
     }
 
     public void makePossibleMove(ChessMove move, ChessBoard boardCopy) {
@@ -103,7 +103,7 @@ public class ChessGame {
             getBoard().addPiece(start,null);
 
             if (move.getPromotionPiece() != null)
-                {getBoard().getPiece(end).Promote(move.getPromotionPiece());}
+                {getBoard().getPiece(end).promote(move.getPromotionPiece());}
 
             if (currentTurn == TeamColor.WHITE) {setTeamTurn(TeamColor.BLACK);}
                 else {setTeamTurn(TeamColor.WHITE);}
@@ -134,19 +134,19 @@ public class ChessGame {
             return false;}
 
 
-    public boolean isInCheckHelper(TeamColor teamColor, ChessBoard PossibleBoard) {
+    public boolean isInCheckHelper(TeamColor teamColor, ChessBoard possibleBoard) {
 
         for (int y = 1; y <=8; y++) {for (int x = 1; x<= 8; x++) {
 
-            if (PossibleBoard.getPiece(new ChessPosition(y,x))!=null &&
-                PossibleBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
+            if (possibleBoard.getPiece(new ChessPosition(y,x))!=null &&
+                possibleBoard.getPiece(new ChessPosition(y,x)).getTeamColor() != teamColor) {
 
-                for (ChessMove move : pieceMoves(PossibleBoard,new ChessPosition(y,x)))
+                for (ChessMove move : pieceMoves(possibleBoard,new ChessPosition(y,x)))
         {ChessPosition examinedMove = move.getEndPosition();
 
-            if (PossibleBoard.getPiece(examinedMove) != null &&
-                PossibleBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
-                    PossibleBoard.getPiece(examinedMove).getTeamColor() == teamColor) {return true;}}}}}
+            if (possibleBoard.getPiece(examinedMove) != null &&
+                possibleBoard.getPiece(examinedMove).getPieceType() == ChessPiece.PieceType.KING &&
+                    possibleBoard.getPiece(examinedMove).getTeamColor() == teamColor) {return true;}}}}}
 
         return false;}
 

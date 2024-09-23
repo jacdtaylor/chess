@@ -164,17 +164,18 @@ public class MoveCalculator {
         int col = myPosition.getColumn();
         int colorMod = 1;
         if (myColor == ChessGame.TeamColor.BLACK) {colorMod = - 1;}
-        ArrayList<ChessPiece.PieceType> Promotions = new ArrayList<ChessPiece.PieceType>();
+        ArrayList<ChessPiece.PieceType> promotions = new ArrayList<ChessPiece.PieceType>();
         if ((row + 1 == 8 && myColor == ChessGame.TeamColor.WHITE) || (row - 1 == 1 && myColor == ChessGame.TeamColor.BLACK)) {
-            Promotions.add(ChessPiece.PieceType.QUEEN);
-            Promotions.add(ChessPiece.PieceType.ROOK);
-            Promotions.add(ChessPiece.PieceType.BISHOP);
-            Promotions.add(ChessPiece.PieceType.KNIGHT);
-        } else {Promotions.add(null);}
+            promotions.add(ChessPiece.PieceType.QUEEN);
+            promotions.add(ChessPiece.PieceType.ROOK);
+            promotions.add(ChessPiece.PieceType.BISHOP);
+            promotions.add(ChessPiece.PieceType.KNIGHT);
+        } else {
+            promotions.add(null);}
 
-        pawnHelper(row + colorMod, col, board, myPosition,possibleMoves, Promotions, myColor);
-        pawnHelperTake(row + colorMod, col + 1, board, myPosition,possibleMoves, Promotions, myColor);
-        pawnHelperTake(row + colorMod, col - 1, board, myPosition,possibleMoves, Promotions, myColor);
+        pawnHelper(row + colorMod, col, board, myPosition,possibleMoves, promotions, myColor);
+        pawnHelperTake(row + colorMod, col + 1, board, myPosition,possibleMoves, promotions, myColor);
+        pawnHelperTake(row + colorMod, col - 1, board, myPosition,possibleMoves, promotions, myColor);
 
 
 
