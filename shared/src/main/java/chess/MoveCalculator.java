@@ -13,6 +13,7 @@ public class MoveCalculator {
                 board.getPiece(endPosition).getTeamColor().equals(myColor);
     }
 
+
     public static void diagonalRecursion(int row, int col, ChessBoard board, ChessPosition myPosition,
                                          ArrayList<ChessMove> possibleMoves, String direction) {
 
@@ -111,6 +112,7 @@ public class MoveCalculator {
 
     }
 
+
     public static void rookMoveCalculator(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves) {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -120,6 +122,7 @@ public class MoveCalculator {
         straightRecursion(row - 1,col,board,myPosition,possibleMoves,"D");
         straightRecursion(row + 1,col,board,myPosition,possibleMoves,"U");
     }
+
 
     public static void royaltyMoveCalculator(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves) {
         int row = myPosition.getRow();
@@ -136,6 +139,7 @@ public class MoveCalculator {
 
     }
 
+
     public static void knightMoveCalculator(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves) {
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
@@ -149,6 +153,7 @@ public class MoveCalculator {
         knightHelper(row - 2,col + 1,board,myPosition,possibleMoves);
         knightHelper(row - 2,col - 1,board,myPosition,possibleMoves);
     }
+
 
     public static void pawnMoveCalculator(ChessBoard board, ChessPosition myPosition, ArrayList<ChessMove> possibleMoves) {
         ChessGame.TeamColor myColor = board.getPiece(myPosition).getTeamColor();

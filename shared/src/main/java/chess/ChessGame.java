@@ -154,14 +154,14 @@ public class ChessGame {
         if (getBoard().getPiece(current) != null
                 && getBoard().getPiece(current).getTeamColor() == teamColor) {
 
-            if (!validMoves(current).isEmpty()) {return true;}}}}
-    return false;}
+            if (!validMoves(current).isEmpty()) {return false;}}}}
+    return true;}
 
 
 
     public boolean isInCheckmate(TeamColor teamColor) {
         if (isInCheck(teamColor)) {
-            return !remainingMoves(teamColor);
+            return remainingMoves(teamColor);
         }
     return false;}
 
@@ -177,7 +177,7 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         if (!isInCheck(teamColor)) {
-            return !remainingMoves(teamColor);
+            return remainingMoves(teamColor);
         }
     return false;}
 
