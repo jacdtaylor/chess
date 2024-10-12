@@ -8,13 +8,22 @@ public class MemoryAuthDAO implements AuthDAO {
 
 
     @Override
+    public Boolean confirmAuth(String username) {
+        for (AuthData data : storedAuthData) {
+            if (data.username().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public void createAuth(AuthData data) {
         storedAuthData.add(data);
     }
     @Override
-    public void deleteAuth(String authToken) throws DataAccessException {
-        AuthData target = getAuth(authToken);
-        storedAuthData.remove(target);
+    public void deleteAuth(AuthData auth) throws DataAccessException {
+        storedAuthData.remove(auth);
     }
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {

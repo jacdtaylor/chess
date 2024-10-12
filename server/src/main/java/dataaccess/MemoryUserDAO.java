@@ -9,6 +9,17 @@ public class MemoryUserDAO implements UserDAO{
 
     HashSet<UserData> storedUserData = new HashSet<UserData>();
 
+
+    @Override
+    public boolean confirmUsername(String username) {
+        for (UserData data : storedUserData) {
+            if (data.username().equals(username)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public UserData getUser(String username) throws DataAccessException {
 
@@ -24,6 +35,8 @@ public class MemoryUserDAO implements UserDAO{
 
     @Override
     public void createUser(UserData user) {
+
+
         storedUserData.add(user);}
 
 

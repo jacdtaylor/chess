@@ -10,7 +10,7 @@ public interface UserDAO {
     UserData getUser(String username) throws DataAccessException;
 
     void createUser(UserData user);
-
+    boolean confirmUsername(String username);
     void clear();
-    Boolean validateCredentials(UserData user) throws DataAccessException, InvalidCredentialException;
+    boolean validateCredentials(UserData user) throws DataAccessException, InvalidCredentialException;
 }
