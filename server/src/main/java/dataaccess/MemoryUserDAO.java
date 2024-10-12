@@ -1,6 +1,5 @@
 package dataaccess;
 
-import model.AuthData;
 import model.UserData;
 
 import java.util.HashSet;
@@ -10,6 +9,7 @@ public class MemoryUserDAO implements UserDAO{
 
     HashSet<UserData> storedUserData = new HashSet<UserData>();
 
+    @Override
     public UserData getUser(String username) throws DataAccessException {
 
         for (UserData data : storedUserData) {
@@ -22,10 +22,24 @@ public class MemoryUserDAO implements UserDAO{
     }
 
 
+    @Override
     public void createUser(UserData user) {
         storedUserData.add(user);}
 
+
+    @Override
     public void clear() {
         storedUserData = new HashSet<UserData>();
     }
+
+    @Override
+    public boolean validateCredentials(UserData user) throws DataAccessException, InvalidCredentialException{
+        UserData currentCreds = getUser(user.username());
+        if (user.password().equals(currentCreds.password())) {return true;}
+        else {
+            throw new InvalidCredentialException("Password does not match");
+        }
+    }
 }
+
+
