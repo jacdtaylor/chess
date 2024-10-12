@@ -22,4 +22,10 @@ public class MemoryGameDAO implements GameDAO{
     public HashSet<GameData> listGames() {
         return storedGameData;
     }
+
+    public void createGame(GameData game) {
+        storedGameData.add(game);
+    }
+
+    public void clear() {storedGameData = new HashSet<GameData>();}
 }

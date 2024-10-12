@@ -25,5 +25,6 @@ public class MemoryAuthDAO implements AuthDAO {
         throw new DataAccessException("Auth Token does not exist: " + authToken);
     }
 
+    public void clear() {storedAuthData = new HashSet<AuthData>();}
 
 }
