@@ -18,6 +18,16 @@ public class MemoryGameDAO implements GameDAO{
         throw new DataAccessException("Game ID not found: " + ID);
 
     }
+
+
+    @Override
+    public void updateGame(GameData game) throws DataAccessException {
+        GameData targetGame = getGame(game.gameID());
+        storedGameData.remove(targetGame);
+        storedGameData.add(game);
+
+    }
+
     @Override
     public HashSet<GameData> listGames() {
         return storedGameData;
