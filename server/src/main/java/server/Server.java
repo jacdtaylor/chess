@@ -9,6 +9,7 @@ import service.GameService;
 import service.UserService;
 import spark.*;
 
+import javax.xml.crypto.Data;
 import java.util.Map;
 
 public class Server {
@@ -30,11 +31,15 @@ public class Server {
         Spark.delete("/db", this::clearDB);
         Spark.post("/user", this::registerUser);
         Spark.post("/session",this::loginUser);
-        Spark.delete("/session",this::logoutUser);
+        Spark.delete("/session",this::logout);
 //        Spark.get("/game",this::listGames);
 //        Spark.post("/game", this::createGame);
 //        Spark.post("/game", this::joinGame);
 
+        Spark.exception(DataAccessException.class, this::dataAccessHandler);
+        Spark.exception(UnauthorizationException.class, this::unauthorizationHandler);
+        Spark.exception(GameManagerError.class, this::gameTakenHandler);
+        Spark.exception(Exception.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
         Spark.init();
@@ -54,37 +59,64 @@ public class Server {
 
     private Object clearDB(Request req, Response res) {
         gameService.clearAll();
-        res.status(204);
+        res.status(200);
         return "";
     }
 
     private Object registerUser(Request req, Response res) throws DataAccessException {
         UserData user = new Gson().fromJson(req.body(), UserData.class);
         AuthData auth = userService.register(user);
+        res.status(200);
         return new Gson().toJson(auth);
     }
 
     private Object loginUser(Request req, Response res) throws DataAccessException {
         UserData user = new Gson().fromJson(req.body(), UserData.class);
         AuthData auth = userService.login(user);
+        res.status(200);
         return new Gson().toJson(auth);
 
     }
 
-    private Object logoutUser(Request req, Response res) throws DataAccessException {
-        AuthData auth = new Gson().fromJson(req.body(), AuthData.class);
+    private Object logout(Request req, Response res) throws DataAccessException {
+        String auth = req.headers("authorization");
+//        AuthData auth = new Gson().fromJson(req.body(), AuthData.class);
         userService.logout(auth);
+        res.status(200);
         return "";
     }
 
-//    private Object listGames(Request req, Response res) {
-//        String auth = res.header;
-//        var list = gameService.gameList(auth).toArray();
-//        return new Gson().toJson(Map.of("games", list));
-//    }
+    private Object listGames(Request req, Response res) {
+        String auth = req.headers("authorization");
+        var list = gameService.gameList(auth).toArray();
+        return new Gson().toJson(Map.of("games", list));
+    }
 
 //    private Object createGame(Request req, Response res) {}
 
+
+    private void unauthorizationHandler(UnauthorizationException e, Request req, Response res) {
+        res.status(401);
+
+    }
+
+    private void gameTakenHandler(GameManagerError e, Request req, Response res) {
+        res.status(403);
+
+    }
+
+    private void dataAccessHandler(DataAccessException e, Request req, Response res) {
+        res.status(400);
+    }
+
+    private void exceptionHandler(Exception e, Request req, Response res) {
+        res.status(500);
+
+
+    }
 }
+
+
+
 
 

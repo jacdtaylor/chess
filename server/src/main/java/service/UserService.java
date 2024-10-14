@@ -20,21 +20,21 @@ public class UserService {
 
 
     }
-    public AuthData register(UserData user) throws DataAccessException {
-        if (userDAO.confirmUsername(user.username())) {
-            throw new LoginException("User already exists");
-        }
+    public AuthData register(UserData user) throws DataAccessException, LoginException {
+//        if (userDAO.confirmUsername(user.username())) {
+//            throw new LoginException("User already exists");
+//        }
         userDAO.createUser(user);
         return login(user);
     }
 
 
-    public AuthData login(UserData user) throws DataAccessException, InvalidCredentialException {
+    public AuthData login(UserData user) throws DataAccessException, InvalidCredentialException, LoginException {
         if (userDAO.validateCredentials(user)) {
             String auth = UUID.randomUUID().toString();
-            if (!authDAO.confirmAuth(user.username())) {
-                throw new LoginException("User already logged in");
-            }
+//            if (authDAO.confirmAuth(user.username())) {
+//                throw new LoginException("User already logged in");
+//            }
             AuthData newAuthData = new AuthData(auth, user.username());
             authDAO.createAuth(newAuthData);
             return newAuthData;
@@ -42,9 +42,9 @@ public class UserService {
         throw new InvalidCredentialException("Username does not exist");
     }
 
-    public void logout(AuthData auth) throws DataAccessException {
-        AuthData currentAuth = authDAO.getAuth(auth.authToken());
-        authDAO.deleteAuth(auth);
+    public void logout(String auth) throws DataAccessException {
+        AuthData currentAuth = authDAO.getAuth(auth);
+        authDAO.deleteAuth(currentAuth);
 
         }
     }
