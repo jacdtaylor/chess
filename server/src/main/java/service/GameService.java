@@ -21,6 +21,12 @@ public class GameService {
     AuthDAO authDAO;
     GameDAO gameDAO;
 
+    public GameService(UserDAO userDAO, AuthDAO authDAO, GameDAO gameDAO) {
+        this.userDAO =userDAO;
+        this.authDAO =authDAO;
+        this.gameDAO =gameDAO;
+
+    }
     public GameData joinGame(String authToken,String playerColor,int gameID) throws DataAccessException, GameManagerError, UnauthorizationException {
         try {authDAO.getAuth(authToken);}catch(DataAccessException e) {throw new UnauthorizationException("Unauthorized Access");}
 
@@ -79,4 +85,9 @@ public class GameService {
         return n;
     }
 
+    public void clearAll() {
+        gameDAO.clear();
+        userDAO.clear();
+        authDAO.clear();
+    }
 }

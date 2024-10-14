@@ -10,9 +10,16 @@ import java.util.UUID;
 public class UserService {
 
 
-    UserDAO userDAO;
-    AuthDAO authDAO;
+    private final UserDAO userDAO;
+    private final AuthDAO authDAO;
 
+
+    public UserService(UserDAO userDAO, AuthDAO authDAO) {
+        this.userDAO = userDAO;
+        this.authDAO = authDAO;
+
+
+    }
     public AuthData register(UserData user) throws DataAccessException {
         if (userDAO.confirmUsername(user.username())) {
             throw new LoginException("User already exists");
