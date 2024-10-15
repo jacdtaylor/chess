@@ -82,7 +82,7 @@ public class GameService {
             try {
                 gameDAO.getGame(n);
                 n = rand.nextInt(1000);
-            } catch (DataAccessException e)
+            } catch (NonexistantGame | DataAccessException e)
             {uniqueID = true;}
         }
             ChessGame createdGame = new ChessGame();

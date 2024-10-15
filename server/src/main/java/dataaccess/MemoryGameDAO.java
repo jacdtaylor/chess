@@ -12,10 +12,10 @@ public class MemoryGameDAO implements GameDAO{
     private final HashMap<String, GameData> gameDataHash = new HashMap<>();
 
     @Override
-    public GameData getGame(int ID) throws DataAccessException {
+    public GameData getGame(int ID) throws NonexistantGame {
         GameData pulledGame = gameDataHash.get(Integer.toString(ID));
         if (pulledGame != null) {return pulledGame;}
-        throw new DataAccessException("Game ID not found: " + ID);
+        throw new NonexistantGame("Game ID not found: " + ID);
 
     }
 

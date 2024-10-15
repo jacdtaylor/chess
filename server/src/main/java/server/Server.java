@@ -114,7 +114,7 @@ public class Server {
         GameData body = new Gson().fromJson(req.body(), GameData.class);
         res.status(200);
         int newGameID = gameService.createGame(auth, body.gameName());
-        return new Gson().toJson(Map.of("GameID", newGameID));
+        return new Gson().toJson(Map.of("gameID", newGameID));
     }
 
 
