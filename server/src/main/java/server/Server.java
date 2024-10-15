@@ -16,10 +16,14 @@ import java.util.Map;
 public class Server {
     private final GameService gameService;
     private final UserService userService;
+    UserDAO userDAO = new MemoryUserDAO();
+    AuthDAO authDAO = new MemoryAuthDAO();
+    GameDAO gameDAO = new MemoryGameDAO();
 
     public Server() {
-        this.gameService = new GameService(new MemoryUserDAO(), new MemoryAuthDAO(), new MemoryGameDAO());
-        this.userService = new UserService(new MemoryUserDAO(), new MemoryAuthDAO());
+
+        this.gameService = new GameService(userDAO, authDAO, gameDAO);
+        this.userService = new UserService(userDAO, authDAO);
     }
 
 
@@ -35,7 +39,7 @@ public class Server {
         Spark.delete("/session",this::logout);
         Spark.get("/game",this::listGames);
         Spark.post("/game", this::createGame);
-//        Spark.post("/game", this::joinGame);
+        Spark.post("/game", this::joinGame);
 
         Spark.exception(DataAccessException.class, this::dataAccessHandler);
         Spark.exception(UnauthorizationException.class, this::unauthorizationHandler);
@@ -86,6 +90,13 @@ public class Server {
         res.status(200);
         return "";
     }
+
+    private Object joinGame(Request req, Response res) {
+        String auth = req.headers("authorization");
+        Object user = new Gson().fromJson(req.body(), Object.class);
+        gameService.joinGame(auth, user["PlayerColor"],user["GameID"])
+    }
+
 
     private Object listGames(Request req, Response res) {
         String auth = req.headers("authorization");
