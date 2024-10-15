@@ -33,7 +33,7 @@ public class Server {
         Spark.post("/user", this::registerUser);
         Spark.post("/session",this::loginUser);
         Spark.delete("/session",this::logout);
-//        Spark.get("/game",this::listGames);
+        Spark.get("/game",this::listGames);
         Spark.post("/game", this::createGame);
 //        Spark.post("/game", this::joinGame);
 

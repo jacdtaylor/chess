@@ -55,34 +55,40 @@ public class GameService {
 
 
     public HashSet<GameData> gameList(String authToken) throws UnauthorizationException {
-        try {authDAO.getAuth(authToken);}catch(DataAccessException e) {throw new UnauthorizationException("Unauthorized Access");}
-        return gameDAO.listGames();
+
+        if (authDAO.confirmAuthToken(authToken)) {
+        return gameDAO.listGames();} else {
+            throw new UnauthorizationException("Unauthorized Access");
+        }
     }
 
 
 
 
     public int createGame(String authToken, String gameName) throws UnauthorizationException {
-        try {authDAO.getAuth(authToken);}catch(DataAccessException e) {throw new UnauthorizationException("Unauthorized Access");}
-        Random rand = new Random();
-        boolean uniqueID = false;
-        int n = rand.nextInt(1000);
-        while (!uniqueID) {
-
-            try {
-                gameDAO.getGame(n);
-                n = rand.nextInt(1000);
-            } catch (DataAccessException e)
-            {uniqueID = true;}
-        }
-            ChessGame createdGame = new ChessGame();
-            ChessBoard createdBoard = new ChessBoard();
-            createdBoard.resetBoard();
-            createdGame.setBoard(createdBoard);
-
-
-        gameDAO.createGame(new GameData(n, null, null, gameName, createdGame));
-        return n;
+//        return 8;
+        if (!authDAO.confirmAuthToken(authToken)) {throw new UnauthorizationException("Unauthorized Access");}
+        return 8;
+//        Random rand = new Random();
+//        boolean uniqueID = false;
+//        int n = rand.nextInt(1000);
+//        while (!uniqueID) {
+//
+//            try {
+//                gameDAO.getGame(n);
+//                n = rand.nextInt(1000);
+//            } catch (DataAccessException e)
+//            {uniqueID = true;}
+//        }
+//            ChessGame createdGame = new ChessGame();
+//            ChessBoard createdBoard = new ChessBoard();
+//            createdBoard.resetBoard();
+//            createdGame.setBoard(createdBoard);
+//
+//
+//        gameDAO.createGame(new GameData(n, null, null, gameName, createdGame));
+//
+//        return n;
     }
 
     public void clearAll() {

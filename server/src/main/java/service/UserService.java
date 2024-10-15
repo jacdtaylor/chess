@@ -21,9 +21,9 @@ public class UserService {
 
     }
     public AuthData register(UserData user) throws DataAccessException, LoginException {
-//        if (userDAO.confirmUsername(user.username())) {
-//            throw new LoginException("User already exists");
-//        }
+        if (userDAO.confirmUsername(user.username())) {
+            throw new LoginException("User already exists");
+        }
         userDAO.createUser(user);
         return login(user);
     }
