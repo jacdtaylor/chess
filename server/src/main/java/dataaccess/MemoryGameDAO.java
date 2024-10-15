@@ -1,20 +1,20 @@
 package dataaccess;
 
 import model.GameData;
+import model.UserData;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class MemoryGameDAO implements GameDAO{
 
-    HashSet<GameData> storedGameData = new HashSet<GameData>();
+    private final HashMap<String, GameData> gameDataHash = new HashMap<>();
 
     @Override
     public GameData getGame(int ID) throws DataAccessException {
-        for (GameData game : storedGameData) {
-            if (game.gameID() == ID) {
-                return game;
-            }
-        }
+        GameData pulledGame = gameDataHash.get(Integer.toString(ID));
+        if (pulledGame != null) {return pulledGame;}
         throw new DataAccessException("Game ID not found: " + ID);
 
     }
@@ -22,20 +22,22 @@ public class MemoryGameDAO implements GameDAO{
 
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-        GameData targetGame = getGame(game.gameID());
-        storedGameData.remove(targetGame);
-        storedGameData.add(game);
+        if (!gameDataHash.containsKey(Integer.toString(game.gameID()))) {
+            throw new DataAccessException("Game does not exist");
+        }
+        gameDataHash.remove(Integer.toString(game.gameID()));
+        gameDataHash.put(Integer.toString(game.gameID()), game);
 
     }
 
     @Override
-    public HashSet<GameData> listGames() {
-        return storedGameData;
+    public Collection<GameData> listGames() {
+        return gameDataHash.values();
     }
     @Override
     public void createGame(GameData game) {
-        storedGameData.add(game);
+        gameDataHash.put(Integer.toString(game.gameID()),game);
     }
     @Override
-    public void clear() {storedGameData = new HashSet<GameData>();}
+    public void clear() {gameDataHash.clear();}
 }

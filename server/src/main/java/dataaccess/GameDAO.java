@@ -3,6 +3,7 @@ package dataaccess;
 import model.GameData;
 
 import javax.xml.crypto.Data;
+import java.util.Collection;
 import java.util.HashSet;
 
 public interface GameDAO {
@@ -12,5 +13,5 @@ public interface GameDAO {
 
     GameData getGame(int ID) throws DataAccessException;
     void updateGame(GameData game) throws DataAccessException;
-    HashSet<GameData> listGames();
+    Collection<GameData> listGames();
 }
