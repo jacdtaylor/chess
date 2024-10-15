@@ -12,5 +12,5 @@ public interface AuthDAO {
     void createAuth(AuthData data);
     Boolean confirmAuth(String username);
     Boolean confirmAuthToken(String authToken);
-
+    public String getUserFromAuth(String auth);
 }

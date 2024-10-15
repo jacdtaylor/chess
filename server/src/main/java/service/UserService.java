@@ -22,7 +22,7 @@ public class UserService {
     }
     public AuthData register(UserData user) throws DataAccessException, LoginException {
         if (userDAO.confirmUsername(user.username())) {
-            throw new LoginException("User already exists");
+            throw new GameManagerError("User already exists");
         }
         userDAO.createUser(user);
         return login(user);
@@ -32,9 +32,9 @@ public class UserService {
     public AuthData login(UserData user) throws DataAccessException, InvalidCredentialException, LoginException {
         if (userDAO.validateCredentials(user)) {
             String auth = UUID.randomUUID().toString();
-            if (authDAO.confirmAuth(user.username())) {
-                throw new LoginException("User already logged in");
-            }
+//            if (authDAO.confirmAuth(user.username())) {
+//                throw new LoginException("User already logged in");
+//            }
             AuthData newAuthData = new AuthData(auth, user.username());
             authDAO.createAuth(newAuthData);
             return newAuthData;

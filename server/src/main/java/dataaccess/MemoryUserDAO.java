@@ -41,7 +41,7 @@ public class MemoryUserDAO implements UserDAO{
             throw new DataAccessException("User does not exist");
         }
         if (userRecord.password().equals(user.password())) {return true;}
-        throw new InvalidCredentialException("Password does not match");
+        throw new DataAccessException("Password does not match");
     }
 }
 

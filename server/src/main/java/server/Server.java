@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
+import model.JoinGameReq;
 import model.UserData;
 import org.eclipse.jetty.server.Authentication;
 import service.GameService;
@@ -39,11 +40,11 @@ public class Server {
         Spark.delete("/session",this::logout);
         Spark.get("/game",this::listGames);
         Spark.post("/game", this::createGame);
-        Spark.post("/game", this::joinGame);
+        Spark.put("/game", this::joinGame);
 
         Spark.exception(DataAccessException.class, this::dataAccessHandler);
         Spark.exception(UnauthorizationException.class, this::unauthorizationHandler);
-        Spark.exception(GameManagerError.class, this::gameTakenHandler);
+        Spark.exception(GameManagerError.class, this::TakenHandler);
         Spark.exception(Exception.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
@@ -91,28 +92,29 @@ public class Server {
         return "";
     }
 
-    private Object joinGame(Request req, Response res) {
+    private Object joinGame(Request req, Response res) throws DataAccessException {
         String auth = req.headers("authorization");
-        Object user = new Gson().fromJson(req.body(), Object.class);
-        gameService.joinGame(auth, user["PlayerColor"],user["GameID"])
+        JoinGameReq gameData = new Gson().fromJson(req.body(), JoinGameReq.class);
+        gameService.joinGame(auth, gameData);
+        res.status(200);
+        return "";
+
     }
 
 
     private Object listGames(Request req, Response res) {
         String auth = req.headers("authorization");
         var list = gameService.gameList(auth).toArray();
+        res.status(200);
         return new Gson().toJson(Map.of("games", list));
     }
 
     private Object createGame(Request req, Response res) throws UnauthorizationException{
         String auth = req.headers("authorization");
         GameData body = new Gson().fromJson(req.body(), GameData.class);
+        res.status(200);
         int newGameID = gameService.createGame(auth, body.gameName());
-
-        return new Gson().toJson(Map.of("GameID", "Test"));
-
-//        String auth = "testAuth";
-//        return new Gson().toJson(Map.of("GameID", newGameID));
+        return new Gson().toJson(Map.of("GameID", newGameID));
     }
 
 
@@ -127,7 +129,7 @@ public class Server {
 
     }
 
-    private Object gameTakenHandler(GameManagerError e, Request req, Response res) {
+    private Object TakenHandler(GameManagerError e, Request req, Response res) {
         res.status(403);
         var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         res.type("application/json");

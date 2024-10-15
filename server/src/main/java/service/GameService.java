@@ -3,9 +3,7 @@ package service;
 
 
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 
 import chess.ChessBoard;
 import chess.ChessGame;
@@ -14,7 +12,6 @@ import dataaccess.*;
 import org.eclipse.jetty.util.log.Log;
 
 import javax.xml.crypto.Data;
-import java.util.UUID;
 
 public class GameService {
 
@@ -28,30 +25,37 @@ public class GameService {
         this.gameDAO =gameDAO;
 
     }
-    public GameData joinGame(String authToken,String playerColor,int gameID) throws DataAccessException, GameManagerError, UnauthorizationException {
+    public GameData joinGame(String authToken,JoinGameReq gameReq) throws DataAccessException, GameManagerError, UnauthorizationException {
         try {authDAO.getAuth(authToken);}catch(DataAccessException e) {throw new UnauthorizationException("Unauthorized Access");}
 
+        int gameID = gameReq.gameID();
+        String color = gameReq.playerColor().toUpperCase();
+        if (!color.equals("WHITE") && !color.equals("BLACK")) {throw new GameManagerError("Invalid Color");}
         GameData targetGame = gameDAO.getGame(gameID);
-
+//        return targetGame;
         GameData joinedGame;
-        if (playerColor.equals("WHITE")) {
+
+        if (color.equals("WHITE")) {
             if (targetGame.whiteUsername() == null) {
 
-                joinedGame  = new GameData(gameID, playerColor,targetGame.blackUsername(),
+                joinedGame  = new GameData(gameID,authDAO.getUserFromAuth(authToken) ,targetGame.blackUsername(),
                         targetGame.gameName(), targetGame.game());
+                gameDAO.updateGame(joinedGame);
+                return joinedGame;
             }
             else {throw new GameManagerError("WHITE PLAYER TAKEN");}
 
         } else {if (targetGame.blackUsername() == null) {
 
-                joinedGame  = new GameData(gameID, targetGame.whiteUsername(), playerColor,
+                joinedGame  = new GameData(gameID, targetGame.whiteUsername(), authDAO.getUserFromAuth(authToken),
                         targetGame.gameName(), targetGame.game());
+                gameDAO.updateGame(joinedGame);
+                return joinedGame;
 
         }
         else {throw new GameManagerError("BLACK PLAYER TAKEN");}}
 
-        gameDAO.updateGame(joinedGame);
-        return joinedGame;
+
     }
 
 

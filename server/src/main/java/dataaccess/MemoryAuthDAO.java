@@ -38,6 +38,12 @@ public class MemoryAuthDAO implements AuthDAO {
         throw new DataAccessException("Auth Token does not exist: " + auth);}
 
     @Override
+    public String getUserFromAuth(String auth) {
+        AuthData pulledAuth = authTokenKey.get(auth);
+        return pulledAuth.username();
+    }
+
+    @Override
     public void clear() {authTokenKey.clear();
                         userTokenKey.clear();}
 
