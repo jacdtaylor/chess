@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import org.eclipse.jetty.server.Authentication;
 import service.GameService;
@@ -33,7 +34,7 @@ public class Server {
         Spark.post("/session",this::loginUser);
         Spark.delete("/session",this::logout);
 //        Spark.get("/game",this::listGames);
-//        Spark.post("/game", this::createGame);
+        Spark.post("/game", this::createGame);
 //        Spark.post("/game", this::joinGame);
 
         Spark.exception(DataAccessException.class, this::dataAccessHandler);
@@ -92,25 +93,52 @@ public class Server {
         return new Gson().toJson(Map.of("games", list));
     }
 
-//    private Object createGame(Request req, Response res) {}
+    private Object createGame(Request req, Response res) throws UnauthorizationException{
+        String auth = req.headers("authorization");
+        GameData body = new Gson().fromJson(req.body(), GameData.class);
+        int newGameID = gameService.createGame(auth, body.gameName());
+
+        return new Gson().toJson(Map.of("GameID", "Test"));
+
+//        String auth = "testAuth";
+//        return new Gson().toJson(Map.of("GameID", newGameID));
+    }
 
 
-    private void unauthorizationHandler(UnauthorizationException e, Request req, Response res) {
+    private Object unauthorizationHandler(UnauthorizationException e, Request req, Response res) {
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        res.type("application/json");
         res.status(401);
+        res.body(body);
+        return body;
+
+
 
     }
 
-    private void gameTakenHandler(GameManagerError e, Request req, Response res) {
+    private Object gameTakenHandler(GameManagerError e, Request req, Response res) {
         res.status(403);
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        res.type("application/json");
+        res.body(body);
+        return body;
+    }
+
+    private Object dataAccessHandler(DataAccessException e, Request req, Response res) {
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        res.type("application/json");
+        res.status(401);
+        res.body(body);
+        return body;
 
     }
 
-    private void dataAccessHandler(DataAccessException e, Request req, Response res) {
+    private Object exceptionHandler(Exception e, Request req, Response res) {
+        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        res.type("application/json");
         res.status(400);
-    }
-
-    private void exceptionHandler(Exception e, Request req, Response res) {
-        res.status(500);
+        res.body(body);
+        return body;
 
 
     }
