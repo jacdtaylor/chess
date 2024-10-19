@@ -32,9 +32,7 @@ public class UserService {
     public AuthData login(UserData user) throws DataAccessException, InvalidCredentialException, LoginException {
         if (userDAO.validateCredentials(user)) {
             String auth = UUID.randomUUID().toString();
-//            if (authDAO.confirmAuth(user.username())) {
-//                throw new LoginException("User already logged in");
-//            }
+
             AuthData newAuthData = new AuthData(auth, user.username());
             authDAO.createAuth(newAuthData);
             return newAuthData;

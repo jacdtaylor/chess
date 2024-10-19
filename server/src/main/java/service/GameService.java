@@ -26,8 +26,8 @@ public class GameService {
         this.gameDAO =gameDAO;
 
     }
-    public GameData joinGame(String authToken,JoinGameReq gameReq) throws DataAccessException, GameManagerError, UnauthorizationException {
-        try {authDAO.getAuth(authToken);}catch(DataAccessException e) {throw new UnauthorizationException("Unauthorized Access");}
+    public GameData joinGame(String authToken,JoinGameReq gameReq) throws DataAccessException, GameManagerError {
+        try {authDAO.getAuth(authToken);}catch(DataAccessException e) {throw new DataAccessException("Unauthorized Access");}
 
         int gameID = gameReq.gameID();
         String color = gameReq.playerColor().toUpperCase();
@@ -60,20 +60,20 @@ public class GameService {
     }
 
 
-    public Collection<GameData> gameList(String authToken) throws UnauthorizationException {
+    public Collection<GameData> gameList(String authToken) throws DataAccessException {
 
         if (authDAO.confirmAuthToken(authToken)) {
         return gameDAO.listGames();} else {
-            throw new UnauthorizationException("Unauthorized Access");
+            throw new DataAccessException("Unauthorized Access");
         }
     }
 
 
 
 
-    public int createGame(String authToken, String gameName) throws UnauthorizationException {
+    public int createGame(String authToken, String gameName) throws DataAccessException {
 //        return 8;
-        if (!authDAO.confirmAuthToken(authToken)) {throw new UnauthorizationException("Unauthorized Access");}
+        if (!authDAO.confirmAuthToken(authToken)) {throw new DataAccessException("Unauthorized Access");}
 
         Random rand = new Random();
         boolean uniqueID = false;

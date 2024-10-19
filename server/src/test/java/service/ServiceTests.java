@@ -44,10 +44,10 @@ public class ServiceTests {
     @Test
     @DisplayName("Join Game Test")
     void joinGameWorking() throws DataAccessException {
-        int ID = gameService.createGame("AuthToken","GameName");
-        JoinGameReq newReq = new JoinGameReq("WHITE", ID);
+        int id = gameService.createGame("AuthToken","GameName");
+        JoinGameReq newReq = new JoinGameReq("WHITE", id);
         gameService.joinGame("AuthToken", newReq);
-        GameData game = gameDAO.getGame(ID);
+        GameData game = gameDAO.getGame(id);
         Assertions.assertEquals(game.whiteUsername(),"Username");
 
     }
@@ -55,24 +55,24 @@ public class ServiceTests {
     @Test
     @DisplayName("Join Game Test")
     void joinGameBroken() throws DataAccessException {
-        int ID = gameService.createGame("AuthToken","GameName");
-        JoinGameReq newReq = new JoinGameReq("WHITE", ID);
-        assertThrows(UnauthorizationException.class, ()->{gameService.joinGame("fakeToken", newReq);});
+        int id = gameService.createGame("AuthToken","GameName");
+        JoinGameReq newReq = new JoinGameReq("WHITE", id);
+        assertThrows(DataAccessException.class, ()->{gameService.joinGame("fakeToken", newReq);});
     }
 
 
     @Test
     @DisplayName("Create Game Test")
     void createGameWorking() throws DataAccessException {
-        int ID = gameService.createGame("AuthToken","GameName");
-        GameData madeGame = gameDAO.getGame(ID);
-        assertEquals(ID, madeGame.gameID());
+        int id = gameService.createGame("AuthToken","GameName");
+        GameData madeGame = gameDAO.getGame(id);
+        assertEquals(id, madeGame.gameID());
     }
 
     @Test
     @DisplayName("Create Game Test")
     void createGameBroken() throws DataAccessException {
-        assertThrows(UnauthorizationException.class, () ->
+        assertThrows(DataAccessException.class, () ->
         {
             gameService.createGame("fakeToken", "GameName");
         });
@@ -81,7 +81,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Game List Test")
-    void gameListWorking() {
+    void gameListWorking() throws DataAccessException {
         GameData sample1 = new GameData(1,null,null,"sample1", null);
         GameData sample2 = new GameData(2,null,null,"sample2", null);
         GameData sample3 = new GameData(3,null,null,"sample3", null);
@@ -100,7 +100,7 @@ public class ServiceTests {
     @Test
     @DisplayName("Game List Test")
     void gameListBroken() {
-        assertThrows(UnauthorizationException.class,() -> {gameService.gameList("fakeToken");});
+        assertThrows(DataAccessException.class,() -> {gameService.gameList("fakeToken");});
     }
 
 
@@ -110,7 +110,7 @@ public class ServiceTests {
         GameData game = new GameData(1,null,null,null,null);
         gameDAO.createGame(game);
         gameService.clearAll();
-        assertThrows(UnauthorizationException.class,() -> {gameService.gameList("AuthToken");});
+        assertThrows(DataAccessException.class,() -> {gameService.gameList("AuthToken");});
     }
 
     @Test

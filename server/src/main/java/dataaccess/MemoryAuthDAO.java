@@ -12,10 +12,7 @@ public class MemoryAuthDAO implements AuthDAO {
 
 
 
-    @Override
-    public Boolean confirmAuth(String username) {
-        return userTokenKey.containsKey(username);
-    }
+
 
     @Override
     public Boolean confirmAuthToken(String authToken) {

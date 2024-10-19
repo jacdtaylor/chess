@@ -43,8 +43,7 @@ public class Server {
         Spark.put("/game", this::joinGame);
 
         Spark.exception(DataAccessException.class, this::dataAccessHandler);
-        Spark.exception(UnauthorizationException.class, this::unauthorizationHandler);
-        Spark.exception(GameManagerError.class, this::TakenHandler);
+        Spark.exception(GameManagerError.class, this::takenHandler);
         Spark.exception(Exception.class, this::exceptionHandler);
 
         //This line initializes the server and can be removed once you have a functioning endpoint 
@@ -102,14 +101,14 @@ public class Server {
     }
 
 
-    private Object listGames(Request req, Response res) {
+    private Object listGames(Request req, Response res) throws DataAccessException {
         String auth = req.headers("authorization");
         var list = gameService.gameList(auth).toArray();
         res.status(200);
         return new Gson().toJson(Map.of("games", list));
     }
 
-    private Object createGame(Request req, Response res) throws UnauthorizationException{
+    private Object createGame(Request req, Response res) throws UnauthorizationException, DataAccessException {
         String auth = req.headers("authorization");
         GameData body = new Gson().fromJson(req.body(), GameData.class);
         res.status(200);
@@ -118,18 +117,12 @@ public class Server {
     }
 
 
-    private Object unauthorizationHandler(UnauthorizationException e, Request req, Response res) {
-        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
-        res.type("application/json");
-        res.status(401);
-        res.body(body);
-        return body;
 
 
 
-    }
 
-    private Object TakenHandler(GameManagerError e, Request req, Response res) {
+
+    private Object takenHandler(GameManagerError e, Request req, Response res) {
         res.status(403);
         var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
         res.type("application/json");
