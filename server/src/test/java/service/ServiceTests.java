@@ -1,5 +1,4 @@
 package service;
-
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
