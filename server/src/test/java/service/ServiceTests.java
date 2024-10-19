@@ -4,6 +4,8 @@ import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.JoinGameReq;
+import model.UserData;
+import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.*;
 
 import java.util.HashSet;
@@ -110,5 +112,63 @@ public class ServiceTests {
         gameService.clearAll();
         assertThrows(UnauthorizationException.class,() -> {gameService.gameList("AuthToken");});
     }
+
+    @Test
+    @DisplayName("Register Test")
+    void registerTestWorking() throws DataAccessException {
+        UserData user = new UserData("Sample1", "P");
+        userService.register(user);
+        assertEquals(userDAO.getUser("Sample1"), user);
+        }
+
+    @Test
+    @DisplayName("Register Test")
+    void registerTestBroken() throws DataAccessException {
+        UserData user = new UserData("Sample1", "P");
+        userService.register(user);
+        assertThrows(GameManagerError.class, ()->{userService.register(user);});
+    }
+
+
+    @Test
+    @DisplayName("Login Test")
+    void loginTestWorking() throws DataAccessException {
+        UserData user = new UserData("Sample1", "P");
+        AuthData token = userService.register(user);
+        userService.logout(token.authToken());
+        AuthData token2 = userService.login(user);
+        assertEquals(authDAO.getUserFromAuth(token2.authToken()), "Sample1");
+    }
+
+    @Test
+    @DisplayName("Login Test")
+    void loginTestBroken() throws DataAccessException {
+        UserData user = new UserData("Sample1", "P");
+        assertThrows(DataAccessException.class , ()->{ AuthData token2 = userService.login(user);
+        ;});
+    }
+
+
+    @Test
+    @DisplayName("Logout Test")
+    void logoutTestBroken() throws DataAccessException {
+        assertThrows(DataAccessException.class , ()->{ userService.logout("fakeAuth");
+            ;});
+    }
+
+
+    @Test
+    @DisplayName("Logout Test")
+    void logoutTestWorking() throws DataAccessException {
+        UserData user = new UserData("Sample1", "P");
+        AuthData token = userService.register(user);
+        userService.logout(token.authToken());
+
+        assertThrows(DataAccessException.class , ()->{ authDAO.getAuth(token.authToken());
+            ;});
+    }
+
+
+
 
 }
