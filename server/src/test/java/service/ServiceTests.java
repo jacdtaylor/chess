@@ -42,7 +42,7 @@ public class ServiceTests {
     }
 
     @Test
-    @DisplayName("Join Game Test")
+    @DisplayName("Join Game Test +")
     void joinGameWorking() throws DataAccessException {
         int id = gameService.createGame("AuthToken","GameName");
         JoinGameReq newReq = new JoinGameReq("WHITE", id);
@@ -53,7 +53,7 @@ public class ServiceTests {
     }
 
     @Test
-    @DisplayName("Join Game Test")
+    @DisplayName("Join Game Test -")
     void joinGameBroken() throws DataAccessException {
         int id = gameService.createGame("AuthToken","GameName");
         JoinGameReq newReq = new JoinGameReq("WHITE", id);
@@ -62,7 +62,7 @@ public class ServiceTests {
 
 
     @Test
-    @DisplayName("Create Game Test")
+    @DisplayName("Create Game Test +")
     void createGameWorking() throws DataAccessException {
         int id = gameService.createGame("AuthToken","GameName");
         GameData madeGame = gameDAO.getGame(id);
@@ -70,7 +70,7 @@ public class ServiceTests {
     }
 
     @Test
-    @DisplayName("Create Game Test")
+    @DisplayName("Create Game Test -")
     void createGameBroken() throws DataAccessException {
         assertThrows(DataAccessException.class, () ->
         {
@@ -80,7 +80,7 @@ public class ServiceTests {
 
 
     @Test
-    @DisplayName("Game List Test")
+    @DisplayName("Game List Test +")
     void gameListWorking() throws DataAccessException {
         GameData sample1 = new GameData(1,null,null,"sample1", null);
         GameData sample2 = new GameData(2,null,null,"sample2", null);
@@ -98,14 +98,14 @@ public class ServiceTests {
     }
 
     @Test
-    @DisplayName("Game List Test")
+    @DisplayName("Game List Test -")
     void gameListBroken() {
         assertThrows(DataAccessException.class,() -> {gameService.gameList("fakeToken");});
     }
 
 
     @Test
-    @DisplayName("Clear Test")
+    @DisplayName("Clear Test +")
     void gameClearTest() {
         GameData game = new GameData(1,null,null,null,null);
         gameDAO.createGame(game);
@@ -114,7 +114,7 @@ public class ServiceTests {
     }
 
     @Test
-    @DisplayName("Register Test")
+    @DisplayName("Register Test +")
     void registerTestWorking() throws DataAccessException {
         UserData user = new UserData("Sample1", "P");
         userService.register(user);
@@ -122,7 +122,7 @@ public class ServiceTests {
         }
 
     @Test
-    @DisplayName("Register Test")
+    @DisplayName("Register Test -")
     void registerTestBroken() throws DataAccessException {
         UserData user = new UserData("Sample1", "P");
         userService.register(user);
@@ -131,7 +131,7 @@ public class ServiceTests {
 
 
     @Test
-    @DisplayName("Login Test")
+    @DisplayName("Login Test +")
     void loginTestWorking() throws DataAccessException {
         UserData user = new UserData("Sample1", "P");
         AuthData token = userService.register(user);
@@ -141,7 +141,7 @@ public class ServiceTests {
     }
 
     @Test
-    @DisplayName("Login Test")
+    @DisplayName("Login Test -")
     void loginTestBroken() throws DataAccessException {
         UserData user = new UserData("Sample1", "P");
         assertThrows(DataAccessException.class , ()->{ AuthData token2 = userService.login(user);
@@ -150,7 +150,7 @@ public class ServiceTests {
 
 
     @Test
-    @DisplayName("Logout Test")
+    @DisplayName("Logout Test -")
     void logoutTestBroken() throws DataAccessException {
         assertThrows(DataAccessException.class , ()->{ userService.logout("fakeAuth");
             ;});
@@ -158,7 +158,7 @@ public class ServiceTests {
 
 
     @Test
-    @DisplayName("Logout Test")
+    @DisplayName("Logout Test +")
     void logoutTestWorking() throws DataAccessException {
         UserData user = new UserData("Sample1", "P");
         AuthData token = userService.register(user);
