@@ -6,6 +6,11 @@ import java.sql.SQLException;
 
 public class SqlAuthDAO implements AuthDAO{
 
+
+    public SqlAuthDAO() throws DataAccessException {
+        configureDatabase();
+    }
+
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  auth (

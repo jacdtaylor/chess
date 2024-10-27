@@ -8,6 +8,11 @@ import java.util.List;
 
 public class SqlGameDAO implements GameDAO{
 
+    public SqlGameDAO() throws DataAccessException {
+        configureDatabase();
+    }
+
+
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  game (

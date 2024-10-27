@@ -7,6 +7,13 @@ import java.sql.SQLException;
 public class SqlUserDAO implements UserDAO{
 
 
+
+    public SqlUserDAO() throws DataAccessException {
+        configureDatabase();
+    }
+
+
+
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  user (
