@@ -3,6 +3,7 @@ package dataaccess;
 import com.google.gson.Gson;
 import model.UserData;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
@@ -77,10 +78,32 @@ public class SqlUserDAO implements UserDAO{
         }}
 
 
+    private UserData readUser(ResultSet rs) throws SQLException {
+        var id = rs.getInt("id");
+        var json = rs.getString("json");
+        return  new Gson().fromJson(json, UserData.class);
+    }
+
+
         @Override
     public UserData getUser(String username) throws DataAccessException {
-        return null;
-    }
+            try (var conn = DatabaseManager.getConnection()) {
+                var statement = "SELECT username, json FROM user WHERE username=?";
+                try (var ps = conn.prepareStatement(statement)) {
+                    ps.setString(1, username);
+                    try (var rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            return readUser(rs);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+            }
+            return null;
+        }
+
+
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
