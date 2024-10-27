@@ -10,7 +10,7 @@ public class SqlGameDAO implements GameDAO{
 
     private final String[] createStatements = {
             """
-            CREATE TABLE IF NOT EXISTS  pet (
+            CREATE TABLE IF NOT EXISTS  game (
               `id` int NOT NULL AUTO_INCREMENT,
               `name` varchar(256) NOT NULL,
               `whiteUsername` varchar(256) NOT NULL,
