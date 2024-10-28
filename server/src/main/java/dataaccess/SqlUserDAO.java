@@ -2,6 +2,8 @@ package dataaccess;
 
 import com.google.gson.Gson;
 import model.UserData;
+import org.eclipse.jetty.server.Authentication;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -109,8 +111,12 @@ public class SqlUserDAO implements UserDAO{
     @Override
     public void createUser(UserData user) throws DataAccessException {
         var statement = "INSERT INTO user (username, password, json) VALUES (?, ?, ?)";
-        var json = new Gson().toJson(user);
-        var id = executeUpdate(statement, user.username(), user.password(), json);
+        String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
+        UserData newUser = new UserData(user.username(),hashedPassword);
+        var json = new Gson().toJson(newUser);
+
+
+        var id = executeUpdate(statement, user.username(), hashedPassword, json);
     }
 
     @Override
@@ -130,6 +136,8 @@ public class SqlUserDAO implements UserDAO{
 
         UserData userData = getUser(user.username());
         if (userData == null) {throw new DataAccessException("Username does not exist");}
-        return userData.password().equals(user.password());
+        if (user.password() == null) {throw new InvalidCredentialException("Password does not exist");}
+
+        return BCrypt.checkpw(user.password(), userData.password());
     }
 }
