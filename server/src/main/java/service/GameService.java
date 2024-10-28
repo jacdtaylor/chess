@@ -97,7 +97,7 @@ public class GameService {
         return n;
     }
 
-    public void clearAll() {
+    public void clearAll() throws DataAccessException {
         gameDAO.clear();
         userDAO.clear();
         authDAO.clear();

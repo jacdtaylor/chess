@@ -62,7 +62,7 @@ public class Server {
         return Spark.port();
     }
 
-    private Object clearDB(Request req, Response res) {
+    private Object clearDB(Request req, Response res) throws DataAccessException {
         gameService.clearAll();
         res.status(200);
         return "";

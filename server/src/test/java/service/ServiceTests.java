@@ -34,7 +34,7 @@ public class ServiceTests {
 
 
     @BeforeEach
-    void clearGame() {
+    void clearGame() throws DataAccessException {
         gameService.clearAll();
         AuthData authData = new AuthData("AuthToken","Username");
         authDAO.createAuth(authData);
@@ -105,7 +105,7 @@ public class ServiceTests {
 
     @Test
     @DisplayName("Clear Test +")
-    void gameClearTest() {
+    void gameClearTest() throws DataAccessException {
         GameData game = new GameData(1,null,null,null,null);
         gameDAO.createGame(game);
         gameService.clearAll();
