@@ -113,17 +113,20 @@ public class SqlUserDAO implements UserDAO{
     }
 
     @Override
-    public boolean confirmUsername(String username) {
-        return false;
+    public boolean confirmUsername(String username) throws DataAccessException {
+        return getUser(username) != null;
     }
 
     @Override
-    public void clear() {
+    public void clear() throws DataAccessException {
+        var statement = "TRUNCATE user";
+        executeUpdate(statement);
 
     }
 
     @Override
     public boolean validateCredentials(UserData user) throws DataAccessException, InvalidCredentialException {
-        return false;
+        UserData userData = getUser(user.username());
+        return userData.password().equals(user.password());
     }
 }
