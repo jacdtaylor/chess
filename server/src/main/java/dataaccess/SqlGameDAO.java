@@ -66,13 +66,13 @@ public class SqlGameDAO implements GameDAO{
 
     private GameData readGame(ResultSet rs) throws SQLException {
         var json = rs.getString("json");
-        return  new Gson().fromJson(json, GameData.class);
+        return new Gson().fromJson(json, GameData.class);
     }
 
     @Override
     public GameData getGame(int id) {
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT id, json FROM game WHERE id=?";
+            var statement = "SELECT json FROM game WHERE id=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, id);
                 try (var rs = ps.executeQuery()) {
@@ -105,7 +105,7 @@ public class SqlGameDAO implements GameDAO{
     public Collection<GameData> listGames() {
         var result = new ArrayList<GameData>();
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT id, json FROM game";
+            var statement = "SELECT json FROM game";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {

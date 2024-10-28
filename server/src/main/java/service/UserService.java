@@ -37,7 +37,7 @@ public class UserService {
             authDAO.createAuth(newAuthData);
             return newAuthData;
         }
-        throw new InvalidCredentialException("Username does not exist");
+        throw new DataAccessException("Password does not match");
     }
 
     public void logout(String auth) throws DataAccessException {

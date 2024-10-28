@@ -127,7 +127,9 @@ public class SqlUserDAO implements UserDAO{
 
     @Override
     public boolean validateCredentials(UserData user) throws DataAccessException, InvalidCredentialException {
+
         UserData userData = getUser(user.username());
+        if (userData == null) {throw new DataAccessException("Username does not exist");}
         return userData.password().equals(user.password());
     }
 }

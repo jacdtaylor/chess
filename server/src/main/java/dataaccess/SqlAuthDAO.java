@@ -97,7 +97,7 @@ public class SqlAuthDAO implements AuthDAO{
 
 
     @Override
-    public AuthData getAuth(String auth) {
+    public AuthData getAuth(String auth) throws DataAccessException {
         try (var conn = DatabaseManager.getConnection()) {
             var statement = "SELECT json FROM auth WHERE authToken=?";
             try (var ps = conn.prepareStatement(statement)) {
@@ -108,19 +108,17 @@ public class SqlAuthDAO implements AuthDAO{
                     }
                 }
             }
-        } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new DataAccessException("ERROR");
         }
-        return null;
+        throw new DataAccessException("ERROR");
     }
 
     @Override
-    public void deleteAuth(AuthData auth) {
-        var statement = "DELETE FROM auth WHERE authToken=?";
-        try {
+    public void deleteAuth(AuthData auth) throws DataAccessException {
+        try {getAuth(auth.authToken());} catch (Exception e) {throw new DataAccessException("Invalid Auth");}
+        var statement = "DELETE FROM auth WHERE authToken=?";{
             executeUpdate(statement, auth.authToken());
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -137,12 +135,12 @@ public class SqlAuthDAO implements AuthDAO{
     }
 
     @Override
-    public Boolean confirmAuthToken(String authToken) {
+    public Boolean confirmAuthToken(String authToken) throws DataAccessException {
         return getAuth(authToken) != null;
     }
 
     @Override
-    public String getUserFromAuth(String auth) {
+    public String getUserFromAuth(String auth) throws DataAccessException {
         AuthData data = null;
         data = getAuth(auth);
         return data.username();

@@ -27,7 +27,7 @@ public class GameService {
 
     }
     public GameData joinGame(String authToken,JoinGameReq gameReq) throws DataAccessException, GameManagerError {
-        try {authDAO.getAuth(authToken);}catch(DataAccessException e) {throw new DataAccessException("Unauthorized Access");}
+        try {authDAO.getAuth(authToken);}catch(Exception e) {throw new DataAccessException("Unauthorized Access");}
 
         int gameID = gameReq.gameID();
         String color = gameReq.playerColor().toUpperCase();
@@ -76,6 +76,7 @@ public class GameService {
         if (!authDAO.confirmAuthToken(authToken)) {throw new DataAccessException("Unauthorized Access");}
 
         int n = gameID + 1;
+        gameID = gameID + 1;
 
             ChessGame createdGame = new ChessGame();
             ChessBoard createdBoard = new ChessBoard();
