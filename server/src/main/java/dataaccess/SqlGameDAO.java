@@ -1,10 +1,18 @@
 package dataaccess;
 
+import com.google.gson.Gson;
+import model.AuthData;
 import model.GameData;
+import model.UserData;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.sql.Types.NULL;
 
 public class SqlGameDAO implements GameDAO{
 
@@ -18,8 +26,6 @@ public class SqlGameDAO implements GameDAO{
             CREATE TABLE IF NOT EXISTS  game (
               `id` int NOT NULL AUTO_INCREMENT,
               `name` varchar(256) NOT NULL,
-              `whiteUsername` varchar(256) NOT NULL,
-              'blackUsername' varchar(256) NOT NULL
               `json` TEXT DEFAULT NULL,
               PRIMARY KEY (`id`),
               INDEX(name)
@@ -43,27 +49,108 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public void createGame(GameData game) {
-
+    var statement = "INSERT INTO game (id, name, json) VALUES (?, ?, ?)";
+    var json = new Gson().toJson(game);
+        try {
+            executeUpdate(statement, game.gameID(), game.gameName(), game.game());
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void clear() {
+        var statement = "TRUNCATE game";
+        try {
+            executeUpdate(statement);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    private GameData readGame(ResultSet rs) throws SQLException {
+        var json = rs.getString("json");
+        return  new Gson().fromJson(json, GameData.class);
     }
 
     @Override
     public GameData getGame(int id) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT id, json FROM game WHERE id=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setInt(1, id);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readGame(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+        }
         return null;
     }
 
+
+
+    public void deleteGame(GameData game) throws DataAccessException {
+        var statement = "DELETE FROM game WHERE id=?";
+        executeUpdate(statement, game.gameID());
+    }
+
+
     @Override
     public void updateGame(GameData game) throws DataAccessException {
-
+        deleteGame(game);
+        createGame(game);
     }
 
     @Override
     public Collection<GameData> listGames() {
-        return List.of();
+        var result = new ArrayList<GameData>();
+        try (var conn = DatabaseManager.getConnection()) {
+            var statement = "SELECT id, json FROM game";
+            try (var ps = conn.prepareStatement(statement)) {
+                try (var rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        result.add(readGame(rs));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return result;
     }
+
+
+    private void executeUpdate(String statement, Object... params) throws DataAccessException {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+                for (var i = 0; i < params.length; i++) {
+                    var param = params[i];
+                    switch (param) {
+                        case String p -> ps.setString(i + 1, p);
+                        case Integer p -> ps.setInt(i + 1, p);
+                        case UserData p -> ps.setString(i + 1, p.toString());
+                        case null -> ps.setNull(i + 1, NULL);
+                        default -> {
+                        }
+                    }
+                }
+                ps.executeUpdate();
+
+                var rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    rs.getInt(1);
+                }
+
+            }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new DataAccessException("Database Error");
+        }}
 }
 

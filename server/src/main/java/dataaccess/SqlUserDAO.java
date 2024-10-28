@@ -14,8 +14,10 @@ public class SqlUserDAO implements UserDAO{
 
 
 
-    public SqlUserDAO() throws DataAccessException {
-        configureDatabase();
+    public SqlUserDAO()  {
+        try {configureDatabase();} catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -79,7 +81,6 @@ public class SqlUserDAO implements UserDAO{
 
 
     private UserData readUser(ResultSet rs) throws SQLException {
-        var id = rs.getInt("id");
         var json = rs.getString("json");
         return  new Gson().fromJson(json, UserData.class);
     }
@@ -107,7 +108,7 @@ public class SqlUserDAO implements UserDAO{
 
     @Override
     public void createUser(UserData user) throws DataAccessException {
-        var statement = "INSERT INTO user (username, password, json) VALUES (?, ?, json)";
+        var statement = "INSERT INTO user (username, password, json) VALUES (?, ?, ?)";
         var json = new Gson().toJson(user);
         var id = executeUpdate(statement, user.username(), user.password(), json);
     }

@@ -17,7 +17,7 @@ import java.util.Map;
 public class Server {
     private final GameService gameService;
     private final UserService userService;
-    UserDAO userDAO = new MemoryUserDAO();
+    UserDAO userDAO = new SqlUserDAO();
     AuthDAO authDAO = new MemoryAuthDAO();
     GameDAO gameDAO = new MemoryGameDAO();
 

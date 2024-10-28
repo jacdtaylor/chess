@@ -6,7 +6,7 @@ import javax.xml.crypto.Data;
 
 public interface AuthDAO {
 
-    void clear();
+    void clear() throws DataAccessException;
     AuthData getAuth(String auth) throws DataAccessException;
     void deleteAuth(AuthData auth) throws DataAccessException;
     void createAuth(AuthData data);
