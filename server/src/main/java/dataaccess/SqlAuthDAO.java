@@ -13,8 +13,12 @@ import static java.sql.Types.NULL;
 public class SqlAuthDAO implements AuthDAO{
 
 
-    public SqlAuthDAO() throws DataAccessException {
-        configureDatabase();
+    public SqlAuthDAO()  {
+        try {
+            configureDatabase();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -93,9 +97,9 @@ public class SqlAuthDAO implements AuthDAO{
 
 
     @Override
-    public AuthData getAuth(String auth) throws DataAccessException {
+    public AuthData getAuth(String auth) {
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT authToken, json FROM auth WHERE authToken=?";
+            var statement = "SELECT json FROM auth WHERE authToken=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setString(1,auth);
                 try (var rs = ps.executeQuery()) {
@@ -104,21 +108,25 @@ public class SqlAuthDAO implements AuthDAO{
                     }
                 }
             }
-        } catch (SQLException e) {
+        } catch (SQLException | DataAccessException e) {
             throw new RuntimeException(e);
         }
         return null;
     }
 
     @Override
-    public void deleteAuth(AuthData auth) throws DataAccessException {
+    public void deleteAuth(AuthData auth) {
         var statement = "DELETE FROM auth WHERE authToken=?";
-        executeUpdate(statement, auth);
+        try {
+            executeUpdate(statement, auth.authToken());
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void createAuth(AuthData data) {
-        var statement = "INSERT INTO user (username, authToken, json) VALUES (?, ?, ?)";
+        var statement = "INSERT INTO auth (username, authToken, json) VALUES (?, ?, ?)";
         var json = new Gson().toJson(data);
         try {
             var id = executeUpdate(statement, data.username(), data.authToken(), json);
@@ -130,21 +138,13 @@ public class SqlAuthDAO implements AuthDAO{
 
     @Override
     public Boolean confirmAuthToken(String authToken) {
-        try {
-            return getAuth(authToken) != null;
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+        return getAuth(authToken) != null;
     }
 
     @Override
     public String getUserFromAuth(String auth) {
         AuthData data = null;
-        try {
-            data = getAuth(auth);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+        data = getAuth(auth);
         return data.username();
     }
 }

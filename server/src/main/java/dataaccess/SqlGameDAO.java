@@ -16,15 +16,19 @@ import static java.sql.Types.NULL;
 
 public class SqlGameDAO implements GameDAO{
 
-    public SqlGameDAO() throws DataAccessException {
-        configureDatabase();
+    public SqlGameDAO(){
+        try {
+            configureDatabase();
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
     private final String[] createStatements = {
             """
             CREATE TABLE IF NOT EXISTS  game (
-              `id` int NOT NULL AUTO_INCREMENT,
+              `id` int NOT NULL,
               `name` varchar(256) NOT NULL,
               `json` TEXT DEFAULT NULL,
               PRIMARY KEY (`id`),
@@ -51,21 +55,13 @@ public class SqlGameDAO implements GameDAO{
     public void createGame(GameData game) {
     var statement = "INSERT INTO game (id, name, json) VALUES (?, ?, ?)";
     var json = new Gson().toJson(game);
-        try {
-            executeUpdate(statement, game.gameID(), game.gameName(), game.game());
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+        executeUpdate(statement,game.gameID(), game.gameName(), json);
     }
 
     @Override
     public void clear() {
-        var statement = "TRUNCATE game";
-        try {
-            executeUpdate(statement);
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
+        var statement = "DELETE FROM game";
+        executeUpdate(statement);
     }
 
     private GameData readGame(ResultSet rs) throws SQLException {
@@ -74,7 +70,7 @@ public class SqlGameDAO implements GameDAO{
     }
 
     @Override
-    public GameData getGame(int id) throws DataAccessException {
+    public GameData getGame(int id) {
         try (var conn = DatabaseManager.getConnection()) {
             var statement = "SELECT id, json FROM game WHERE id=?";
             try (var ps = conn.prepareStatement(statement)) {
@@ -86,21 +82,21 @@ public class SqlGameDAO implements GameDAO{
                 }
             }
         } catch (Exception e) {
-            throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
+            throw new RuntimeException(String.format("Unable to read data: %s", e.getMessage()));
         }
         return null;
     }
 
 
 
-    public void deleteGame(GameData game) throws DataAccessException {
+    public void deleteGame(GameData game)  {
         var statement = "DELETE FROM game WHERE id=?";
         executeUpdate(statement, game.gameID());
     }
 
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public void updateGame(GameData game)  {
         deleteGame(game);
         createGame(game);
     }
@@ -124,7 +120,7 @@ public class SqlGameDAO implements GameDAO{
     }
 
 
-    private void executeUpdate(String statement, Object... params) throws DataAccessException {
+    private void executeUpdate(String statement, Object... params)  {
         try (var conn = DatabaseManager.getConnection()) {
             try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
                 for (var i = 0; i < params.length; i++) {
@@ -150,7 +146,7 @@ public class SqlGameDAO implements GameDAO{
                 throw new RuntimeException(e);
             }
         } catch (SQLException | DataAccessException e) {
-            throw new DataAccessException("Database Error");
+            throw new RuntimeException("Database Error");
         }}
 }
 

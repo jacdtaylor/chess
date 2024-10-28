@@ -19,7 +19,7 @@ public class GameService {
     UserDAO userDAO;
     AuthDAO authDAO;
     GameDAO gameDAO;
-
+    int gameID = 0;
     public GameService(UserDAO userDAO, AuthDAO authDAO, GameDAO gameDAO) {
         this.userDAO =userDAO;
         this.authDAO =authDAO;
@@ -75,17 +75,8 @@ public class GameService {
 //        return 8;
         if (!authDAO.confirmAuthToken(authToken)) {throw new DataAccessException("Unauthorized Access");}
 
-        Random rand = new Random();
-        boolean uniqueID = false;
-        int n = rand.nextInt(1000);
-        while (!uniqueID) {
+        int n = gameID + 1;
 
-            try {
-                gameDAO.getGame(n);
-                n = rand.nextInt(1000);
-            } catch (NonexistantGame | DataAccessException e)
-            {uniqueID = true;}
-        }
             ChessGame createdGame = new ChessGame();
             ChessBoard createdBoard = new ChessBoard();
             createdBoard.resetBoard();
