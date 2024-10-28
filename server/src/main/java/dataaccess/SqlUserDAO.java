@@ -96,6 +96,7 @@ public class SqlUserDAO implements UserDAO{
                     ps.setString(1, username);
                     try (var rs = ps.executeQuery()) {
                         if (rs.next()) {
+                            if (readUser(rs)==null) {throw new DataAccessException("Username not found");}
                             return readUser(rs);
                         }
                     }
