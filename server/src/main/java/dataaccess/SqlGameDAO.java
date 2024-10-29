@@ -105,7 +105,8 @@ public class SqlGameDAO implements GameDAO{
 
 
     @Override
-    public void updateGame(GameData game)  {
+    public void updateGame(GameData game) throws DataAccessException {
+        if (getGame(game.gameID()) == null) {throw new DataAccessException("game does not exist");}
         deleteGame(game);
         createGame(game);
     }

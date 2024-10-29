@@ -124,6 +124,19 @@ public class DataAccessGameTest {
 
 
     };
+
+    @Test
+    @DisplayName("Update Game -")
+    void updateGameNeg() throws DataAccessException {
+        ChessGame game = new ChessGame();
+        GameData originalGame = new GameData(1,null,null,
+                "sample1", game);
+
+        assertThrows(Exception.class, ()->{gameDAO.updateGame(originalGame);});
+
+
+
+    };
     }
 
 
