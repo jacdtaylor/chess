@@ -1,8 +1,9 @@
 package dataaccess;
 
+import Exceptions.DataAccessException;
+import Exceptions.InvalidCredentialException;
 import com.google.gson.Gson;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.ResultSet;
@@ -10,8 +11,6 @@ import java.sql.SQLException;
 
 import static dataaccess.DatabaseManager.configureDatabase;
 import static dataaccess.DatabaseManager.executeUpdate;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.sql.Types.NULL;
 
 
 public class SqlUserDAO implements UserDAO{

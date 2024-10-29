@@ -1,20 +1,16 @@
 package dataaccess;
 
 
+import Exceptions.DataAccessException;
 import chess.*;
 import model.GameData;
-import model.UserData;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mindrot.jbcrypt.BCrypt;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import model.AuthData;
-
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 

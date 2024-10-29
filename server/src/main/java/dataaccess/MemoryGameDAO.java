@@ -1,11 +1,11 @@
 package dataaccess;
 
+import Exceptions.DataAccessException;
+import Exceptions.NonexistantGame;
 import model.GameData;
-import model.UserData;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class MemoryGameDAO implements GameDAO{
 

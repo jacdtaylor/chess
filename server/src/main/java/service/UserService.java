@@ -1,9 +1,12 @@
 package service;
 
+import Exceptions.DataAccessException;
+import Exceptions.GameManagerError;
+import Exceptions.InvalidCredentialException;
+import Exceptions.LoginException;
 import model.AuthData;
 import model.UserData;
 import dataaccess.*;
-import org.eclipse.jetty.util.log.Log;
 
 import java.util.UUID;
 

@@ -1,8 +1,7 @@
 package dataaccess;
 
+import Exceptions.DataAccessException;
 import model.AuthData;
-
-import javax.xml.crypto.Data;
 
 public interface AuthDAO {
 

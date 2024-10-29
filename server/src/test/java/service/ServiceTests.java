@@ -1,10 +1,11 @@
 package service;
+import Exceptions.DataAccessException;
+import Exceptions.GameManagerError;
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.JoinGameReq;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.*;
 
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package dataaccess;
+package Exceptions;
 
 public class UnauthorizationException extends RuntimeException {
     public UnauthorizationException(String message) {

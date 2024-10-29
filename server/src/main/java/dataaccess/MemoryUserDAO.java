@@ -1,10 +1,10 @@
 package dataaccess;
 
-import model.AuthData;
+import Exceptions.DataAccessException;
+import Exceptions.InvalidCredentialException;
 import model.UserData;
 
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class MemoryUserDAO implements UserDAO{
 
@@ -35,7 +35,7 @@ public class MemoryUserDAO implements UserDAO{
     }
 
     @Override
-    public boolean validateCredentials(UserData user) throws DataAccessException, InvalidCredentialException{
+    public boolean validateCredentials(UserData user) throws DataAccessException, InvalidCredentialException {
         UserData userRecord = userDataHash.get(user.username());
         if (userRecord == null) {
             throw new DataAccessException("User does not exist");

@@ -1,17 +1,18 @@
 package server;
 
+import Exceptions.DataAccessException;
+import Exceptions.GameManagerError;
+import Exceptions.UnauthorizationException;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.AuthData;
 import model.GameData;
 import model.JoinGameReq;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import service.GameService;
 import service.UserService;
 import spark.*;
 
-import javax.xml.crypto.Data;
 import java.util.Map;
 
 public class Server {

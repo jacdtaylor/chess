@@ -6,13 +6,12 @@ package service;
 
 import java.util.*;
 
+import Exceptions.DataAccessException;
+import Exceptions.GameManagerError;
 import chess.ChessBoard;
 import chess.ChessGame;
 import model.*;
 import dataaccess.*;
-import org.eclipse.jetty.util.log.Log;
-
-import javax.xml.crypto.Data;
 
 public class GameService {
 
