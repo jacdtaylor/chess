@@ -1,7 +1,12 @@
 package dataaccess;
 
+import model.UserData;
+
 import java.sql.*;
 import java.util.Properties;
+
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+import static java.sql.Types.NULL;
 
 public class DatabaseManager {
     private static final String DATABASE_NAME;
@@ -70,5 +75,51 @@ public class DatabaseManager {
         }
     }
 
+
+
+
+    static void configureDatabase(String[] createStatements) throws DataAccessException {
+        DatabaseManager.createDatabase();
+        try (var conn = DatabaseManager.getConnection()) {
+            for (var statement : createStatements) {
+                try (var preparedStatement = conn.prepareStatement(statement)) {
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            throw new DataAccessException(String.format("Unable to configure database: %s", e.getMessage()));
+        }
+    }
+
+    static int executeUpdate(String statement, Object... params) {
+        try (var conn = DatabaseManager.getConnection()) {
+            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
+                for (var i = 0; i < params.length; i++) {
+                    var param = params[i];
+                    switch (param) {
+                        case String p -> ps.setString(i + 1, p);
+                        case Integer p -> ps.setInt(i + 1, p);
+                        case UserData p -> ps.setString(i + 1, p.toString());
+                        case null -> ps.setNull(i + 1, NULL);
+                        default -> {
+                        }
+                    }
+                }
+                ps.executeUpdate();
+
+                var rs = ps.getGeneratedKeys();
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+
+                return 0;
+            }
+            catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } catch (SQLException | DataAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

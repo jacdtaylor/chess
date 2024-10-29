@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static dataaccess.DatabaseManager.configureDatabase;
+import static dataaccess.DatabaseManager.executeUpdate;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
@@ -20,15 +22,8 @@ public class SqlGameDAO implements GameDAO{
 
     public SqlGameDAO(){
         try {
-            configureDatabase();
-        } catch (DataAccessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
-    private final String[] createStatements = {
-            """
+            String[] createStatements = {
+                    """
             CREATE TABLE IF NOT EXISTS  game (
               `id` int NOT NULL,
               `name` varchar(256) NOT NULL,
@@ -38,21 +33,13 @@ public class SqlGameDAO implements GameDAO{
               INDEX(name)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
             """
-    };
-
-
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException e) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", e.getMessage()));
+            };
+            configureDatabase(createStatements);
+        } catch (DataAccessException e) {
+            throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public void createGame(GameData game) {
@@ -98,7 +85,7 @@ public class SqlGameDAO implements GameDAO{
 
 
 
-    public void deleteGame(GameData game)  {
+    public void deleteGame(GameData game) throws DataAccessException {
         var statement = "DELETE FROM game WHERE id=?";
         executeUpdate(statement, game.gameID());
     }
@@ -130,33 +117,5 @@ public class SqlGameDAO implements GameDAO{
     }
 
 
-    private void executeUpdate(String statement, Object... params)  {
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
-                for (var i = 0; i < params.length; i++) {
-                    var param = params[i];
-                    switch (param) {
-                        case String p -> ps.setString(i + 1, p);
-                        case Integer p -> ps.setInt(i + 1, p);
-                        case UserData p -> ps.setString(i + 1, p.toString());
-                        case null -> ps.setNull(i + 1, NULL);
-                        default -> {
-                        }
-                    }
-                }
-                ps.executeUpdate();
-
-                var rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    rs.getInt(1);
-                }
-
-            }
-            catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        } catch (SQLException | DataAccessException e) {
-            throw new RuntimeException("Database Error");
-        }}
 }
 
