@@ -51,17 +51,19 @@ public class SqlUserDAO implements UserDAO{
                 try (var ps = conn.prepareStatement(statement)) {
                     ps.setString(1, username);
                     try (var rs = ps.executeQuery()) {
-                        if (readUser(rs)==null) {throw new DataAccessException("Username not found");}
 
                         if (rs.next()) {
+
+//                            if (readUser(rs)==null) {throw new DataAccessException("Username not found");}
                             return readUser(rs);
                         }
+                        return null;
                     }
                 }
             } catch (Exception e) {
                 throw new DataAccessException(String.format("Unable to read data: %s", e.getMessage()));
             }
-            return null;
+
         }
 
 
