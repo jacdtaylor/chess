@@ -1,6 +1,7 @@
 package dataaccess;
 
 
+import chess.*;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeAll;
@@ -95,27 +96,38 @@ public class DataAccessGameTest {
         assertEquals(testList, returnedList);};
 
     @Test
-    @DisplayName("List Game +")
+    @DisplayName("List Game -")
     void listGameNeg() throws DataAccessException {
-        GameData sample1 = new GameData(1,null,null,"sample1", null);
-        GameData sample2 = new GameData(2,null,null,"sample2", null);
-        GameData sample3 = new GameData(3,null,null,"sample3", null);
         Set<GameData> testList = new HashSet<>();
-        testList.add(sample1);
-        testList.add(sample2);
-        testList.add(sample3);
-
-        gameDAO.createGame(sample1);
-        gameDAO.createGame(sample2);
-        gameDAO.createGame(sample3);
         Set<GameData> returnedList = new HashSet<>(gameDAO.listGames());
         assertEquals(testList, returnedList);
+    };
+
+
+    @Test
+    @DisplayName("Update Game +")
+    void updateGamePos() throws DataAccessException {
+        ChessGame game = new ChessGame();
+    GameData originalGame = new GameData(1,null,null,
+            "sample1", game);
+        gameDAO.createGame(originalGame);
+        try {
+            game.makeMove(new ChessMove(new ChessPosition(2,2), new ChessPosition(3,2), null));
+        } catch (InvalidMoveException e) {
+            throw new RuntimeException(e);
+        }
+        GameData newGame = new GameData(1,"homie","bro",
+                "sample1", game);
+        gameDAO.updateGame(newGame);
+
+        assertEquals(newGame.game().toString(), gameDAO.getGame(1).game().toString());
+
+
     };
     }
 
 
 
 //    void updateGame(GameData game) throws DataAccessException;
-//    Collection<GameData> listGames();
 
 

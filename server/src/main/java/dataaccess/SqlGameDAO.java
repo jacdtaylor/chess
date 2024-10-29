@@ -32,7 +32,7 @@ public class SqlGameDAO implements GameDAO{
             CREATE TABLE IF NOT EXISTS  game (
               `id` int NOT NULL,
               `name` varchar(256) NOT NULL,
-              `chessGame` varchar(256) NOT NULL,
+              `chessGame` longtext NOT NULL,
               `json` TEXT DEFAULT NULL,
               PRIMARY KEY (`id`),
               INDEX(name)
