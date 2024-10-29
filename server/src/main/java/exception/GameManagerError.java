@@ -1,4 +1,4 @@
-package Exceptions;
+package exception;
 
 public class GameManagerError extends RuntimeException {
     public GameManagerError(String message) {

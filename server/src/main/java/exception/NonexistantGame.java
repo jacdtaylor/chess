@@ -1,4 +1,4 @@
-package Exceptions;
+package exception;
 
 public class NonexistantGame extends RuntimeException {
     public NonexistantGame(String message) {

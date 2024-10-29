@@ -1,6 +1,6 @@
 package dataaccess;
 
-import Exceptions.DataAccessException;
+import exception.DataAccessException;
 import com.google.gson.Gson;
 import model.GameData;
 import chess.ChessGame;

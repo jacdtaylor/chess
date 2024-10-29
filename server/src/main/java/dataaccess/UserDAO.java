@@ -1,7 +1,7 @@
 package dataaccess;
 
-import Exceptions.DataAccessException;
-import Exceptions.InvalidCredentialException;
+import exception.DataAccessException;
+import exception.InvalidCredentialException;
 import model.UserData;
 
 public interface UserDAO {

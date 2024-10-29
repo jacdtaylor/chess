@@ -6,8 +6,8 @@ package service;
 
 import java.util.*;
 
-import Exceptions.DataAccessException;
-import Exceptions.GameManagerError;
+import exception.DataAccessException;
+import exception.GameManagerError;
 import chess.ChessBoard;
 import chess.ChessGame;
 import model.*;

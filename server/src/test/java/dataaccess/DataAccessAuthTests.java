@@ -1,7 +1,7 @@
 package dataaccess;
 
 
-import Exceptions.DataAccessException;
+import exception.DataAccessException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

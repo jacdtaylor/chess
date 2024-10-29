@@ -1,9 +1,9 @@
 package service;
 
-import Exceptions.DataAccessException;
-import Exceptions.GameManagerError;
-import Exceptions.InvalidCredentialException;
-import Exceptions.LoginException;
+import exception.DataAccessException;
+import exception.GameManagerError;
+import exception.InvalidCredentialException;
+import exception.LoginException;
 import model.AuthData;
 import model.UserData;
 import dataaccess.*;

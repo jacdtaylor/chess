@@ -1,7 +1,7 @@
 package dataaccess;
 
-import Exceptions.DataAccessException;
-import Exceptions.NonexistantGame;
+import exception.DataAccessException;
+import exception.NonexistantGame;
 import model.GameData;
 
 import java.util.Collection;

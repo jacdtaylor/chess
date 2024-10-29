@@ -1,8 +1,8 @@
 package server;
 
-import Exceptions.DataAccessException;
-import Exceptions.GameManagerError;
-import Exceptions.UnauthorizationException;
+import exception.DataAccessException;
+import exception.GameManagerError;
+import exception.UnauthorizationException;
 import com.google.gson.Gson;
 import dataaccess.*;
 import model.AuthData;
