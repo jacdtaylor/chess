@@ -3,8 +3,9 @@ package dataaccess;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
+import model.JoinGameReq;
 import model.UserData;
-
+import chess.ChessGame;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
 
 public class SqlGameDAO implements GameDAO{
+
 
     public SqlGameDAO(){
         try {
@@ -30,6 +32,7 @@ public class SqlGameDAO implements GameDAO{
             CREATE TABLE IF NOT EXISTS  game (
               `id` int NOT NULL,
               `name` varchar(256) NOT NULL,
+              `chessGame` varchar(256) NOT NULL,
               `json` TEXT DEFAULT NULL,
               PRIMARY KEY (`id`),
               INDEX(name)
@@ -53,9 +56,10 @@ public class SqlGameDAO implements GameDAO{
 
     @Override
     public void createGame(GameData game) {
-    var statement = "INSERT INTO game (id, name, json) VALUES (?, ?, ?)";
+    var statement = "INSERT INTO game (id, name, chessGame, json) VALUES (?, ?, ?, ?)";
+    var chessjson = new Gson().toJson(game.game());
     var json = new Gson().toJson(game);
-        executeUpdate(statement,game.gameID(), game.gameName(), json);
+    executeUpdate(statement,game.gameID(), game.gameName(),chessjson ,json);
     }
 
     @Override
@@ -72,12 +76,17 @@ public class SqlGameDAO implements GameDAO{
     @Override
     public GameData getGame(int id) {
         try (var conn = DatabaseManager.getConnection()) {
-            var statement = "SELECT json FROM game WHERE id=?";
+            var statement = "SELECT json, chessGame FROM game WHERE id=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, id);
                 try (var rs = ps.executeQuery()) {
                     if (rs.next()) {
-                        return readGame(rs);
+//                        return readGame(rs);
+                        GameData oldData = readGame(rs);
+                        String stringChessGame = rs.getString("chessGame");
+                        ChessGame newChessGame = new Gson().fromJson(stringChessGame, ChessGame.class);
+                        return new GameData(oldData.gameID(),oldData.whiteUsername(),
+                                oldData.blackUsername(),oldData.gameName(), newChessGame);
                     }
                 }
             }
