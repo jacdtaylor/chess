@@ -2,6 +2,7 @@ package server;
 
 import com.google.gson.Gson;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 
 import java.io.*;
@@ -21,22 +22,22 @@ public class ServerFacade {
         return this.makeRequest("POST", path, user, AuthData.class);
     }
 
-    public void deletePet(int id) {
-        var path = String.format("/pet/%s", id);
+    public AuthData loginUser(UserData user) {
+        var path = "/session";
+        return this.makeRequest("DELETE", path, user, AuthData.class);
+    }
+
+    public void clearDB(){
+        var path = "/db";
         this.makeRequest("DELETE", path, null, null);
     }
 
-    public void deleteAllPets() throws ResponseException {
-        var path = "/pet";
-        this.makeRequest("DELETE", path, null, null);
-    }
-
-    public Pet[] listPets() throws ResponseException {
-        var path = "/pet";
-        record listPetResponse(Pet[] pet) {
+    public GameData[] listGames() {
+        var path = "/game";
+        record listGameDataResponse(GameData[] gameData) {
         }
-        var response = this.makeRequest("GET", path, null, listPetResponse.class);
-        return response.pet();
+        var response = this.makeRequest("GET", path, null, listGameDataResponse.class);
+        return response.gameData();
     }
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
