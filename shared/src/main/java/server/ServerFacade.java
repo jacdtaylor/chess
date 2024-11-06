@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import exception.ResponseException;
 import model.AuthData;
 import model.GameData;
 import model.JoinGameReq;
@@ -18,27 +19,27 @@ public class ServerFacade {
     }
 
 
-    public AuthData registerUser(UserData user){
+    public AuthData registerUser(UserData user) throws Exception {
         var path = "/user";
         return this.makeRequest("POST", path, user, AuthData.class, null);
     }
 
-    public AuthData loginUser(UserData user) {
+    public AuthData loginUser(UserData user) throws Exception {
         var path = "/session";
         return this.makeRequest("DELETE", path, user, AuthData.class, null);
     }
 
-    public void logoutUser(String authToken) {
+    public void logoutUser(String authToken) throws Exception {
         var path = "/session";
         this.makeRequest("DELETE", path, authToken, AuthData.class, null);
     }
 
-    public void clearDB(){
+    public void clearDB() throws Exception {
         var path = "/db";
         this.makeRequest("DELETE", path, null, null, null);
     }
 
-    public GameData[] listGames(String auth) {
+    public GameData[] listGames(String auth) throws Exception {
         var path = "/game";
         record listGameDataResponse(GameData[] gameData) {
         }
@@ -46,23 +47,22 @@ public class ServerFacade {
         return response.gameData();
     }
 
-    public int createGame(String auth) {
+    public int createGame(String gameName, String auth) throws Exception {
         var path = "/game";
         record createGameDataResponse(int id) {
         }
-        var response = this.makeRequest("POST", path, null, createGameDataResponse.class, auth);
+        var response = this.makeRequest("POST", path, gameName, createGameDataResponse.class, auth);
         return response.id();
     }
 
-    public void joinGame(String auth) {
-        JoinGameReq req = new JoinGameReq("WHITE", 1);
+    public void joinGame(JoinGameReq req,String auth) throws Exception {
         var path = "/game";
         this.makeRequest("PUT",path,req,null,auth);
     }
 
 
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String auth) throws ResponseException {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String auth) throws Exception {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -74,7 +74,7 @@ public class ServerFacade {
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (Exception ex) {
-            throw new ResponseException(500, ex.getMessage());
+            throw new Exception(ex.getMessage());
         }
     }
 

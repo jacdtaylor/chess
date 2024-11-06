@@ -10,12 +10,14 @@ import ChessClients.PreLoginClient;
 import java.util.Scanner;
 
 public class ChessRepl {
+String auth;
 String serverUrl;
 PreLoginClient preLoginClient;
 LoginClient loginClient;
 GameClient gameClient;
-    public ChessRepl(String serverUrl) {
+    public ChessRepl(String serverUrl, String authToken) {
         serverUrl = serverUrl;
+        auth = authToken;
         preLoginClient = new PreLoginClient(serverUrl);
         loginClient = new LoginClient(serverUrl);
         gameClient = new GameClient(serverUrl);
@@ -48,10 +50,10 @@ GameClient gameClient;
                 System.out.print(result);
 
                 if (result.equals("welcome")) {
-                    new ChessRepl(serverUrl).run("postLogin");
+                    new ChessRepl(serverUrl, auth).run("postLogin");
                 }
                 if (result.equals("game joined successfully")) {
-                    new ChessRepl(serverUrl).run("gameLogin");
+                    new ChessRepl(serverUrl, auth).run("gameLogin");
                 }
 
             } catch (Throwable e) {
