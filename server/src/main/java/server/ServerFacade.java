@@ -3,6 +3,7 @@ package server;
 import com.google.gson.Gson;
 import model.AuthData;
 import model.GameData;
+import model.JoinGameReq;
 import model.UserData;
 
 import java.io.*;
@@ -19,28 +20,49 @@ public class ServerFacade {
 
     public AuthData registerUser(UserData user){
         var path = "/user";
-        return this.makeRequest("POST", path, user, AuthData.class);
+        return this.makeRequest("POST", path, user, AuthData.class, null);
     }
 
     public AuthData loginUser(UserData user) {
         var path = "/session";
-        return this.makeRequest("DELETE", path, user, AuthData.class);
+        return this.makeRequest("DELETE", path, user, AuthData.class, null);
+    }
+
+    public void logoutUser(String authToken) {
+        var path = "/session";
+        this.makeRequest("DELETE", path, authToken, AuthData.class, null);
     }
 
     public void clearDB(){
         var path = "/db";
-        this.makeRequest("DELETE", path, null, null);
+        this.makeRequest("DELETE", path, null, null, null);
     }
 
-    public GameData[] listGames() {
+    public GameData[] listGames(String auth) {
         var path = "/game";
         record listGameDataResponse(GameData[] gameData) {
         }
-        var response = this.makeRequest("GET", path, null, listGameDataResponse.class);
+        var response = this.makeRequest("GET", path, null, listGameDataResponse.class, auth);
         return response.gameData();
     }
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass) throws ResponseException {
+    public int createGame(String auth) {
+        var path = "/game";
+        record createGameDataResponse(int id) {
+        }
+        var response = this.makeRequest("POST", path, null, createGameDataResponse.class, auth);
+        return response.id();
+    }
+
+    public void joinGame(String auth) {
+        JoinGameReq req = new JoinGameReq("WHITE", 1);
+        var path = "/game";
+        this.makeRequest("PUT",path,req,null,auth);
+    }
+
+
+
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String auth) throws ResponseException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
