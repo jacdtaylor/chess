@@ -19,27 +19,27 @@ public class ServerFacade {
     }
 
 
-    public AuthData registerUser(UserData user) throws Exception {
+    public AuthData registerUser(UserData user) throws ResponseException {
         var path = "/user";
         return this.makeRequest("POST", path, user, AuthData.class, null);
     }
 
-    public AuthData loginUser(UserData user) throws Exception {
+    public AuthData loginUser(UserData user) throws ResponseException {
         var path = "/session";
-        return this.makeRequest("DELETE", path, user, AuthData.class, null);
+        return this.makeRequest("POST", path, user, AuthData.class, null);
     }
 
-    public void logoutUser(String authToken) throws Exception {
+    public void logoutUser(String authToken) throws ResponseException {
         var path = "/session";
         this.makeRequest("DELETE", path, authToken, AuthData.class, null);
     }
 
-    public void clearDB() throws Exception {
+    public void clearDB() throws ResponseException {
         var path = "/db";
         this.makeRequest("DELETE", path, null, null, null);
     }
 
-    public GameData[] listGames(String auth) throws Exception {
+    public GameData[] listGames(String auth) throws ResponseException {
         var path = "/game";
         record listGameDataResponse(GameData[] gameData) {
         }
@@ -47,7 +47,7 @@ public class ServerFacade {
         return response.gameData();
     }
 
-    public int createGame(String gameName, String auth) throws Exception {
+    public int createGame(String gameName, String auth) throws ResponseException {
         var path = "/game";
         record createGameDataResponse(int id) {
         }
@@ -55,14 +55,14 @@ public class ServerFacade {
         return response.id();
     }
 
-    public void joinGame(JoinGameReq req,String auth) throws Exception {
+    public void joinGame(JoinGameReq req,String auth) throws ResponseException {
         var path = "/game";
         this.makeRequest("PUT",path,req,null,auth);
     }
 
 
 
-    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String auth) throws Exception {
+    private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String auth) throws ResponseException {
         try {
             URL url = (new URI(serverUrl + path)).toURL();
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -74,7 +74,7 @@ public class ServerFacade {
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (Exception ex) {
-            throw new Exception(ex.getMessage());
+            throw new ResponseException(500, ex.getMessage());
         }
     }
 

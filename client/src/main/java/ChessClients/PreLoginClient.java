@@ -1,5 +1,6 @@
 package ChessClients;
 
+import exception.ResponseException;
 import model.AuthData;
 import model.UserData;
 import server.ServerFacade;
@@ -33,18 +34,16 @@ public class PreLoginClient {
     }}
 
 
-    public String Login(String... params) {
+    public String Login(String... params) throws Exception {
         UserData user = new UserData(params[0],params[1]);
-//        AuthData result = server.loginUser(user);
-        return "We would login here";
-//        return result.authToken();
+        AuthData result = server.loginUser(user);
+        return result.authToken();
     }
 
-    public String Register(String... params) {
+    public String Register(String... params) throws ResponseException {
         UserData user = new UserData(params[0],params[1]);
-//        AuthData result = server.registerUser(user);
-        return "We would Register Here";
-//        return result.authToken();
+        AuthData result = server.registerUser(user);
+        return result.authToken();
 
     }
     public String getHelp() {

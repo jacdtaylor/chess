@@ -6,6 +6,7 @@ package ChessRepl;//package client;
 import ChessClients.GameClient;
 import ChessClients.LoginClient;
 import ChessClients.PreLoginClient;
+import utility.validUUID;
 
 import java.util.Scanner;
 
@@ -46,12 +47,13 @@ GameClient gameClient;
                     case "gameLogin" -> result = gameClient.eval(line);
                     default -> result = preLoginClient.eval(line);
                 }
+                if (validUUID.isValidUUID(result)) {
+                    new ChessRepl(serverUrl, result).run("postLogin");}
 
-                System.out.print(result);
+                else {System.out.print(result);}
 
-                if (result.equals("welcome")) {
-                    new ChessRepl(serverUrl, auth).run("postLogin");
-                }
+
+
                 if (result.equals("game joined successfully")) {
                     new ChessRepl(serverUrl, auth).run("gameLogin");
                 }
