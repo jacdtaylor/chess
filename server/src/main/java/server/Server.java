@@ -33,7 +33,6 @@ public class Server {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
-
         // Register your endpoints and handle exceptions here.
         Spark.delete("/db", this::clearDB);
         Spark.post("/user", this::registerUser);

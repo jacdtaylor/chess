@@ -19,17 +19,17 @@ public class PreLoginClient {
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
         try {
         return switch (cmd) {
-            case "login" -> "welcome";
+            case "login" -> Login(params);
             case "register" -> "REGISTER FUNCTIONALITY";
             case "quit" -> "GOODBYE";
             default -> "HELP";
         };
     } catch (Exception ex) {
         return ex.getMessage();
+    }}
+
+
+    public String Login(String... params) {
+
     }
-
-
-
-    }
-
 }
