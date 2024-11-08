@@ -1,13 +1,13 @@
 package ChessClients;
 
+import server.ServerFacade;
+
 import java.util.Arrays;
 
 public class GameClient {
-
-    private final String serverUrl;
-    public GameClient(String serverUrl) {
-//        server = new ServerFacade(serverUrl);
-        this.serverUrl = serverUrl;
+    private final ServerFacade server;
+    public GameClient(ServerFacade server) {
+        this.server = server;
 //        this.notificationHandler = notificationHandler;
     }
 

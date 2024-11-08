@@ -1,5 +1,7 @@
 
 import ChessRepl.ChessRepl;
+import server.ServerFacade;
+
 public class ClientMain {
     public static void main(String[] args) {
         var serverUrl = "http://localhost:8080";
@@ -7,7 +9,7 @@ public class ClientMain {
             serverUrl = args[0];
         }
 
-        new ChessRepl(serverUrl, null).run("prelogin");
+        new ChessRepl(new ServerFacade(serverUrl), null).run("prelogin");
     }
 
 }

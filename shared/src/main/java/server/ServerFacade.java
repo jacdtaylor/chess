@@ -9,6 +9,7 @@ import model.UserData;
 
 import java.io.*;
 import java.net.*;
+import java.util.Collection;
 
 public class ServerFacade {
 
@@ -31,7 +32,7 @@ public class ServerFacade {
 
     public void logoutUser(String authToken) throws ResponseException {
         var path = "/session";
-        this.makeRequest("DELETE", path, authToken, AuthData.class, null);
+        this.makeRequest("DELETE", path, null, null, authToken);
     }
 
     public void clearDB() throws ResponseException {
@@ -39,19 +40,20 @@ public class ServerFacade {
         this.makeRequest("DELETE", path, null, null, null);
     }
 
-    public GameData[] listGames(String auth) throws ResponseException {
+    public Collection<GameData> listGames(String auth) throws ResponseException {
         var path = "/game";
-        record listGameDataResponse(GameData[] gameData) {
+        record listGameDataResponse(Collection<GameData > games) {
         }
         var response = this.makeRequest("GET", path, null, listGameDataResponse.class, auth);
-        return response.gameData();
+        return response.games();
     }
 
     public int createGame(String gameName, String auth) throws ResponseException {
         var path = "/game";
         record createGameDataResponse(int id) {
         }
-        var response = this.makeRequest("POST", path, gameName, createGameDataResponse.class, auth);
+        GameData gameReq = new GameData(-999,null,null,gameName,null);
+        var response = this.makeRequest("POST", path, gameReq, createGameDataResponse.class, auth);
         return response.id();
     }
 
@@ -64,10 +66,14 @@ public class ServerFacade {
 
     private <T> T makeRequest(String method, String path, Object request, Class<T> responseClass, String auth) throws ResponseException {
         try {
+
             URL url = (new URI(serverUrl + path)).toURL();
+
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod(method);
             http.setDoOutput(true);
+            if (auth != null) {
+            http.setRequestProperty("authorization", auth); }
 
             writeBody(request, http);
             http.connect();

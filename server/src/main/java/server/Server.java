@@ -105,10 +105,13 @@ public class Server {
         String auth = req.headers("authorization");
         var list = gameService.gameList(auth).toArray();
         res.status(200);
+
+
         return new Gson().toJson(Map.of("games", list));
     }
 
     private Object createGame(Request req, Response res) throws UnauthorizationException, DataAccessException {
+
         String auth = req.headers("authorization");
         GameData body = new Gson().fromJson(req.body(), GameData.class);
         res.status(200);

@@ -2,6 +2,7 @@ package ChessClients;
 
 import exception.ResponseException;
 import model.GameData;
+import model.JoinGameReq;
 import server.ServerFacade;
 
 import java.util.Arrays;
@@ -25,9 +26,9 @@ public class LoginClient {
         try {
             return switch (cmd) {
                 case "list" -> returnList();
-                case "join" -> "game joined successfully";
+                case "join" -> joinGame(params);
                 case "create" -> createGame(params);
-                case "logout" -> "GOODBYE";
+                case "logout" -> logout();
                 default -> "HELP";
             };
         } catch (Exception ex) {
@@ -49,6 +50,19 @@ public class LoginClient {
         server.createGame(params[0],auth);
         return "Game Created Successfully";
 
+    }
+
+    public String joinGame(String... params) throws ResponseException {
+        JoinGameReq req = new JoinGameReq(params[0],Integer.parseInt(params[1]));
+        server.joinGame(req, auth);
+
+
+        return "game joined";
+    }
+
+    public String logout() throws ResponseException {
+        server.logoutUser(auth);
+        return "GOODBYE";
     }
 
 }
