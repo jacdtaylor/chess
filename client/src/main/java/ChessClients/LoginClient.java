@@ -5,15 +5,14 @@ import model.GameData;
 import server.ServerFacade;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 public class LoginClient {
     private final String auth;
-    private final String serverUrl;
     private final ServerFacade server;
-    public LoginClient(String serverUrl, String auth) {
-        server = new ServerFacade(serverUrl);
+    public LoginClient(ServerFacade server, String auth) {
+        this.server = server;
         this.auth = auth;
-        this.serverUrl = serverUrl;
 //        this.notificationHandler = notificationHandler;
     }
 
@@ -25,9 +24,9 @@ public class LoginClient {
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
         try {
             return switch (cmd) {
-                case "list" -> returnList(auth);
+                case "list" -> returnList();
                 case "join" -> "game joined successfully";
-                case "create" -> "create game here";
+                case "create" -> createGame(params);
                 case "logout" -> "GOODBYE";
                 default -> "HELP";
             };
@@ -40,9 +39,15 @@ public class LoginClient {
     }
 
 
-    public String returnList(String auth) throws ResponseException {
-        GameData[] retrievedList = server.listGames(auth);
+    public String returnList() throws ResponseException {
+        Collection<GameData> retrievedList = server.listGames(auth);
+        return retrievedList.toString();
+    }
 
+
+    public String createGame(String... params) throws ResponseException {
+        server.createGame(params[0],auth);
+        return "Game Created Successfully";
 
     }
 
