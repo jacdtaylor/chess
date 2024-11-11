@@ -9,7 +9,7 @@ public class ClientMain {
             serverUrl = args[0];
         }
 
-        new ChessRepl(new ServerFacade(serverUrl), null).run("prelogin");
+        new ChessRepl(new ServerFacade(serverUrl), null, null).run("prelogin");
     }
 
 }

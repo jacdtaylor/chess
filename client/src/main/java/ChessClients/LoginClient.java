@@ -8,6 +8,7 @@ import server.ServerFacade;
 import java.util.Arrays;
 import java.util.Collection;
 
+
 public class LoginClient {
     private final String auth;
     private final ServerFacade server;
@@ -46,7 +47,21 @@ public class LoginClient {
 
     public String returnList() throws ResponseException {
         Collection<GameData> retrievedList = server.listGames(auth);
-        return retrievedList.toString();
+        String finalVar = """
+                CurrentGames
+                """;
+        finalVar += "\n";
+
+        for (GameData item : retrievedList) {
+            String whiteResult = item.whiteUsername() == null ? "empty" : item.whiteUsername();
+            String blackResult = item.blackUsername() == null ? "empty" : item.blackUsername();
+
+            finalVar += String.format("%d.\tGame: %s\tWhite: %s\tBlack: %s\t",
+                    item.gameID(),item.gameName(),whiteResult ,blackResult);
+            finalVar += "\n";
+        }
+
+        return finalVar;
     }
 
 
@@ -58,7 +73,7 @@ public class LoginClient {
     public String joinGame(String... params) throws ResponseException {
         JoinGameReq req = new JoinGameReq(params[0],Integer.parseInt(params[1]));
         server.joinGame(req, auth);
-        return "game joined";
+        return String.format("Join Game %s", params[1]);
     }
 
     public String logout() throws ResponseException {

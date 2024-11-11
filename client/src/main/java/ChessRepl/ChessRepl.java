@@ -17,13 +17,15 @@ String serverUrl;
 PreLoginClient preLoginClient;
 LoginClient loginClient;
 GameClient gameClient;
+Integer gameID;
 private final ServerFacade server;
-    public ChessRepl(ServerFacade server, String authToken) {
+    public ChessRepl(ServerFacade server, String authToken, Integer gameID) {
         auth = authToken;
+        this.gameID = gameID;
         this.server = server;
         preLoginClient = new PreLoginClient(server);
         loginClient = new LoginClient(server, auth);
-        gameClient = new GameClient(server);
+        gameClient = new GameClient(server, auth, gameID);
 
     }
 
@@ -52,15 +54,20 @@ private final ServerFacade server;
                     default -> result = preLoginClient.eval(line);
                 }
                 if (validUUID.isValidUUID(result)) {
-                    new ChessRepl(server, result).run("postLogin");}
+                    new ChessRepl(server, result, gameID).run("postLogin");}
+
+
+                else if (result.contains("Join Game")) {
+                    String numberString = result.replaceAll("[^0-9]", "");
+                    int newID = Integer.parseInt(numberString);
+                    new ChessRepl(server, auth, newID).run("gameLogin");
+                }
+
 
                 else {System.out.print(result);}
 
 
 
-                if (result.equals("game joined successfully")) {
-                    new ChessRepl(server, auth).run("gameLogin");
-                }
 
             } catch (Throwable e) {
                 var msg = e.toString();

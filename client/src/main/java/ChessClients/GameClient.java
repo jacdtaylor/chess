@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class GameClient {
     private final ServerFacade server;
-    public GameClient(ServerFacade server) {
+    public GameClient(ServerFacade server, String Auth, Integer gameID) {
         this.server = server;
 //        this.notificationHandler = notificationHandler;
     }
