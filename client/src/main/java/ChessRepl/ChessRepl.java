@@ -28,11 +28,7 @@ private final ServerFacade server;
     }
 
     public void run(String clientVersion) {
-        switch (clientVersion) {
-            case "postLogin" -> System.out.println("Enter Post Login Repl");
-            case "gameLogin" -> System.out.println("Enter Game Repl");
-            default ->          System.out.println("Welcome to Chess, Please Login or Register :D");
-        }
+
 
 
 //        System.out.print(client.help());
@@ -40,7 +36,13 @@ private final ServerFacade server;
         Scanner scanner = new Scanner(System.in);
         var result = "";
         while (!result.equals("GOODBYE")) {
+            switch (clientVersion) {
+                case "postLogin" -> System.out.print("[AUTHORIZED]");
+                case "gameLogin" -> System.out.print("[INGAME]");
+                default ->          System.out.print("[UNAUTHORIZED]");
+            }
             printPrompt();
+
             String line = scanner.nextLine();
 
             try {

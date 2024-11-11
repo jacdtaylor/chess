@@ -27,6 +27,7 @@ public class LoginClient {
             return switch (cmd) {
                 case "list" -> returnList();
                 case "join" -> joinGame(params);
+                case "observe" -> observeGame();
                 case "create" -> createGame(params);
                 case "logout" -> logout();
                 default -> "HELP";
@@ -39,6 +40,9 @@ public class LoginClient {
 
     }
 
+    public String observeGame() {
+        return "We be lookin'";
+    }
 
     public String returnList() throws ResponseException {
         Collection<GameData> retrievedList = server.listGames(auth);
@@ -49,14 +53,11 @@ public class LoginClient {
     public String createGame(String... params) throws ResponseException {
         server.createGame(params[0],auth);
         return "Game Created Successfully";
-
     }
 
     public String joinGame(String... params) throws ResponseException {
         JoinGameReq req = new JoinGameReq(params[0],Integer.parseInt(params[1]));
         server.joinGame(req, auth);
-
-
         return "game joined";
     }
 
