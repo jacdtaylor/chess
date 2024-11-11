@@ -4,7 +4,7 @@ import exception.ResponseException;
 import model.GameData;
 import model.JoinGameReq;
 import server.ServerFacade;
-
+import ui.*;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -76,10 +76,19 @@ public class LoginClient {
         Collection<GameData> allGames = server.listGames(auth);
         GameData[] gameArray = allGames.toArray(new GameData[0]);
         int id = Integer.parseInt(params[1]);
-        int newID = gameArray[id - 1].gameID();
-        JoinGameReq req = new JoinGameReq(params[0],newID);
-        server.joinGame(req, auth);
-        return String.format("Join Game %s", params[1]);
+
+        GameData currentGame = gameArray[id - 1];
+        int newID = currentGame.gameID();
+
+//        JoinGameReq req = new JoinGameReq(params[0],newID);
+//        server.joinGame(req, auth);
+
+
+
+        return
+                VisualizeBoard.produceWhiteBoard(currentGame.game().getBoard()) +
+                VisualizeBoard.produceBlackBoard(currentGame.game().getBoard());
+//        return String.format("Join Game %s", params[1]);
     }
 
 
