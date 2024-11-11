@@ -31,6 +31,7 @@ public class LoginClient {
                 case "observe" -> observeGame();
                 case "create" -> createGame(params);
                 case "logout" -> logout();
+
                 default -> "HELP";
             };
         } catch (Exception ex) {
@@ -51,14 +52,15 @@ public class LoginClient {
                 CurrentGames
                 """;
         finalVar += "\n";
-
+        int num = 1;
         for (GameData item : retrievedList) {
             String whiteResult = item.whiteUsername() == null ? "empty" : item.whiteUsername();
             String blackResult = item.blackUsername() == null ? "empty" : item.blackUsername();
 
             finalVar += String.format("%d.\tGame: %s\tWhite: %s\tBlack: %s\t",
-                    item.gameID(),item.gameName(),whiteResult ,blackResult);
+                    num,item.gameName(),whiteResult ,blackResult);
             finalVar += "\n";
+            num+=1;
         }
 
         return finalVar;
@@ -71,14 +73,20 @@ public class LoginClient {
     }
 
     public String joinGame(String... params) throws ResponseException {
-        JoinGameReq req = new JoinGameReq(params[0],Integer.parseInt(params[1]));
+        Collection<GameData> allGames = server.listGames(auth);
+        GameData[] gameArray = allGames.toArray(new GameData[0]);
+        int id = Integer.parseInt(params[1]);
+        int newID = gameArray[id - 1].gameID();
+        JoinGameReq req = new JoinGameReq(params[0],newID);
         server.joinGame(req, auth);
         return String.format("Join Game %s", params[1]);
     }
+
 
     public String logout() throws ResponseException {
         server.logoutUser(auth);
         return "GOODBYE";
     }
+
 
 }

@@ -25,6 +25,7 @@ public class PreLoginClient {
             case "login" -> Login(params);
             case "register" -> Register(params);
             case "quit" -> "GOODBYE";
+            case "clear" -> clearDB();
             default -> getHelp();
         };
     } catch (Exception ex) {
@@ -53,5 +54,10 @@ public class PreLoginClient {
                quit
                """
                 ;
+    }
+
+    public String clearDB() throws ResponseException {
+        server.clearAll();
+        return "CLEARED\n";
     }
 }
