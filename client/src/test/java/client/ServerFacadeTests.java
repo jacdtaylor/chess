@@ -1,6 +1,6 @@
 package client;
 
-import exception.ResponseException;
+import exceptions.ResponseException;
 import model.AuthData;
 import model.GameData;
 import model.JoinGameReq;

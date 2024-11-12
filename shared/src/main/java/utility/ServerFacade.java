@@ -1,7 +1,7 @@
 package utility;
 
 import com.google.gson.Gson;
-import exception.ResponseException;
+import exceptions.ResponseException;
 import model.AuthData;
 import model.GameData;
 import model.JoinGameReq;
@@ -80,7 +80,7 @@ public class ServerFacade {
             throwIfNotSuccessful(http);
             return readBody(http, responseClass);
         } catch (Exception ex) {
-            throw new ResponseException(500, ex.getMessage());
+            throw new ResponseException(ex.getMessage());
         }
     }
 
@@ -98,7 +98,7 @@ public class ServerFacade {
     private void throwIfNotSuccessful(HttpURLConnection http) throws IOException, ResponseException {
         var status = http.getResponseCode();
         if (!isSuccessful(status)) {
-            throw new ResponseException(status, "failure: " + status);
+            throw new ResponseException("failure");
         }
     }
 

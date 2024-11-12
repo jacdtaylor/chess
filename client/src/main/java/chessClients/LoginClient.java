@@ -1,6 +1,6 @@
 package chessClients;
 
-import exception.ResponseException;
+import exceptions.ResponseException;
 import model.GameData;
 import model.JoinGameReq;
 import utility.ServerFacade;
