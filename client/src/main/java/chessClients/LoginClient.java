@@ -1,14 +1,13 @@
-package ChessClients;
+package chessClients;
 
 import exception.ResponseException;
 import model.GameData;
 import model.JoinGameReq;
-import server.ServerFacade;
+import utility.ServerFacade;
 import ui.*;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static chess.ChessGame.TeamColor.WHITE;
 import static ui.EscapeSequences.RESET_TEXT_COLOR;
 import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
 

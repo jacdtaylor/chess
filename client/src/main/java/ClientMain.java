@@ -1,6 +1,6 @@
 
-import ChessRepl.ChessRepl;
-import server.ServerFacade;
+import chessRepl.ChessRepl;
+import utility.ServerFacade;
 
 public class ClientMain {
     public static void main(String[] args) {

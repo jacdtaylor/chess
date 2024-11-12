@@ -1,9 +1,9 @@
-package ChessClients;
+package chessClients;
 
 import exception.ResponseException;
 import model.AuthData;
 import model.UserData;
-import server.ServerFacade;
+import utility.ServerFacade;
 
 import java.util.Arrays;
 
@@ -24,8 +24,8 @@ public class PreLoginClient {
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
         try {
         return switch (cmd) {
-            case "login" -> Login(params);
-            case "register" -> Register(params);
+            case "login" -> login(params);
+            case "register" -> register(params);
             case "quit" -> "GOODBYE";
             case "clear" -> clearDB();
             default -> getHelp();
@@ -35,7 +35,7 @@ public class PreLoginClient {
     }}
 
 
-    public String Login(String... params) throws Exception {
+    public String login(String... params) throws Exception {
         if (params.length > 2 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
         }
         try {
@@ -49,7 +49,7 @@ public class PreLoginClient {
         }
     }
 
-    public String Register(String... params) {
+    public String register(String... params) {
         if (params.length > 2 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
         }
         try {UserData user = new UserData(params[0],params[1]);

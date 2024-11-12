@@ -1,6 +1,6 @@
-package ChessClients;
+package chessClients;
 
-import server.ServerFacade;
+import utility.ServerFacade;
 
 import java.util.Arrays;
 

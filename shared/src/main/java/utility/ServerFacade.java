@@ -1,4 +1,4 @@
-package server;
+package utility;
 
 import com.google.gson.Gson;
 import exception.ResponseException;
@@ -38,18 +38,18 @@ public class ServerFacade {
 
     public Collection<GameData> listGames(String auth) throws ResponseException {
         var path = "/game";
-        record listGameDataResponse(Collection<GameData> games) {
+        record ListGameDataResponse(Collection<GameData> games) {
         }
-        var response = this.makeRequest("GET", path, null, listGameDataResponse.class, auth);
+        var response = this.makeRequest("GET", path, null, ListGameDataResponse.class, auth);
         return response.games();
     }
 
     public int createGame(String gameName, String auth) throws ResponseException {
         var path = "/game";
-        record createGameDataResponse(int id) {
+        record CreateGameDataResponse(int id) {
         }
         GameData gameReq = new GameData(-999,null,null,gameName,null);
-        var response = this.makeRequest("POST", path, gameReq, createGameDataResponse.class, auth);
+        var response = this.makeRequest("POST", path, gameReq, CreateGameDataResponse.class, auth);
         return response.id();
     }
 

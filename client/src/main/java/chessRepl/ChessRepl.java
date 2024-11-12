@@ -1,13 +1,13 @@
-package ChessRepl;//package client;
+package chessRepl;//package client;
 
 //import client.websocket.NotificationHandler;
 //import webSocketMessages.Notification;
 
-import ChessClients.GameClient;
-import ChessClients.LoginClient;
-import ChessClients.PreLoginClient;
-import server.ServerFacade;
-import utility.validUUID;
+import chessClients.GameClient;
+import chessClients.LoginClient;
+import chessClients.PreLoginClient;
+import utility.ServerFacade;
+import utility.ValidUUID;
 
 import java.util.Scanner;
 
@@ -53,7 +53,7 @@ private final ServerFacade server;
                     case "gameLogin" -> result = gameClient.eval(line);
                     default -> result = preLoginClient.eval(line);
                 }
-                if (validUUID.isValidUUID(result)) {
+                if (ValidUUID.isValidUUID(result)) {
                     new ChessRepl(server, result, gameID).run("postLogin");}
 
 

@@ -7,8 +7,8 @@ import model.JoinGameReq;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
-import server.ServerFacade;
-import utility.validUUID;
+import utility.ServerFacade;
+import utility.ValidUUID;
 
 import java.util.Collection;
 
@@ -28,9 +28,14 @@ public class ServerFacadeTests {
         facade.clearAll();
     }
 
+    @AfterEach
+    void clear() throws ResponseException {
+        facade.clearAll();
+
+    }
+
     @AfterAll
     static void stopServer() throws ResponseException {
-        facade.clearAll();
         server.stop();
     }
 
@@ -39,7 +44,7 @@ public class ServerFacadeTests {
     public void registerTestPos() throws ResponseException {
         UserData testUser = new UserData("username", "pass");
         AuthData auth = facade.registerUser(testUser);
-        Assertions.assertTrue(validUUID.isValidUUID(auth.authToken()));
+        Assertions.assertTrue(ValidUUID.isValidUUID(auth.authToken()));
     }
 
     @Test
@@ -58,7 +63,7 @@ public class ServerFacadeTests {
         AuthData auth = facade.registerUser(testUser);
         facade.logoutUser(auth.authToken());
         AuthData auth2 = facade.loginUser(testUser);
-        Assertions.assertTrue(validUUID.isValidUUID(auth2.authToken()));
+        Assertions.assertTrue(ValidUUID.isValidUUID(auth2.authToken()));
     }
 
     @Test
@@ -103,8 +108,8 @@ public class ServerFacadeTests {
         UserData testUser = new UserData("username", "pass");
         AuthData auth = facade.registerUser(testUser);
 
-        int ID = facade.createGame("Game", auth.authToken());
-        Assertions.assertEquals(0, ID);
+        int id = facade.createGame("Game", auth.authToken());
+        Assertions.assertEquals(0, id);
     }
 
     @Test

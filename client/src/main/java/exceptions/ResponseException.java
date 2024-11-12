@@ -1,4 +1,4 @@
-package Exceptions;
+package exceptions;
 
 public class ResponseException extends RuntimeException {
     public ResponseException(String message) {
