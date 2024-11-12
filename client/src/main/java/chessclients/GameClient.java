@@ -21,7 +21,7 @@ public class GameClient {
             return switch (cmd) {
                 case "move" -> "make a move";
                 case "print" -> "print the board";
-                case "quit" -> "GOODBYE";
+                case "quit" -> "GOODBYE\n";
                 default -> "HELP";
             };
         } catch (Exception ex) {

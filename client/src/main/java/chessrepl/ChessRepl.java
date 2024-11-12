@@ -11,6 +11,9 @@ import utility.ValidUUID;
 
 import java.util.Scanner;
 
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
+import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
+
 public class ChessRepl {
 String auth;
 String serverUrl;
@@ -36,7 +39,7 @@ private final ServerFacade server;
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
-        while (!result.equals("GOODBYE")) {
+        while (!result.equals("GOODBYE\n")) {
             switch (clientVersion) {
                 case "postLogin" -> System.out.print("[AUTHORIZED]");
                 case "gameLogin" -> System.out.print("[INGAME]");
@@ -63,7 +66,7 @@ private final ServerFacade server;
                 }
 
 
-                else {System.out.print(result);}
+                else {System.out.print(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);}
 
 
 
@@ -73,7 +76,7 @@ private final ServerFacade server;
                 System.out.print(msg);
             }
         }
-        System.out.println();
+
     }
 
 

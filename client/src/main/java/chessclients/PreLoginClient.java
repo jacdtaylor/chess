@@ -27,7 +27,7 @@ public class PreLoginClient {
         return switch (cmd) {
             case "login" -> login(params);
             case "register" -> register(params);
-            case "quit" -> "GOODBYE";
+            case "quit" -> "GOODBYE\n";
             case "clear" -> clearDB();
             default -> getHelp();
         };

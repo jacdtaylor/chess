@@ -31,7 +31,7 @@ public class LoginClient {
             return switch (cmd) {
                 case "list" -> returnList();
                 case "join" -> joinGame(params);
-                case "observe" -> observeGame();
+                case "observe" -> observeGame(params);
                 case "create" -> createGame(params);
                 case "logout" -> logout();
 
@@ -53,7 +53,7 @@ public class LoginClient {
             try {
                 Collection<GameData> allGames = server.listGames(auth);
                 GameData[] gameArray = allGames.toArray(new GameData[0]);
-                int id = Integer.parseInt(params[1]);
+                int id = Integer.parseInt(params[0]);
 
                 GameData currentGame = gameArray[id - 1];
                 int newID = currentGame.gameID();
@@ -68,7 +68,9 @@ public class LoginClient {
         }
 
 
-    public String returnList() {
+    public String returnList(String... params) {
+        if (params.length > 0 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
+        }
         try {
         Collection<GameData> retrievedList = server.listGames(auth);
         String finalVar = "";
@@ -100,7 +102,7 @@ public class LoginClient {
         }
         try {
         server.createGame(params[0],auth);
-        return "Game Created Successfully";}
+        return "Game Created Successfully\n";}
         catch (ResponseException ex) {
             return SET_TEXT_COLOR_RED + "UNAUTHORIZED ACCESS" + RESET_TEXT_COLOR + "\n";
 
@@ -114,7 +116,7 @@ public class LoginClient {
         }
         if (params.length > 3 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
         }
-        if (!params[0].equals("WHITE") & !params[0].equals("BLACK"))
+        if (!params[0].equals("white") & !params[0].equals("black"))
         {return SET_TEXT_COLOR_RED + "INVALID COLOR" + RESET_TEXT_COLOR + "\n";}
         try {
             Collection<GameData> allGames = server.listGames(auth);
@@ -144,7 +146,7 @@ public class LoginClient {
 
     public String logout() throws ResponseException {
         server.logoutUser(auth);
-        return "GOODBYE";
+        return "GOODBYE\n";
     }
 
     public String getHelp() {
@@ -155,7 +157,7 @@ public class LoginClient {
                 create <GAMENAME>
                 observe <GAME #>
                 help
-                quit
+                logout
                 """
                 ;
     }
