@@ -7,6 +7,8 @@ import server.ServerFacade;
 
 import java.util.Arrays;
 
+import static ui.EscapeSequences.*;
+
 public class PreLoginClient {
     private final ServerFacade server;
     public PreLoginClient(ServerFacade server) {
@@ -34,15 +36,33 @@ public class PreLoginClient {
 
 
     public String Login(String... params) throws Exception {
+        if (params.length > 2 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
+        }
+        try {
         UserData user = new UserData(params[0],params[1]);
         AuthData result = server.loginUser(user);
-        return result.authToken();
+        return result.authToken();}
+        catch (ResponseException ex) {
+            return  SET_TEXT_COLOR_RED + "INCORRECT CREDENTIALS" + RESET_TEXT_COLOR + "\n";
+        } catch (Exception ex) {
+            return SET_TEXT_COLOR_RED +"PLEASE ENTER USERNAME AND PASSWORD" + RESET_TEXT_COLOR + "\n";
+        }
     }
 
-    public String Register(String... params) throws ResponseException {
-        UserData user = new UserData(params[0],params[1]);
-        AuthData result = server.registerUser(user);
-        return result.authToken();
+    public String Register(String... params) {
+        if (params.length > 2 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
+        }
+        try {UserData user = new UserData(params[0],params[1]);
+        AuthData result = null;
+
+            result = server.registerUser(user);
+            return result.authToken();
+        } catch (ResponseException e) {
+            return SET_TEXT_COLOR_RED + "USER EXISTS" + RESET_TEXT_COLOR + "\n";
+        }  catch (Exception ex) {
+        return SET_TEXT_COLOR_RED +"PLEASE ENTER USERNAME AND PASSWORD" + RESET_TEXT_COLOR + "\n";
+    }
+
 
     }
     public String getHelp() {

@@ -35,10 +35,6 @@ public class ServerFacade {
         this.makeRequest("DELETE", path, null, null, authToken);
     }
 
-    public void clearDB() throws ResponseException {
-        var path = "/db";
-        this.makeRequest("DELETE", path, null, null, null);
-    }
 
     public Collection<GameData> listGames(String auth) throws ResponseException {
         var path = "/game";
