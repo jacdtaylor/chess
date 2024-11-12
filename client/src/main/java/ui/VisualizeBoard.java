@@ -5,15 +5,21 @@ import chess.ChessGame;
 import chess.ChessPiece;
 import chess.ChessPosition;
 
+import java.awt.*;
+
 import static ui.EscapeSequences.*;
 
 public class VisualizeBoard {
 
 
     static public String produceBlackBoard(ChessBoard board) {
+
         String visualization = """
                 """;
-        String endLines = SET_TEXT_BOLD + SET_BG_COLOR_BLACK + "    h  g  f  e  d  c  b  a    " + RESET_BG_COLOR + "\n";
+        String endLines = SET_BG_COLOR_BLACK +
+                "   " + FULLWIDTHH + FULLWIDTHG + FULLWIDTHF + FULLWIDTHE
+                +FULLWIDTHD + FULLWIDTHC + FULLWIDTHB + FULLWIDTHA + "   "
+                + RESET_BG_COLOR + "\n";
         visualization += endLines;
         int y = 1;
         int x = 8;
@@ -35,7 +41,7 @@ public class VisualizeBoard {
                     currentBb = SET_BG_COLOR_BEIGE;
                 }
             }
-            line+=SET_BG_COLOR_BLACK + " " + Integer.toString(y) + "   "+ RESET_BG_COLOR+ "\n" ;
+            line+=SET_BG_COLOR_BLACK + " " + Integer.toString(y) + " "+ RESET_BG_COLOR+ "\n" ;
             visualization += line;
             x = 8;
             y++;
@@ -48,7 +54,10 @@ public class VisualizeBoard {
     static public String produceWhiteBoard(ChessBoard board) {
         String visualization = """
                 """;
-        String endLines = SET_BG_COLOR_BLACK + "    a   b  c   d   e  f   g   h    " + RESET_BG_COLOR + "\n";
+        String endLines = SET_BG_COLOR_BLACK +
+                "   " + FULLWIDTHA + FULLWIDTHB + FULLWIDTHC + FULLWIDTHD
+                +FULLWIDTHE + FULLWIDTHF + FULLWIDTHG + FULLWIDTHH + "   "
+                + RESET_BG_COLOR + "\n";
         visualization += endLines;
         int y = 8;
         int x = 1;
@@ -70,7 +79,7 @@ public class VisualizeBoard {
                     currentBb = SET_BG_COLOR_BEIGE;
                 }
             }
-            line+=SET_BG_COLOR_BLACK + " " + Integer.toString(y) + "   "+ RESET_BG_COLOR+ "\n" ;
+            line+=SET_BG_COLOR_BLACK + " " + Integer.toString(y) + " "+ RESET_BG_COLOR+ "\n" ;
             visualization += line;
             x = 1;
             y--;

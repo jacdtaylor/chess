@@ -64,5 +64,14 @@ public class EscapeSequences {
     public static final String BLACK_PAWN = " ♟ ";
     public static final String EMPTY = " \u2003 ";
 
+    public static final String FULLWIDTHA = " \uFF21 ";
+    public static final String FULLWIDTHB = " \uFF22 ";
+    public static final String FULLWIDTHC = " \uFF23 ";
+    public static final String FULLWIDTHD = " \uFF24 ";
+    public static final String FULLWIDTHE = " \uFF25 ";
+    public static final String FULLWIDTHF = " \uFF26 ";
+    public static final String FULLWIDTHG = " \uFF27 ";
+    public static final String FULLWIDTHH = " \uFF28 ";
+
     public static String moveCursorToLocation(int x, int y) { return UNICODE_ESCAPE + "[" + y + ";" + x + "H"; }
 }
