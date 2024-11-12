@@ -77,6 +77,74 @@ public class ServerFacadeTests {
                 ()-> {facade.logoutUser(auth.authToken());}
             );}
 
+    @Test
+    public void logoutTestNeg() throws ResponseException {
+        Assertions.assertThrows(Exception.class,
+                ()-> {facade.logoutUser("FAKE AUTH TOKEN");}
+        );}
+
+    @Test
+    public void listTestPos() throws ResponseException {
+
+        UserData testUser = new UserData("username", "pass");
+        AuthData auth = facade.registerUser(testUser);
+        facade.createGame("TEST GAME", auth.authToken());
+        Collection<GameData> result = facade.listGames(auth.authToken());
+        Assertions.assertTrue(result.size() > 0);
+    }
+
+    @Test
+    public void listTestNeg() throws ResponseException {
+        Assertions.assertThrows(Exception.class, ()->{facade.listGames("FAKE AUTH");});
+    }
+
+    @Test
+    public void createTestPos() throws ResponseException {
+        UserData testUser = new UserData("username", "pass");
+        AuthData auth = facade.registerUser(testUser);
+
+        int ID = facade.createGame("Game", auth.authToken());
+        Assertions.assertEquals(0, ID);
+    }
+
+    @Test
+    public void createTestNeg() throws ResponseException {
+        Assertions.assertThrows(Exception.class, ()->{facade.createGame("BAD EGG", "FAKE AUTH");});
+    }
+
+    @Test
+    public void joinTestPos() throws ResponseException {
+        UserData testUser = new UserData("username", "pass");
+        AuthData auth = facade.registerUser(testUser);
+        facade.createGame("Game", auth.authToken());
+        Collection<GameData> list = facade.listGames(auth.authToken());
+        GameData[] gameArray = list.toArray(new GameData[0]);
+        int gameID = gameArray[0].gameID();
+        JoinGameReq req = new JoinGameReq("WHITE", gameID);
+        facade.joinGame(req, auth.authToken());
+        Collection<GameData> list2 = facade.listGames(auth.authToken());
+        GameData[] gameArray2 = list2.toArray(new GameData[0]);
+        Assertions.assertEquals(gameArray2[0].whiteUsername(), "username");
+
+    }
+    @Test
+    public void joinTestNeg() throws ResponseException {
+        UserData testUser = new UserData("username", "pass");
+        AuthData auth = facade.registerUser(testUser);
+        facade.createGame("Game", auth.authToken());
+        JoinGameReq req = new JoinGameReq("WHITE", -999);
+        Assertions.assertThrows(Exception.class, ()->{facade.joinGame(req, auth.authToken());});
+
+    }
+
+    @Test
+    public void clearTest() throws ResponseException {
+        UserData testUser = new UserData("username", "pass");
+        AuthData auth = facade.registerUser(testUser);
+        facade.clearAll();
+        Assertions.assertDoesNotThrow(()->{facade.registerUser(testUser);});
+    }
+
 
 }
 
@@ -86,34 +154,10 @@ public class ServerFacadeTests {
 
 
 
-//public void logoutUser(String authToken) throws ResponseException {
-//    var path = "/session";
-//    this.makeRequest("DELETE", path, null, null, authToken);
-//}
-//
-//
-//public Collection<GameData> listGames(String auth) throws ResponseException {
-//    var path = "/game";
-//    record listGameDataResponse(Collection<GameData> games) {
-//    }
-//    var response = this.makeRequest("GET", path, null, listGameDataResponse.class, auth);
-//    return response.games();
-//}
-//
-//public int createGame(String gameName, String auth) throws ResponseException {
-//    var path = "/game";
-//    record createGameDataResponse(int id) {
-//    }
-//    GameData gameReq = new GameData(-999,null,null,gameName,null);
-//    var response = this.makeRequest("POST", path, gameReq, createGameDataResponse.class, auth);
-//    return response.id();
-//}
-//
-//public void joinGame(JoinGameReq req, String auth) throws ResponseException {
-//    var path = "/game";
-//    this.makeRequest("PUT",path,req,null,auth);
-//}
-//
+
+
+
+
 //private void clearAll() throws ResponseException {
 //    var path = "/db";
 //    this.makeRequest("DELETE",path,null,null,null);
