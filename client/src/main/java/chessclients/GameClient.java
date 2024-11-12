@@ -1,4 +1,4 @@
-package chessClients;
+package chessclients;
 
 import utility.ServerFacade;
 
@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class GameClient {
     private final ServerFacade server;
-    public GameClient(ServerFacade server, String Auth, Integer gameID) {
+    public GameClient(ServerFacade server, String auth, Integer gameID) {
         this.server = server;
 //        this.notificationHandler = notificationHandler;
     }

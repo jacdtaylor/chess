@@ -1,11 +1,11 @@
-package chessRepl;//package client;
+package chessrepl;//package client;
 
 //import client.websocket.NotificationHandler;
 //import webSocketMessages.Notification;
 
-import chessClients.GameClient;
-import chessClients.LoginClient;
-import chessClients.PreLoginClient;
+import chessclients.GameClient;
+import chessclients.LoginClient;
+import chessclients.PreLoginClient;
 import utility.ServerFacade;
 import utility.ValidUUID;
 
@@ -33,7 +33,6 @@ private final ServerFacade server;
 
 
 
-//        System.out.print(client.help());
 
         Scanner scanner = new Scanner(System.in);
         var result = "";
@@ -77,10 +76,7 @@ private final ServerFacade server;
         System.out.println();
     }
 
-//    public void notify(Notification notification) {
-//        System.out.println(notification.message());
-//        printPrompt();
-//    }
+
 
     private void printPrompt() {
         System.out.print("\n" + ">>> " );

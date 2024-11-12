@@ -154,16 +154,3 @@ public class ServerFacadeTests {
 }
 
 
-
-
-
-
-
-
-
-
-
-//private void clearAll() throws ResponseException {
-//    var path = "/db";
-//    this.makeRequest("DELETE",path,null,null,null);
-//}

@@ -1,4 +1,4 @@
-package chessClients;
+package chessclients;
 
 
 import exceptions.ResponseException;

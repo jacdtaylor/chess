@@ -1,5 +1,5 @@
 
-import chessRepl.ChessRepl;
+import chessrepl.ChessRepl;
 import utility.ServerFacade;
 
 public class ClientMain {
