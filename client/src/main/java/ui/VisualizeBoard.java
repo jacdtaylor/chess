@@ -54,7 +54,8 @@ public class VisualizeBoard {
     static public String produceWhiteBoard(ChessBoard board) {
         String visualization = """
                 """;
-        String endLines = SET_BG_COLOR_BLACK +
+        String endLines = RESET_TEXT_COLOR+
+                SET_BG_COLOR_BLACK +
                 "   " + FULLWIDTHA + FULLWIDTHB + FULLWIDTHC + FULLWIDTHD
                 +FULLWIDTHE + FULLWIDTHF + FULLWIDTHG + FULLWIDTHH + "   "
                 + RESET_BG_COLOR + "\n";
