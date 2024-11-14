@@ -24,6 +24,7 @@ public class SqlUserDAO implements UserDAO{
             CREATE TABLE IF NOT EXISTS  user (
               `username` varchar(256) NOT NULL,
               `password` varchar(256) NOT NULL,
+              `email` varchar(256) NOT NULL,
               `json` TEXT DEFAULT NULL,
               PRIMARY KEY (`username`),
               INDEX(username)
@@ -72,7 +73,7 @@ public class SqlUserDAO implements UserDAO{
     public void createUser(UserData user) throws DataAccessException {
         var statement = "INSERT INTO user (username, password, json) VALUES (?, ?, ?)";
         String hashedPassword = BCrypt.hashpw(user.password(), BCrypt.gensalt());
-        UserData newUser = new UserData(user.username(),hashedPassword);
+        UserData newUser = new UserData(user.username(),hashedPassword,user.email());
         var json = new Gson().toJson(newUser);
 
 

@@ -101,7 +101,7 @@ public class LoginClient {
         if (params.length > 1 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
         }
         try {
-        server.createGame(params[0],auth);
+        server.createGame(params[0], auth);
         return "Game Created Successfully\n";}
         catch (ResponseException ex) {
             return SET_TEXT_COLOR_RED + "UNAUTHORIZED ACCESS" + RESET_TEXT_COLOR + "\n";

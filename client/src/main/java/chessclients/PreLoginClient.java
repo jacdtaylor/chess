@@ -37,10 +37,10 @@ public class PreLoginClient {
 
 
     public String login(String... params) throws Exception {
-        if (params.length > 2 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
+        if (params.length > 3 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
         }
         try {
-        UserData user = new UserData(params[0],params[1]);
+        UserData user = new UserData(params[0],params[1], null);
         AuthData result = server.loginUser(user);
         return result.authToken();}
         catch (ResponseException ex) {
@@ -51,9 +51,9 @@ public class PreLoginClient {
     }
 
     public String register(String... params) {
-        if (params.length > 2 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
+        if (params.length > 3 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
         }
-        try {UserData user = new UserData(params[0],params[1]);
+        try {UserData user = new UserData(params[0],params[1],params[2]);
         AuthData result = null;
 
             result = server.registerUser(user);
@@ -61,7 +61,7 @@ public class PreLoginClient {
         } catch (ResponseException e) {
             return SET_TEXT_COLOR_RED + "USER EXISTS" + RESET_TEXT_COLOR + "\n";
         }  catch (Exception ex) {
-        return SET_TEXT_COLOR_RED +"PLEASE ENTER USERNAME AND PASSWORD" + RESET_TEXT_COLOR + "\n";
+        return SET_TEXT_COLOR_RED +"PLEASE ENTER USERNAME, PASSWORD, AND EMAIL" + RESET_TEXT_COLOR + "\n";
     }
 
 

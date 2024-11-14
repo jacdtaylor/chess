@@ -42,14 +42,14 @@ public class ServerFacadeTests {
 
     @Test
     public void registerTestPos() throws ResponseException {
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         AuthData auth = facade.registerUser(testUser);
         Assertions.assertTrue(ValidUUID.isValidUUID(auth.authToken()));
     }
 
     @Test
     public void registerTestNeg() throws ResponseException {
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         facade.registerUser(testUser);
         Assertions.assertThrows(Exception.class, () -> {
             facade.registerUser(testUser);
@@ -59,7 +59,7 @@ public class ServerFacadeTests {
 
     @Test
     public void loginTestPos() throws ResponseException {
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         AuthData auth = facade.registerUser(testUser);
         facade.logoutUser(auth.authToken());
         AuthData auth2 = facade.loginUser(testUser);
@@ -68,14 +68,14 @@ public class ServerFacadeTests {
 
     @Test
     public void loginTestNeg() throws ResponseException {
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         Assertions.assertThrows(Exception.class, () -> {
             facade.loginUser(testUser);
         });}
 
     @Test
     public void logoutTestPos() throws ResponseException {
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         AuthData auth = facade.registerUser(testUser);
 
         Assertions.assertDoesNotThrow(
@@ -91,7 +91,7 @@ public class ServerFacadeTests {
     @Test
     public void listTestPos() throws ResponseException {
 
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         AuthData auth = facade.registerUser(testUser);
         facade.createGame("TEST GAME", auth.authToken());
         Collection<GameData> result = facade.listGames(auth.authToken());
@@ -105,7 +105,7 @@ public class ServerFacadeTests {
 
     @Test
     public void createTestPos() throws ResponseException {
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         AuthData auth = facade.registerUser(testUser);
 
         int id = facade.createGame("Game", auth.authToken());
@@ -119,7 +119,7 @@ public class ServerFacadeTests {
 
     @Test
     public void joinTestPos() throws ResponseException {
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         AuthData auth = facade.registerUser(testUser);
         facade.createGame("Game", auth.authToken());
         Collection<GameData> list = facade.listGames(auth.authToken());
@@ -134,7 +134,7 @@ public class ServerFacadeTests {
     }
     @Test
     public void joinTestNeg() throws ResponseException {
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         AuthData auth = facade.registerUser(testUser);
         facade.createGame("Game", auth.authToken());
         JoinGameReq req = new JoinGameReq("WHITE", -999);
@@ -144,7 +144,7 @@ public class ServerFacadeTests {
 
     @Test
     public void clearTest() throws ResponseException {
-        UserData testUser = new UserData("username", "pass");
+        UserData testUser = new UserData("username", "pass", "mail");
         AuthData auth = facade.registerUser(testUser);
         facade.clearAll();
         Assertions.assertDoesNotThrow(()->{facade.registerUser(testUser);});
