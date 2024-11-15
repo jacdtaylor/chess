@@ -1,18 +1,29 @@
 package ui;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import static ui.EscapeSequences.*;
 
 public class VisualizeBoard {
 
 
-    static public String produceBlackBoard(ChessBoard board) {
+    static public String produceBlackBoard(ChessGame game, ChessPosition possibleMovesTarget) {
+
+        ArrayList<ChessPosition> highlightedSpots = new ArrayList<ChessPosition>();
+        ChessBoard board = game.getBoard();
+        if (possibleMovesTarget != null) {
+            for (ChessMove move : game.validMoves(possibleMovesTarget)) {
+                highlightedSpots.add(move.getEndPosition());
+            }
+
+
+        } else {
+            highlightedSpots = null;
+        }
 
         String visualization = """
                 """;
@@ -24,6 +35,7 @@ public class VisualizeBoard {
         int y = 1;
         int x = 8;
         String currentBb = SET_BG_COLOR_BEIGE;
+        String BGcolor = currentBb;
         String pieceType = "";
         while (y <= 8) {
             String line = SET_BG_COLOR_BLACK + " " + Integer.toString(y) + " ";
@@ -32,7 +44,16 @@ public class VisualizeBoard {
                 ChessPosition currentPosition = new ChessPosition(y,x);
                 ChessPiece currentPiece = board.getPiece(currentPosition);
                 pieceType = getPieceString(currentPiece);
-                line += currentBb +SET_TEXT_COLOR_BLACK+ pieceType + RESET_TEXT_COLOR;
+                if (highlightedSpots != null &&
+                        highlightedSpots.contains(new ChessPosition(y,x))) {
+                    BGcolor = SET_BG_COLOR_RED;
+                }
+                else if (currentPosition.equals(possibleMovesTarget)) {BGcolor = SET_BG_COLOR_LIGHT_RED;}
+                else
+                {BGcolor = currentBb;}
+
+
+                line += BGcolor +SET_TEXT_COLOR_BLACK + pieceType + RESET_TEXT_COLOR;
                 x--;
 
                 if (currentBb.equals(SET_BG_COLOR_BEIGE) && x!=0) {
@@ -51,7 +72,19 @@ public class VisualizeBoard {
     }
 
 
-    static public String produceWhiteBoard(ChessBoard board) {
+    static public String produceWhiteBoard(ChessGame game, ChessPosition possibleMovesTarget) {
+        ArrayList<ChessPosition> highlightedSpots = new ArrayList<ChessPosition>();
+        ChessBoard board = game.getBoard();
+        if (possibleMovesTarget != null) {
+            for (ChessMove move : game.validMoves(possibleMovesTarget)) {
+                highlightedSpots.add(move.getEndPosition());
+            }
+
+
+        } else {
+            highlightedSpots = null;
+        }
+
         String visualization = """
                 """;
         String endLines = RESET_TEXT_COLOR+
@@ -63,6 +96,9 @@ public class VisualizeBoard {
         int y = 8;
         int x = 1;
         String currentBb = SET_BG_COLOR_BEIGE;
+        String bgColor = currentBb;
+        String txtColor = SET_TEXT_COLOR_BLACK;
+
         String pieceType = "";
         while (y >= 1) {
             String line = SET_BG_COLOR_BLACK + " " + Integer.toString(y) + " ";
@@ -71,7 +107,15 @@ public class VisualizeBoard {
                 ChessPosition currentPosition = new ChessPosition(y,x);
                 ChessPiece currentPiece = board.getPiece(currentPosition);
                 pieceType = getPieceString(currentPiece);
-                line += currentBb +SET_TEXT_COLOR_BLACK+ pieceType + RESET_TEXT_COLOR;
+                if (highlightedSpots != null &&
+                        highlightedSpots.contains(new ChessPosition(y,x))) {
+                    bgColor = SET_BG_COLOR_RED;
+                }
+                else
+                {bgColor = currentBb;}
+                if (currentPosition.equals(possibleMovesTarget)) {txtColor = SET_TEXT_COLOR_RED;}
+                else {txtColor = SET_TEXT_COLOR_BLACK;}
+                line += bgColor + txtColor + pieceType + RESET_TEXT_COLOR;
                 x++;
 
                 if (currentBb.equals(SET_BG_COLOR_BEIGE) && x!=9) {

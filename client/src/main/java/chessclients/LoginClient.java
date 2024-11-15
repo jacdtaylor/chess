@@ -1,5 +1,6 @@
 package chessclients;
 
+import chess.ChessPosition;
 import exceptions.ResponseException;
 import model.GameData;
 import model.JoinGameReq;
@@ -59,8 +60,8 @@ public class LoginClient {
                 int newID = currentGame.gameID();
 
                 return
-                        VisualizeBoard.produceWhiteBoard(currentGame.game().getBoard()) +
-                        VisualizeBoard.produceBlackBoard(currentGame.game().getBoard());
+                        VisualizeBoard.produceWhiteBoard(currentGame.game(), new ChessPosition(1,2)) +
+                        VisualizeBoard.produceBlackBoard(currentGame.game(), null);
 
             } catch (Exception ex) {
                 return SET_TEXT_COLOR_RED + "GAME DOES NOT EXIST" + RESET_TEXT_COLOR + "\n";
@@ -131,8 +132,8 @@ public class LoginClient {
 
 
             return
-                    VisualizeBoard.produceWhiteBoard(currentGame.game().getBoard()) +
-                            VisualizeBoard.produceBlackBoard(currentGame.game().getBoard());
+                    VisualizeBoard.produceWhiteBoard(currentGame.game(), null) +
+                            VisualizeBoard.produceBlackBoard(currentGame.game(), null);
 
 //        return String.format("Join Game %s", params[1]);
         }
