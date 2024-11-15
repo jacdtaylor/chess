@@ -35,7 +35,8 @@ public class VisualizeBoard {
         int y = 1;
         int x = 8;
         String currentBb = SET_BG_COLOR_BEIGE;
-        String BGcolor = currentBb;
+        String txtColor = SET_TEXT_COLOR_BLACK;
+        String bgColor = currentBb;
         String pieceType = "";
         while (y <= 8) {
             String line = SET_BG_COLOR_BLACK + " " + Integer.toString(y) + " ";
@@ -46,14 +47,14 @@ public class VisualizeBoard {
                 pieceType = getPieceString(currentPiece);
                 if (highlightedSpots != null &&
                         highlightedSpots.contains(new ChessPosition(y,x))) {
-                    BGcolor = SET_BG_COLOR_RED;
-                }
-                else if (currentPosition.equals(possibleMovesTarget)) {BGcolor = SET_BG_COLOR_LIGHT_RED;}
-                else
-                {BGcolor = currentBb;}
+                    bgColor = (currentBb == SET_BG_COLOR_BEIGE) ? SET_BG_COLOR_RED : SET_BG_COLOR_LIGHT_RED;
+                }else
+                {bgColor = currentBb;}
+                if (currentPosition.equals(possibleMovesTarget)) {txtColor = SET_TEXT_COLOR_RED;}
+                else {txtColor = SET_TEXT_COLOR_BLACK;}
 
 
-                line += BGcolor +SET_TEXT_COLOR_BLACK + pieceType + RESET_TEXT_COLOR;
+                line += bgColor +txtColor + pieceType + RESET_TEXT_COLOR;
                 x--;
 
                 if (currentBb.equals(SET_BG_COLOR_BEIGE) && x!=0) {
@@ -109,7 +110,7 @@ public class VisualizeBoard {
                 pieceType = getPieceString(currentPiece);
                 if (highlightedSpots != null &&
                         highlightedSpots.contains(new ChessPosition(y,x))) {
-                    bgColor = SET_BG_COLOR_RED;
+                    bgColor = (currentBb == SET_BG_COLOR_BEIGE) ? SET_BG_COLOR_RED : SET_BG_COLOR_LIGHT_RED;
                 }
                 else
                 {bgColor = currentBb;}

@@ -11,6 +11,7 @@ import java.util.Collection;
 
 import static ui.EscapeSequences.RESET_TEXT_COLOR;
 import static ui.EscapeSequences.SET_TEXT_COLOR_RED;
+import static utility.MoveInterpreter.translatePosition;
 
 
 public class LoginClient {
@@ -49,8 +50,8 @@ public class LoginClient {
     public String observeGame(String... params) {
         if (params.length == 0 ) {return SET_TEXT_COLOR_RED + "MISSING ARGUMENT" + RESET_TEXT_COLOR + "\n";
         }
-        if (params.length > 1 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
-        }
+//        if (params.length > 1 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
+//        }
             try {
                 Collection<GameData> allGames = server.listGames(auth);
                 GameData[] gameArray = allGames.toArray(new GameData[0]);
@@ -60,7 +61,7 @@ public class LoginClient {
                 int newID = currentGame.gameID();
 
                 return
-                        VisualizeBoard.produceWhiteBoard(currentGame.game(), new ChessPosition(1,2)) +
+                        VisualizeBoard.produceWhiteBoard(currentGame.game(),translatePosition(params[1])) +
                         VisualizeBoard.produceBlackBoard(currentGame.game(), null);
 
             } catch (Exception ex) {
