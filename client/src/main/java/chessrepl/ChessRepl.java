@@ -8,13 +8,14 @@ import chessclients.LoginClient;
 import chessclients.PreLoginClient;
 import utility.ServerFacade;
 import utility.ValidUUID;
+import websocket.NotificationHandler;
+import websocket.messages.ServerMessage;
 
 import java.util.Scanner;
 
-import static ui.EscapeSequences.RESET_TEXT_COLOR;
-import static ui.EscapeSequences.SET_TEXT_COLOR_BLUE;
+import static ui.EscapeSequences.*;
 
-public class ChessRepl {
+public class ChessRepl implements NotificationHandler {
 String auth;
 String serverUrl;
 PreLoginClient preLoginClient;
@@ -80,9 +81,14 @@ private final ServerFacade server;
     }
 
 
+    public void notify(ServerMessage message) {
+        System.out.println(SET_BG_COLOR_MAGENTA + "MESSAGE GOES HERE");
+        printPrompt();
+
+    }
 
     private void printPrompt() {
-        System.out.print("\n" + ">>> " );
+        System.out.print(RESET_TEXT_COLOR + "\n" + ">>> ");
     }
 
 }
