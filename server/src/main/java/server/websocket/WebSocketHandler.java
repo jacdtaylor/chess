@@ -27,7 +27,15 @@ public class WebSocketHandler {
         }
     }
 
+    private void connectUser(String auth, int id, Session session) {
 
+    }
+
+    private void makeMove(String auth, int id) {}
+
+    private void leaveUser(String auth, int id) {}
+
+    private void resignUser(String auth, int id) {}
 
 
 
