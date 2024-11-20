@@ -51,6 +51,7 @@ public class GameClient {
 
     public String takeAMove(String... params) {
         wb.makeMove(auth,gameID);
-       return "TEST";
+        return "made move" + params[0];
+
     }
 }

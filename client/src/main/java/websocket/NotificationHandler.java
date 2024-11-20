@@ -3,14 +3,19 @@ package websocket;
 
 import websocket.messages.ServerMessage;
 
-import static ui.EscapeSequences.RESET_TEXT_COLOR;
-import static ui.EscapeSequences.SET_BG_COLOR_MAGENTA;
+import static ui.EscapeSequences.*;
 
 public class NotificationHandler {
     public NotificationHandler() {}
 
     public void notify(ServerMessage message) {
-        System.out.println("\n" + SET_BG_COLOR_MAGENTA + message.getMessage() + RESET_TEXT_COLOR);
+        if (message.getServerMessageType().equals(ServerMessage.ServerMessageType.LOAD_GAME)) {
+
+
+        }
+
+
+        System.out.println("\n" + SET_TEXT_COLOR_MAGENTA + message.getMessage() + RESET_TEXT_COLOR);
         printPrompt();
     };
 

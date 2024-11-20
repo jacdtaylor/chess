@@ -1,5 +1,6 @@
 package server.websocket;
 
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 import websocket.messages.ServerMessage;
 
@@ -25,10 +26,10 @@ public class ConnectionManager {
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
 
-                c.send(notification.toString());
-//                if (!c.visitorName.equals(excludeVisitorName) && c.currentID == targetID) {
-//                    c.send(notification.toString());
-//                }
+//
+                if (!c.visitorName.equals(excludeVisitorName) && c.currentID == targetID) {
+                    c.send(new Gson().toJson(notification));
+                }
             } else {
                 removeList.add(c);
             }
