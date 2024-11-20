@@ -45,14 +45,22 @@ public class WebSocketHandler {
         serverMess.addMessage(mess);
         connections.broadcast(auth, serverMess, id);
 
-
     }
 
-    private void leaveUser(String auth, int id) {
+    private void leaveUser(String auth, int id) throws IOException {
         connections.remove(auth);
+        String mess = "PLAYER LEFT GAME";
+        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+        serverMess.addMessage(mess);
+        connections.broadcast(auth, serverMess, id);
     }
 
-    private void resignUser(String auth, int id) {}
+    private void resignUser(String auth, int id) throws IOException {
+        String mess = "PLAYER RESIGNED GAME";
+        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+        serverMess.addMessage(mess);
+        connections.broadcast(auth, serverMess, id);
+    }
 
 
 
