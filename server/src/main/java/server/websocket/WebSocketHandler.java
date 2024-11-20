@@ -2,10 +2,12 @@ package server.websocket;
 
 
 import com.google.gson.Gson;
+import dataaccess.AuthDAO;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ServerMessage;
 
 import java.io.IOException;
 
@@ -27,13 +29,19 @@ public class WebSocketHandler {
         }
     }
 
-    private void connectUser(String auth, int id, Session session) {
-
+    private void connectUser(String auth, int id, Session session) throws IOException {
+        connections.add(auth,session,id);
+        String mess = "PLAYER JOINED";
+        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+        serverMess.addMessage(mess);
+        connections.broadcast(auth, serverMess, id);
     }
 
     private void makeMove(String auth, int id) {}
 
-    private void leaveUser(String auth, int id) {}
+    private void leaveUser(String auth, int id) {
+        connections.remove(auth);
+    }
 
     private void resignUser(String auth, int id) {}
 
