@@ -1,14 +1,20 @@
 package chessclients;
 
+import org.glassfish.tyrus.spi.WebSocketEngine;
 import utility.ServerFacade;
+import websocket.NotificationHandler;
+import websocket.WebSocketFacade;
 
 import java.util.Arrays;
 
 public class GameClient {
     private final ServerFacade server;
-    public GameClient(ServerFacade server, String auth, Integer gameID) {
+    private final WebSocketFacade wb;
+    private NotificationHandler notif;
+    public GameClient(ServerFacade server, String auth, Integer gameID, NotificationHandler notif) {
         this.server = server;
-//        this.notificationHandler = notificationHandler;
+        this.wb = new WebSocketFacade(server.getServerUrl(), notif);
+        this.notif = notif;
     }
 
 

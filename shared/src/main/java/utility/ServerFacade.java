@@ -84,6 +84,9 @@ public class ServerFacade {
         }
     }
 
+    public String getServerUrl() {
+        return serverUrl;
+    }
 
     private static void writeBody(Object request, HttpURLConnection http) throws IOException {
         if (request != null) {
@@ -101,6 +104,7 @@ public class ServerFacade {
             throw new ResponseException("failure");
         }
     }
+
 
     private static <T> T readBody(HttpURLConnection http, Class<T> responseClass) throws IOException {
         T response = null;

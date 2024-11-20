@@ -22,14 +22,16 @@ PreLoginClient preLoginClient;
 LoginClient loginClient;
 GameClient gameClient;
 Integer gameID;
+NotificationHandler notif;
 private final ServerFacade server;
     public ChessRepl(ServerFacade server, String authToken, Integer gameID) {
+
         auth = authToken;
         this.gameID = gameID;
         this.server = server;
         preLoginClient = new PreLoginClient(server);
         loginClient = new LoginClient(server, auth);
-        gameClient = new GameClient(server, auth, gameID);
+        gameClient = new GameClient(server, auth, gameID, this);
 
     }
 
@@ -59,7 +61,6 @@ private final ServerFacade server;
                 if (ValidUUID.isValidUUID(result)) {
                     new ChessRepl(server, result, gameID).run("postLogin");}
 
-
                 else if (result.contains("Join Game")) {
                     String numberString = result.replaceAll("[^0-9]", "");
                     int newID = Integer.parseInt(numberString);
@@ -82,7 +83,7 @@ private final ServerFacade server;
 
 
     public void notify(ServerMessage message) {
-        System.out.println(SET_BG_COLOR_MAGENTA + "MESSAGE GOES HERE");
+        System.out.println(SET_BG_COLOR_MAGENTA + message.getMessage());
         printPrompt();
 
     }
