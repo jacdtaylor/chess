@@ -132,11 +132,10 @@ public class LoginClient {
         server.joinGame(req, auth);
 
 
-            return
-                    VisualizeBoard.produceWhiteBoard(currentGame.game(), null) +
-                            VisualizeBoard.produceBlackBoard(currentGame.game(), null);
+            return "Join Game";
 
-//        return String.format("Join Game %s", params[1]);
+
+
         }
         catch (ResponseException ex) {
         return SET_TEXT_COLOR_RED + "COLOR TAKEN" + RESET_TEXT_COLOR + "\n";}

@@ -17,12 +17,10 @@ import static ui.EscapeSequences.*;
 
 public class ChessRepl implements NotificationHandler {
 String auth;
-String serverUrl;
 PreLoginClient preLoginClient;
 LoginClient loginClient;
 GameClient gameClient;
 Integer gameID;
-NotificationHandler notif;
 private final ServerFacade server;
     public ChessRepl(ServerFacade server, String authToken, Integer gameID) {
 
@@ -33,11 +31,10 @@ private final ServerFacade server;
         loginClient = new LoginClient(server, auth);
         gameClient = new GameClient(server, auth, gameID, this);
 
+
     }
 
     public void run(String clientVersion) {
-
-
 
 
         Scanner scanner = new Scanner(System.in);
@@ -66,7 +63,6 @@ private final ServerFacade server;
                     int newID = Integer.parseInt(numberString);
                     new ChessRepl(server, auth, newID).run("gameLogin");
                 }
-
 
                 else {System.out.print(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);}
 

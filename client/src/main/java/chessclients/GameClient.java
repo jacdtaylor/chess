@@ -11,10 +11,12 @@ public class GameClient {
     private final ServerFacade server;
     private final WebSocketFacade wb;
     private NotificationHandler notif;
+    private int gameID;
     public GameClient(ServerFacade server, String auth, Integer gameID, NotificationHandler notif) {
         this.server = server;
         this.wb = new WebSocketFacade(server.getServerUrl(), notif);
         this.notif = notif;
+        this.gameID = gameID;
     }
 
 
@@ -25,7 +27,7 @@ public class GameClient {
         var params = Arrays.copyOfRange(tokens, 1, tokens.length);
         try {
             return switch (cmd) {
-                case "move" -> "make a move";
+                case "move" -> takeAMove(params);
                 case "print" -> "print the board";
                 case "quit" -> "GOODBYE\n";
                 default -> "HELP";
@@ -38,4 +40,9 @@ public class GameClient {
 
     }
 
+
+    public String takeAMove(String... params) {
+        wb.
+
+    }
 }
