@@ -5,6 +5,7 @@ import utility.ServerFacade;
 import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
 
+import javax.websocket.Endpoint;
 import java.util.Arrays;
 
 public class GameClient {
@@ -12,11 +13,17 @@ public class GameClient {
     private final WebSocketFacade wb;
     private NotificationHandler notif;
     private int gameID;
-    public GameClient(ServerFacade server, String auth, Integer gameID, NotificationHandler notif) {
+    private String auth;
+    public GameClient(ServerFacade server, String auth, Integer gameID, NotificationHandler notificationHandler) {
         this.server = server;
         this.wb = new WebSocketFacade(server.getServerUrl(), notif);
-        this.notif = notif;
-        this.gameID = gameID;
+        this.notif = notificationHandler;
+        if (gameID != null) {this.gameID = gameID;}
+
+        this.auth = auth;
+        if (gameID != null) {
+            wb.joinGame(auth,gameID);
+        }
     }
 
 
@@ -42,7 +49,7 @@ public class GameClient {
 
 
     public String takeAMove(String... params) {
-        wb.
-
+        wb.makeMove(auth,gameID);
+       return "TEST";
     }
 }

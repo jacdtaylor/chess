@@ -59,6 +59,7 @@ private final ServerFacade server;
                     new ChessRepl(server, result, gameID).run("postLogin");}
 
                 else if (result.contains("Join Game")) {
+
                     String numberString = result.replaceAll("[^0-9]", "");
                     int newID = Integer.parseInt(numberString);
                     new ChessRepl(server, auth, newID).run("gameLogin");
@@ -77,9 +78,9 @@ private final ServerFacade server;
 
     }
 
-
+    @Override
     public void notify(ServerMessage message) {
-        System.out.println(SET_BG_COLOR_MAGENTA + message.getMessage());
+        System.out.println("\n" + SET_BG_COLOR_MAGENTA + message.getMessage());
         printPrompt();
 
     }
