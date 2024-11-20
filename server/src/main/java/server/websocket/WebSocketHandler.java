@@ -37,7 +37,16 @@ public class WebSocketHandler {
         connections.broadcast(auth, serverMess, id);
     }
 
-    private void makeMove(String auth, int id) {}
+    private void makeMove(String auth, int id) throws IOException {
+        ServerMessage loadGameNoti = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+        connections.broadcast(auth,loadGameNoti,id);
+        String mess = "PLAYER MADE A MOVE";
+        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
+        serverMess.addMessage(mess);
+        connections.broadcast(auth, serverMess, id);
+
+
+    }
 
     private void leaveUser(String auth, int id) {
         connections.remove(auth);
