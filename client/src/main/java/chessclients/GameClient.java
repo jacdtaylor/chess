@@ -16,8 +16,9 @@ public class GameClient {
     private String auth;
     public GameClient(ServerFacade server, String auth, Integer gameID, NotificationHandler notificationHandler) {
         this.server = server;
-        this.wb = new WebSocketFacade(server.getServerUrl(), notif);
         this.notif = notificationHandler;
+        this.wb = new WebSocketFacade(server.getServerUrl(), notif);
+
         if (gameID != null) {this.gameID = gameID;}
 
         this.auth = auth;

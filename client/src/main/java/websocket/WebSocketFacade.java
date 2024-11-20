@@ -32,8 +32,10 @@ public class WebSocketFacade extends Endpoint {
                 @Override
                 public void onMessage(String message) {
 
+
                     ServerMessage serverMessage = new Gson().fromJson(message,ServerMessage.class);
-                    sendNotif(serverMessage);
+                    notificationHandler.notify(serverMessage);
+
                 }
             });
 
@@ -77,14 +79,6 @@ public class WebSocketFacade extends Endpoint {
         } catch (IOException ex) {
             throw new ResponseException(ex.getMessage());
         }
-    }
-
-    public void sendNotif(ServerMessage message) {
-        System.out.println("\n" + SET_BG_COLOR_MAGENTA + message.getMessage());
-        printPrompt();
-    }
-    private void printPrompt() {
-        System.out.print(RESET_TEXT_COLOR + "\n" + ">>> ");
     }
 
 

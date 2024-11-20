@@ -1,6 +1,11 @@
 
 import chessrepl.ChessRepl;
 import utility.ServerFacade;
+import websocket.NotificationHandler;
+import websocket.messages.ServerMessage;
+
+import static ui.EscapeSequences.RESET_TEXT_COLOR;
+import static ui.EscapeSequences.SET_BG_COLOR_MAGENTA;
 
 public class ClientMain {
     public static void main(String[] args) {
@@ -9,7 +14,13 @@ public class ClientMain {
             serverUrl = args[0];
         }
 
-        new ChessRepl(new ServerFacade(serverUrl), null, null).run("prelogin");
+        new ChessRepl(new ServerFacade(serverUrl), null, null, new NotificationHandler() {
+        }).run("prelogin");
     }
+
+
+
+
+
 
 }

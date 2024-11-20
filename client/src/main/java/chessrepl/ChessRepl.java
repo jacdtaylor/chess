@@ -15,21 +15,22 @@ import java.util.Scanner;
 
 import static ui.EscapeSequences.*;
 
-public class ChessRepl implements NotificationHandler {
+public class ChessRepl {
 String auth;
 PreLoginClient preLoginClient;
 LoginClient loginClient;
 GameClient gameClient;
 Integer gameID;
+NotificationHandler notif;
 private final ServerFacade server;
-    public ChessRepl(ServerFacade server, String authToken, Integer gameID) {
-
+    public ChessRepl(ServerFacade server, String authToken, Integer gameID, NotificationHandler notif) {
+        this.notif = notif;
         auth = authToken;
         this.gameID = gameID;
         this.server = server;
         preLoginClient = new PreLoginClient(server);
         loginClient = new LoginClient(server, auth);
-        gameClient = new GameClient(server, auth, gameID, this);
+        gameClient = new GameClient(server, auth, gameID, notif);
 
 
     }
@@ -56,13 +57,13 @@ private final ServerFacade server;
                     default -> result = preLoginClient.eval(line);
                 }
                 if (ValidUUID.isValidUUID(result)) {
-                    new ChessRepl(server, result, gameID).run("postLogin");}
+                    new ChessRepl(server, result, gameID, notif).run("postLogin");}
 
                 else if (result.contains("Join Game")) {
 
                     String numberString = result.replaceAll("[^0-9]", "");
                     int newID = Integer.parseInt(numberString);
-                    new ChessRepl(server, auth, newID).run("gameLogin");
+                    new ChessRepl(server, auth, newID, notif).run("gameLogin");
                 }
 
                 else {System.out.print(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);}
@@ -77,16 +78,9 @@ private final ServerFacade server;
         }
 
     }
-
-    @Override
-    public void notify(ServerMessage message) {
-        System.out.println("\n" + SET_BG_COLOR_MAGENTA + message.getMessage());
-        printPrompt();
-
-    }
-
     private void printPrompt() {
         System.out.print(RESET_TEXT_COLOR + "\n" + ">>> ");
     }
+
 
 }
