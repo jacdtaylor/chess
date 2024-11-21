@@ -55,7 +55,7 @@ public class GameClient {
             return switch (cmd) {
                 case "move" -> takeAMove(params);
                 case "print" -> printBoard();
-                case "quit" -> "GOODBYE\n";
+                case "quit" -> leaveGame();
                 default -> "HELP";
             };
         } catch (Exception ex) {
@@ -66,6 +66,21 @@ public class GameClient {
 
     }
 
+
+    public String leaveGame() {
+        GameData currentGame = server.getGame(gameID);
+
+        if (username.equals(currentGame.whiteUsername())) {
+            currentGame = new GameData(currentGame.gameID(),null, currentGame.blackUsername(), currentGame.gameName(), currentGame.game());
+            server.updateGame(currentGame);
+        }
+        else if (username.equals(currentGame.blackUsername())) {
+            currentGame = new GameData(currentGame.gameID(), currentGame.whiteUsername(), null, currentGame.gameName(), currentGame.game());
+            server.updateGame(currentGame);
+        }
+        wb.leaveGame(auth,gameID,username);
+        return "GOODBYE\n";
+    }
 
     public String takeAMove(String... params) throws Exception {
         GameData currentGame = server.getGame(gameID);
