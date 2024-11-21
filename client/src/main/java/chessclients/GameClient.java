@@ -58,6 +58,7 @@ public class GameClient {
                 case "print" -> printBoard();
                 case "quit" -> leaveGame();
                 case "display" -> checkPiece(params);
+                case "resign" -> resign();
                 default -> "HELP";
             };
         } catch (Exception ex) {
@@ -156,6 +157,29 @@ public class GameClient {
         catch (Exception ex) {
             return "PLEASE SELECT A PIECE";
         }
+    }
+
+    public String resign() {
+        GameData currentGame = server.getGame(gameID);
+        String winner;
+        GameData updatedGame;
+        if (username.equals(currentGame.whiteUsername())) {
+            updatedGame = new GameData(currentGame.gameID(),"RESIGNED", currentGame.blackUsername(), currentGame.gameName(),currentGame.game());
+
+
+            winner = currentGame.blackUsername();
+        }
+        else if (username.equals(currentGame.blackUsername())) {
+            updatedGame = new GameData(currentGame.gameID(), currentGame.whiteUsername(), "RESIGNED", currentGame.gameName(),currentGame.game());
+
+            winner = currentGame.whiteUsername();
+        }
+        else {
+            return "CANNOT RESIGN";}
+
+        server.updateGame(updatedGame);
+        wb.resignGame(auth, gameID, username);
+        return "Resigned from Game:";
     }
 
     private boolean observerCheck(GameData currentGame) {
