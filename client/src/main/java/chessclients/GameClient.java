@@ -2,6 +2,7 @@ package chessclients;
 
 import chess.ChessGame;
 import chess.ChessMove;
+import chess.ChessPosition;
 import model.GameData;
 import org.glassfish.tyrus.spi.WebSocketEngine;
 import ui.VisualizeBoard;
@@ -56,6 +57,7 @@ public class GameClient {
                 case "move" -> takeAMove(params);
                 case "print" -> printBoard();
                 case "quit" -> leaveGame();
+                case "display" -> checkPiece(params);
                 default -> "HELP";
             };
         } catch (Exception ex) {
@@ -131,9 +133,36 @@ public class GameClient {
     }
 
 
+    public String checkPiece(String... params) {
+        try {
+
+
+            GameData currentGame = server.getGame(gameID);
+            ChessGame game = currentGame.game();
+
+            ChessPosition chessPosition = MoveInterpreter.translatePosition(params[0]);
+            game.setTeamTurn(game.getBoard().getPiece(chessPosition).getTeamColor());
+
+            currentGame = new GameData(currentGame.gameID(), currentGame.whiteUsername(), currentGame.blackUsername(), currentGame.gameName(), game);
+
+            if (username.equals(currentGame.whiteUsername())) {
+                return VisualizeBoard.produceWhiteBoard(game, chessPosition);
+            } else if (username.equals(currentGame.blackUsername())) {
+                return VisualizeBoard.produceBlackBoard(game, chessPosition);
+            } else {
+                return VisualizeBoard.produceWhiteBoard(game, chessPosition);
+            }
+        }
+        catch (Exception ex) {
+            return "PLEASE SELECT A PIECE";
+        }
+    }
+
     private boolean observerCheck(GameData currentGame) {
         return (!Objects.equals(username, currentGame.whiteUsername()) && !Objects.equals(username, currentGame.blackUsername()));
     }
+
+
 
 
     private GameData getCurrentGame(int id)
