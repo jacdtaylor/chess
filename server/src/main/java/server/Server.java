@@ -40,7 +40,7 @@ public class Server {
 
         Spark.delete("/db", this::clearDB);
         Spark.post("/user", this::registerUser);
-        Spark.get("/user", this::getUser);
+        Spark.put("/name", this::getUser);
         Spark.post("/session",this::loginUser);
         Spark.delete("/session",this::logout);
         Spark.get("/game",this::listGames);
@@ -136,12 +136,16 @@ public class Server {
     }
 
     private Object getGame(Request req, Response res) throws DataAccessException {
+
         GameData currentGame = gameService.getGameData(Integer.parseInt(req.body()));
+        res.status(200);
         return new Gson().toJson(currentGame);
     }
 
     private Object getUser(Request req, Response res) throws DataAccessException {
-        String username = userService.getUser(req.body());
+        String auth = req.headers("authorization");
+        String username = userService.getUser(auth);
+        res.status(200);
         return username;
     }
 

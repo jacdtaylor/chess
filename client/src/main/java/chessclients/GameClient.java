@@ -29,7 +29,8 @@ public class GameClient {
         if (gameID != null) {this.gameID = gameID;}
 
         this.auth = auth;
-        username = server.getUser(auth);
+        if (auth != null) {
+        username = server.getUser(auth);}
         if (gameID != null) {
             wb.joinGame(auth,gameID, username);
         }

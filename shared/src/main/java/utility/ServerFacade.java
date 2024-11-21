@@ -21,15 +21,16 @@ public class ServerFacade {
     }
 
     public String getUser(String authToken) {
-        var path = "user";
-        record GetUserResponse(String name) {
-        }
-        return this.makeRequest("GET", path, authToken,GetUserResponse.class,null).name();
+        var path = "/name";
+
+        var response = this.makeRequest("PUT", path, null,String.class,authToken);
+        return response;
     }
 
     public AuthData registerUser(UserData user) throws ResponseException {
         var path = "/user";
-        return this.makeRequest("POST", path, user, AuthData.class, null);
+        AuthData response = this.makeRequest("POST", path, user, AuthData.class, null);
+        return response;
     }
 
     public AuthData loginUser(UserData user) throws ResponseException {

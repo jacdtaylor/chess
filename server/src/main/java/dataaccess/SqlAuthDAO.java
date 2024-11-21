@@ -91,7 +91,7 @@ public class SqlAuthDAO implements AuthDAO{
 
     @Override
     public String getUserFromAuth(String auth) throws DataAccessException {
-        AuthData data = null;
+        AuthData data;
         data = getAuth(auth);
         return data.username();
     }
