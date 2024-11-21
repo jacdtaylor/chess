@@ -87,11 +87,14 @@ public class SqlGameDAO implements GameDAO{
 
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public GameData updateGame(GameData game) throws DataAccessException {
         if (getGame(game.gameID()) == null) {throw new DataAccessException("game does not exist");}
         deleteGame(game);
         createGame(game);
+        return getGame(game.gameID());
     }
+
+
 
     @Override
     public Collection<GameData> listGames() {

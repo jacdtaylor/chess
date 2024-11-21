@@ -3,6 +3,7 @@ package dataaccess;
 import exception.DataAccessException;
 import exception.NonexistantGame;
 import model.GameData;
+import org.eclipse.jetty.util.annotation.ManagedObject;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -21,14 +22,19 @@ public class MemoryGameDAO implements GameDAO{
 
 
     @Override
-    public void updateGame(GameData game) throws DataAccessException {
+    public GameData updateGame(GameData game) throws DataAccessException {
         if (!gameDataHash.containsKey(Integer.toString(game.gameID()))) {
             throw new DataAccessException("Game does not exist");
         }
         gameDataHash.remove(Integer.toString(game.gameID()));
         gameDataHash.put(Integer.toString(game.gameID()), game);
 
+        return getGame(game.gameID());
+
     }
+
+
+
 
     @Override
     public Collection<GameData> listGames() {

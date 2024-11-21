@@ -22,6 +22,6 @@ public class NotificationHandler {
     };
 
     private void printPrompt() {
-        System.out.print(RESET_TEXT_COLOR + "\n" + ">>> ");
+        System.out.print(RESET_TEXT_COLOR + ">>> ");
     }
 }

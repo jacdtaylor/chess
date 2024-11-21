@@ -1,5 +1,6 @@
 package utility;
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import exceptions.ResponseException;
 import model.AuthData;
@@ -18,6 +19,7 @@ public class ServerFacade {
     public ServerFacade(String url) {
         serverUrl = url;
     }
+
 
 
     public AuthData registerUser(UserData user) throws ResponseException {
@@ -61,6 +63,18 @@ public class ServerFacade {
     public void clearAll() throws ResponseException {
         var path = "/db";
         this.makeRequest("DELETE",path,null,null,null);
+    }
+
+    public GameData updateGame(GameData game) {
+        var path= "/update";
+        var response = this.makeRequest("PUT",path,game,GameData.class,null);
+        return response;
+    }
+
+    public GameData getGame(int gameID) {
+        var path = "/current";
+        var response = this.makeRequest("PUT", path, gameID, GameData.class, null);
+        return response;
     }
 
 

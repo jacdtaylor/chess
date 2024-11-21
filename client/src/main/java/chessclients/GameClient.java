@@ -1,8 +1,10 @@
 package chessclients;
 
 import chess.ChessGame;
+import chess.ChessMove;
 import model.GameData;
 import org.glassfish.tyrus.spi.WebSocketEngine;
+import utility.MoveInterpreter;
 import utility.ServerFacade;
 import websocket.NotificationHandler;
 import websocket.WebSocketFacade;
@@ -52,13 +54,25 @@ public class GameClient {
     }
 
 
-    public String takeAMove(String... params) {
-        GameData currentGame = getCurrentGame()
+    public String takeAMove(String... params) throws Exception {
+        GameData currentGame = server.getGame(gameID);
         int newID = currentGame.gameID();
+        ChessGame game = currentGame.game();
+        ChessMove targetMove = MoveInterpreter.translateMove(params[0]);
+        try {
+            game.makeMove(targetMove);
+            GameData updatedGameData = new GameData(currentGame.gameID(), currentGame.whiteUsername(),
+                    currentGame.blackUsername(), currentGame.gameName(), game);
+            server.updateGame(updatedGameData);
+            wb.makeMove(auth,gameID,game);
+            return "made move" + params[0];
+        }
+        catch (Exception ex) {
+            return "INVALID MOVE";
+        }
 
 
-        wb.makeMove(auth,gameID);
-        return "made move" + params[0];
+
 
     }
 

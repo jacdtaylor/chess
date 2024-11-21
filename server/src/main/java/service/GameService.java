@@ -67,8 +67,12 @@ public class GameService {
         }
     }
 
+    public GameData updateGame(GameData game) throws DataAccessException {
+        return gameDAO.updateGame(game);
+    }
 
-
+    public GameData getGameData(int gameID) throws DataAccessException {
+        return gameDAO.getGame(gameID);}
 
     public int createGame(String authToken, String gameName) throws DataAccessException {
 //        return 8;

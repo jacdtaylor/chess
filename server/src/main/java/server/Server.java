@@ -45,6 +45,8 @@ public class Server {
         Spark.get("/game",this::listGames);
         Spark.post("/game", this::createGame);
         Spark.put("/game", this::joinGame);
+        Spark.put("/update", this::updateGame);
+        Spark.put("/current", this::getGame);
 
         Spark.exception(DataAccessException.class, this::dataAccessHandler);
         Spark.exception(GameManagerError.class, this::takenHandler);
@@ -123,6 +125,19 @@ public class Server {
         return new Gson().toJson(Map.of("gameID", newGameID));
     }
 
+    private Object updateGame(Request req, Response res) throws DataAccessException {
+        String auth = req.headers("authorization");
+        GameData body = new Gson().fromJson(req.body(), GameData.class);
+        res.status(200);
+        GameData updatedGame = gameService.updateGame(body);
+        return new Gson().toJson(updatedGame);
+
+    }
+
+    private Object getGame(Request req, Response res) throws DataAccessException {
+        GameData currentGame = gameService.getGameData(Integer.parseInt(req.body()));
+        return new Gson().toJson(currentGame);
+    }
 
 
 
