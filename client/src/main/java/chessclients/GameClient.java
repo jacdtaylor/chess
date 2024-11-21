@@ -13,6 +13,7 @@ import websocket.WebSocketFacade;
 import javax.websocket.Endpoint;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Objects;
 
 public class GameClient {
     private final ServerFacade server;
@@ -31,9 +32,17 @@ public class GameClient {
         this.auth = auth;
         if (auth != null) {
         username = server.getUser(auth);}
-        if (gameID != null) {
+        if (gameID != null && !observerCheck(server.getGame(gameID))) {
             wb.joinGame(auth,gameID, username);
+            System.out.print(printBoard());
         }
+        else if (gameID != null && observerCheck(server.getGame(gameID))) {
+            wb.observeGame(auth,gameID,username);
+            System.out.print(printBoard());
+
+
+        }
+
     }
 
 
@@ -45,7 +54,7 @@ public class GameClient {
         try {
             return switch (cmd) {
                 case "move" -> takeAMove(params);
-                case "print" -> "print the board";
+                case "print" -> printBoard();
                 case "quit" -> "GOODBYE\n";
                 default -> "HELP";
             };
@@ -60,11 +69,20 @@ public class GameClient {
 
     public String takeAMove(String... params) throws Exception {
         GameData currentGame = server.getGame(gameID);
-        int newID = currentGame.gameID();
+
         ChessGame game = currentGame.game();
+
         ChessMove targetMove = MoveInterpreter.translateMove(params[0]);
+        ChessGame.TeamColor currentColor = game.getTeamTurn();
+
+        if (!Objects.equals(username, currentGame.whiteUsername()) && !Objects.equals(username, currentGame.blackUsername()))
+        {return "OBSERVERS CANNOT MAKE MOVES\n";}
+        if (username.equals(currentGame.whiteUsername()) && currentColor.equals(ChessGame.TeamColor.BLACK))
+        {return "NOT YOUR TURN\n";}
+        if (username.equals(currentGame.blackUsername()) && currentColor.equals(ChessGame.TeamColor.WHITE))
+        {return "NOT YOUR TURN\n";}
         try {
-            ChessGame.TeamColor currentColor = game.getTeamTurn();
+
             game.makeMove(targetMove);
             GameData updatedGameData = new GameData(currentGame.gameID(), currentGame.whiteUsername(),
                     currentGame.blackUsername(), currentGame.gameName(), game);
@@ -83,6 +101,25 @@ public class GameClient {
 
 
     }
+
+    public String printBoard() {
+        GameData currentGame = server.getGame(gameID);
+        ChessGame game = currentGame.game();
+      if (username.equals(currentGame.whiteUsername())) {
+          return VisualizeBoard.produceWhiteBoard(game,null);}
+      else if (username.equals(currentGame.blackUsername())) {
+          return VisualizeBoard.produceBlackBoard(game, null);}
+      else {
+          return VisualizeBoard.produceWhiteBoard(game,null);
+      }
+
+    }
+
+
+    private boolean observerCheck(GameData currentGame) {
+        return (!Objects.equals(username, currentGame.whiteUsername()) && !Objects.equals(username, currentGame.blackUsername()));
+    }
+
 
     private GameData getCurrentGame(int id)
         {Collection<GameData> allGames = server.listGames(auth);

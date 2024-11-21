@@ -60,7 +60,11 @@ private final ServerFacade server;
                     new ChessRepl(server, result, gameID, notif).run("postLogin");}
 
                 else if (result.contains("Join Game")) {
-
+                    String numberString = result.replaceAll("[^0-9]", "");
+                    int newID = Integer.parseInt(numberString);
+                    new ChessRepl(server, auth, newID, notif).run("gameLogin");
+                }
+                else if (result.contains("Observe Game")) {
                     String numberString = result.replaceAll("[^0-9]", "");
                     int newID = Integer.parseInt(numberString);
                     new ChessRepl(server, auth, newID, notif).run("gameLogin");

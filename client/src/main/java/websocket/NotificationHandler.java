@@ -15,13 +15,13 @@ public class NotificationHandler {
             ChessGame currentGame = message.getChessGame();
 
             if (currentGame.getTeamTurn().equals(ChessGame.TeamColor.WHITE)){
-            System.out.println("\n" + VisualizeBoard.produceWhiteBoard(currentGame,null));}
-            else {System.out.println("\n" + VisualizeBoard.produceBlackBoard(currentGame,null));}
+            System.out.print("\n" + VisualizeBoard.produceWhiteBoard(currentGame,null));}
+            else {System.out.print("\n" + VisualizeBoard.produceBlackBoard(currentGame,null));}
         }
 
-
+        else {
         System.out.println("\n" + SET_TEXT_COLOR_MAGENTA + message.getMessage() + RESET_TEXT_COLOR);
-        printPrompt();
+        printPrompt();}
     };
 
     private void printPrompt() {

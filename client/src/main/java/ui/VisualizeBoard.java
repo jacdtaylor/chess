@@ -27,7 +27,7 @@ public class VisualizeBoard {
 
         String visualization = """
                 """;
-        String endLines = SET_BG_COLOR_BLACK +
+        String endLines = SET_TEXT_COLOR_WHITE + SET_BG_COLOR_BLACK +
                 "   " + FULLWIDTHH + FULLWIDTHG + FULLWIDTHF + FULLWIDTHE
                 +FULLWIDTHD + FULLWIDTHC + FULLWIDTHB + FULLWIDTHA + "   "
                 + RESET_BG_COLOR + "\n";

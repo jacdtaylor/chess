@@ -48,26 +48,30 @@ public class LoginClient {
     }
 
     public String observeGame(String... params) {
-        if (params.length == 0 ) {return SET_TEXT_COLOR_RED + "MISSING ARGUMENT" + RESET_TEXT_COLOR + "\n";
-        }
-//        if (params.length > 1 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
-//        }
+            if (params.length < 1 ) {return SET_TEXT_COLOR_RED + "MISSING ARGUMENT" + RESET_TEXT_COLOR + "\n";
+            }
+            if (params.length > 2 ) {return SET_TEXT_COLOR_RED + "TOO MANY ARGUMENTS" + RESET_TEXT_COLOR + "\n";
+            }
+
             try {
                 Collection<GameData> allGames = server.listGames(auth);
                 GameData[] gameArray = allGames.toArray(new GameData[0]);
-                int id = Integer.parseInt(params[0]);
+                int id = Integer.parseInt(params[1]);
 
                 GameData currentGame = gameArray[id - 1];
                 int newID = currentGame.gameID();
 
-                return
-                        VisualizeBoard.produceWhiteBoard(currentGame.game(),translatePosition(params[1])) +
-                        VisualizeBoard.produceBlackBoard(currentGame.game(), null);
+                return "Observe Game " + params[1];
 
-            } catch (Exception ex) {
-                return SET_TEXT_COLOR_RED + "GAME DOES NOT EXIST" + RESET_TEXT_COLOR + "\n";
+
+
             }
-        }
+            catch (ResponseException ex) {
+                return SET_TEXT_COLOR_RED + "COLOR TAKEN" + RESET_TEXT_COLOR + "\n";}
+            catch (Exception ex) {
+                return SET_TEXT_COLOR_RED + "GAME DOES NOT EXIST" + RESET_TEXT_COLOR + "\n";
+
+            }}
 
 
     public String returnList(String... params) {
