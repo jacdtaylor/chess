@@ -32,9 +32,9 @@ public class WebSocketHandler {
 
     private void connectUser(String auth, int id, Session session, String username) throws IOException {
         connections.add(auth,session,id);
-        String mess = "PLAYER JOINED";
+        String mess = username + " JOINED THE GAME";
         ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-        serverMess.setUsername(username);
+
         serverMess.addMessage(mess);
         connections.broadcast(auth, serverMess, id);
     }
@@ -43,28 +43,28 @@ public class WebSocketHandler {
         ServerMessage loadGameNoti = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
         loadGameNoti.setChessGame(game);
         connections.broadcast(auth,loadGameNoti,id);
-        String mess = "PLAYER MADE A MOVE";
+        String mess = username + " MADE A MOVE";
         ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
         serverMess.addMessage(mess);
-        serverMess.setUsername(username);
+
         connections.broadcast(auth, serverMess, id);
 
     }
 
     private void leaveUser(String auth, int id, String username) throws IOException {
         connections.remove(auth);
-        String mess = "PLAYER LEFT GAME";
+        String mess = username + " LEFT THE GAME";
         ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
         serverMess.addMessage(mess);
-        serverMess.setUsername(username);
+
         connections.broadcast(auth, serverMess, id);
     }
 
     private void resignUser(String auth, int id, String username) throws IOException {
-        String mess = "PLAYER RESIGNED GAME";
+        String mess = username + " RESIGNED";
         ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
         serverMess.addMessage(mess);
-        serverMess.setUsername(username);
+
         connections.broadcast(auth, serverMess, id);
     }
 
