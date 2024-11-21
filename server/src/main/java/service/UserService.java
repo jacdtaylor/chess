@@ -23,6 +23,12 @@ public class UserService {
 
 
     }
+
+    public String getUser(String auth) throws DataAccessException {
+        return authDAO.getUserFromAuth(auth);
+    }
+
+
     public AuthData register(UserData user) throws DataAccessException, LoginException {
         if (userDAO.confirmUsername(user.username())) {
             throw new GameManagerError("User already exists");

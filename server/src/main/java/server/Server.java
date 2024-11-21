@@ -40,6 +40,7 @@ public class Server {
 
         Spark.delete("/db", this::clearDB);
         Spark.post("/user", this::registerUser);
+        Spark.get("/user", this::getUser);
         Spark.post("/session",this::loginUser);
         Spark.delete("/session",this::logout);
         Spark.get("/game",this::listGames);
@@ -139,6 +140,10 @@ public class Server {
         return new Gson().toJson(currentGame);
     }
 
+    private Object getUser(Request req, Response res) throws DataAccessException {
+        String username = userService.getUser(req.body());
+        return username;
+    }
 
 
 

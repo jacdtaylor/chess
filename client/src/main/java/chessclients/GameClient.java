@@ -17,9 +17,10 @@ import java.util.Collection;
 public class GameClient {
     private final ServerFacade server;
     private final WebSocketFacade wb;
-    private NotificationHandler notif;
+    private final NotificationHandler notif;
     private int gameID;
-    private String auth;
+    private final String auth;
+    String username;
     public GameClient(ServerFacade server, String auth, Integer gameID, NotificationHandler notificationHandler) {
         this.server = server;
         this.notif = notificationHandler;
@@ -28,8 +29,9 @@ public class GameClient {
         if (gameID != null) {this.gameID = gameID;}
 
         this.auth = auth;
+        username = server.getUser(auth);
         if (gameID != null) {
-            wb.joinGame(auth,gameID);
+            wb.joinGame(auth,gameID, username);
         }
     }
 
@@ -66,7 +68,8 @@ public class GameClient {
             GameData updatedGameData = new GameData(currentGame.gameID(), currentGame.whiteUsername(),
                     currentGame.blackUsername(), currentGame.gameName(), game);
             server.updateGame(updatedGameData);
-            wb.makeMove(auth,gameID,game);
+
+            wb.makeMove(auth,gameID,game, username);
             if (currentColor.equals(ChessGame.TeamColor.WHITE)) {return VisualizeBoard.produceWhiteBoard(game, null);}
             else {return VisualizeBoard.produceBlackBoard(game,null);}
 

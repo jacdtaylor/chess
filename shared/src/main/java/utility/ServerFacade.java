@@ -20,7 +20,12 @@ public class ServerFacade {
         serverUrl = url;
     }
 
-
+    public String getUser(String authToken) {
+        var path = "user";
+        record GetUserResponse(String name) {
+        }
+        return this.makeRequest("GET", path, authToken,GetUserResponse.class,null).name();
+    }
 
     public AuthData registerUser(UserData user) throws ResponseException {
         var path = "/user";
