@@ -4,6 +4,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 import model.GameData;
 import org.glassfish.tyrus.spi.WebSocketEngine;
+import ui.VisualizeBoard;
 import utility.MoveInterpreter;
 import utility.ServerFacade;
 import websocket.NotificationHandler;
@@ -60,12 +61,15 @@ public class GameClient {
         ChessGame game = currentGame.game();
         ChessMove targetMove = MoveInterpreter.translateMove(params[0]);
         try {
+            ChessGame.TeamColor currentColor = game.getTeamTurn();
             game.makeMove(targetMove);
             GameData updatedGameData = new GameData(currentGame.gameID(), currentGame.whiteUsername(),
                     currentGame.blackUsername(), currentGame.gameName(), game);
             server.updateGame(updatedGameData);
             wb.makeMove(auth,gameID,game);
-            return "made move" + params[0];
+            if (currentColor.equals(ChessGame.TeamColor.WHITE)) {return VisualizeBoard.produceWhiteBoard(game, null);}
+            else {return VisualizeBoard.produceBlackBoard(game,null);}
+
         }
         catch (Exception ex) {
             return "INVALID MOVE";
