@@ -1,6 +1,8 @@
 package websocket;
 
 
+import chess.ChessGame;
+import ui.VisualizeBoard;
 import websocket.messages.ServerMessage;
 
 import static ui.EscapeSequences.*;
@@ -10,8 +12,8 @@ public class NotificationHandler {
 
     public void notify(ServerMessage message) {
         if (message.getServerMessageType().equals(ServerMessage.ServerMessageType.LOAD_GAME)) {
-
-
+            ChessGame currentGame = message.getChessGame();
+            System.out.println("\n" + VisualizeBoard.produceWhiteBoard(currentGame,null));
         }
 
 

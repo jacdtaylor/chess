@@ -1,5 +1,7 @@
 package chessclients;
 
+import chess.ChessGame;
+import model.GameData;
 import org.glassfish.tyrus.spi.WebSocketEngine;
 import utility.ServerFacade;
 import websocket.NotificationHandler;
@@ -7,6 +9,7 @@ import websocket.WebSocketFacade;
 
 import javax.websocket.Endpoint;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class GameClient {
     private final ServerFacade server;
@@ -50,8 +53,19 @@ public class GameClient {
 
 
     public String takeAMove(String... params) {
+        GameData currentGame = getCurrentGame()
+        int newID = currentGame.gameID();
+
+
         wb.makeMove(auth,gameID);
         return "made move" + params[0];
 
     }
+
+    private GameData getCurrentGame(int id)
+        {Collection<GameData> allGames = server.listGames(auth);
+        GameData[] gameArray = allGames.toArray(new GameData[0]);
+        GameData currentGame = gameArray[id - 1];
+        return currentGame;
+        }
 }

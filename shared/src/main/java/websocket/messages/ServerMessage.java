@@ -14,6 +14,7 @@ public class ServerMessage {
     ServerMessageType serverMessageType;
     String message;
     ChessGame chessGame;
+    String username;
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -40,6 +41,12 @@ public class ServerMessage {
     public ChessGame getChessGame() {
         return chessGame;
     }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {return username;}
 
 
     @Override

@@ -1,6 +1,7 @@
 package server.websocket;
 
 
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
 import org.eclipse.jetty.websocket.api.Session;
@@ -22,7 +23,7 @@ public class WebSocketHandler {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
         switch (command.getCommandType()) {
             case CONNECT -> connectUser(command.getAuthToken(), command.getGameID(), session);
-            case MAKE_MOVE -> makeMove(command.getAuthToken(), command.getGameID());
+            case MAKE_MOVE -> makeMove(command.getAuthToken(), command.getGameID(), command.getChessGame());
             case LEAVE -> leaveUser(command.getAuthToken(), command.getGameID());
             case RESIGN -> resignUser(command.getAuthToken(), command.getGameID());
 
@@ -37,8 +38,9 @@ public class WebSocketHandler {
         connections.broadcast(auth, serverMess, id);
     }
 
-    private void makeMove(String auth, int id) throws IOException {
+    private void makeMove(String auth, int id, ChessGame game) throws IOException {
         ServerMessage loadGameNoti = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
+        loadGameNoti.setChessGame(game);
         connections.broadcast(auth,loadGameNoti,id);
         String mess = "PLAYER MADE A MOVE";
         ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);

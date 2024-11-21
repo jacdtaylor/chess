@@ -18,6 +18,7 @@ public class UserGameCommand {
 
     private final Integer gameID;
 
+    String username;
     ChessGame chessGame;
 
     public UserGameCommand(CommandType commandType, String authToken, Integer gameID) {
@@ -48,6 +49,13 @@ public class UserGameCommand {
     public void setChessGame(ChessGame chessGame) {
         this.chessGame = chessGame;
     }
+    public ChessGame getChessGame() {return chessGame;}
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {return username;}
 
     @Override
     public boolean equals(Object o) {
