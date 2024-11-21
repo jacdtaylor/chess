@@ -3,6 +3,7 @@ package websocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import exceptions.ResponseException;
+import model.GameData;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ServerMessage;
 
@@ -68,7 +69,7 @@ public class WebSocketFacade extends Endpoint {
 
 
 
-    public void makeMove(String auth, int gameID, ChessGame game, String user) throws ResponseException {
+    public void makeMove(String auth, int gameID, GameData game, String user) throws ResponseException {
         try {
             var action = new UserGameCommand(UserGameCommand.CommandType.MAKE_MOVE, auth, gameID);
             action.setChessGame(game);

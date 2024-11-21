@@ -4,6 +4,7 @@ package server.websocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.AuthDAO;
+import model.GameData;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
@@ -50,7 +51,7 @@ public class WebSocketHandler {
     }
 
 
-    private void makeMove(String auth, int id, ChessGame game, String username) throws IOException {
+    private void makeMove(String auth, int id, GameData game, String username) throws IOException {
         ServerMessage loadGameNoti = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
         loadGameNoti.setChessGame(game);
         connections.broadcast(auth,loadGameNoti,id);
