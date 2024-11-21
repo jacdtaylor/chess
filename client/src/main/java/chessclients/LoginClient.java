@@ -56,12 +56,12 @@ public class LoginClient {
             try {
                 Collection<GameData> allGames = server.listGames(auth);
                 GameData[] gameArray = allGames.toArray(new GameData[0]);
-                int id = Integer.parseInt(params[1]);
+                int id = Integer.parseInt(params[0]);
 
                 GameData currentGame = gameArray[id - 1];
                 int newID = currentGame.gameID();
 
-                return "Observe Game " + params[1];
+                return "Observe Game " + params[0];
 
 
 
