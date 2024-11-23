@@ -155,14 +155,14 @@ public class Server {
 
     private Object takenHandler(GameManagerError e, Request req, Response res) {
         res.status(403);
-        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        var body = new Gson().toJson(Map.of("message", String.format("ErrorMessage: %s", e.getMessage()), "success", false));
         res.type("application/json");
         res.body(body);
         return body;
     }
 
     private Object dataAccessHandler(DataAccessException e, Request req, Response res) {
-        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        var body = new Gson().toJson(Map.of("message", String.format("ErrorMessage: %s", e.getMessage()), "success", false));
         res.type("application/json");
         res.status(401);
         res.body(body);
@@ -171,7 +171,7 @@ public class Server {
     }
 
     private Object exceptionHandler(Exception e, Request req, Response res) {
-        var body = new Gson().toJson(Map.of("message", String.format("Error: %s", e.getMessage()), "success", false));
+        var body = new Gson().toJson(Map.of("message", String.format("ErrorMessage: %s", e.getMessage()), "success", false));
         res.type("application/json");
         res.status(400);
         res.body(body);

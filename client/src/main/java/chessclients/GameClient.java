@@ -36,12 +36,11 @@ public class GameClient {
         if (gameID != null && !observerCheck(server.getGame(gameID))) {
             GameData currentGame = server.getGame(gameID);
             wb.joinGame(auth,gameID,currentGame, username);
-            System.out.print(printBoard());
+
         }
         else if (gameID != null && observerCheck(server.getGame(gameID))) {
             GameData currentGame = server.getGame(gameID);
             wb.observeGame(auth,gameID,currentGame, username);
-            System.out.print(printBoard());
 
 
         }

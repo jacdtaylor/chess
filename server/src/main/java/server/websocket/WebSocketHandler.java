@@ -9,6 +9,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.UserGameCommand;
+import websocket.messages.LoadGame;
+import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -35,36 +37,29 @@ public class WebSocketHandler {
     private void connectUser(String auth, int id, GameData game,Session session, String username) throws IOException {
         connections.add(auth,session,id);
         String mess = username + " JOINED THE GAME";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-        serverMess.addMessage(mess);
+        Notification serverMess = new Notification(mess);
         connections.broadcast(auth, serverMess, id, false);
+        LoadGame loadGameNoti = new LoadGame(game);
 
-        ServerMessage loadGameNoti = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
-        loadGameNoti.setChessGame(game);
         connections.broadcast(auth,loadGameNoti,id, true);
     }
 
     private void connectObserver(String auth, int id, GameData game, Session session, String username) throws IOException {
         connections.add(auth,session,id);
         String mess = username + " JOINED THE GAME AS AN OBSERVER";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-
-        serverMess.addMessage(mess);
+        Notification serverMess = new Notification(mess);
         connections.broadcast(auth, serverMess, id, false);
 
-        ServerMessage loadGameNoti = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
-        loadGameNoti.setChessGame(game);
+        LoadGame loadGameNoti = new LoadGame(game);
         connections.broadcast(auth,loadGameNoti,id, true);
     }
 
 
     private void makeMove(String auth, int id, GameData game, String username) throws IOException {
-        ServerMessage loadGameNoti = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
-        loadGameNoti.setChessGame(game);
+        LoadGame loadGameNoti = new LoadGame(game);
         connections.broadcast(auth,loadGameNoti,id, false);
         String mess = username + " MADE A MOVE";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-        serverMess.addMessage(mess);
+        Notification serverMess = new Notification(mess);
 
         connections.broadcast(auth, serverMess, id, false);
 
@@ -73,16 +68,16 @@ public class WebSocketHandler {
     private void leaveUser(String auth, int id, String username) throws IOException {
         connections.remove(auth);
         String mess = username + " LEFT THE GAME";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-        serverMess.addMessage(mess);
+        Notification serverMess = new Notification(mess);
+
 
         connections.broadcast(auth, serverMess, id, false);
     }
 
     private void resignUser(String auth, int id, String username) throws IOException {
         String mess = username + " RESIGNED";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-        serverMess.addMessage(mess);
+        Notification serverMess = new Notification(mess);
+
 
         connections.broadcast(auth, serverMess, id, false);
     }

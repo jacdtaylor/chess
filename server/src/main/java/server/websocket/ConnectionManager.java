@@ -28,7 +28,7 @@ public class ConnectionManager {
                 if (self && c.visitorName.equals(excludeVisitorName)) {
                     c.send(new Gson().toJson(notification));
                 }
-//
+
                 if (!self && !c.visitorName.equals(excludeVisitorName) && c.currentID == targetID) {
                     c.send(new Gson().toJson(notification));
                 }
