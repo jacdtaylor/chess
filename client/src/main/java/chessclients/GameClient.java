@@ -86,21 +86,9 @@ public class GameClient {
     }
 
     public String takeAMove(String... params) throws Exception {
-
-
-
         GameData currentGame = server.getGame(gameID);
+
         ChessGame game = currentGame.game();
-
-        if (game.isInCheckmate(ChessGame.TeamColor.WHITE) |
-                game.isInCheckmate(ChessGame.TeamColor.BLACK) |
-                    game.isInStalemate(ChessGame.TeamColor.WHITE) |
-                        game.isInStalemate(ChessGame.TeamColor.BLACK) |
-                            currentGame.blackUsername().equals("RESIGNED") |
-                                currentGame.whiteUsername().equals("RESIGNED"))
-        {return "CANNOT PLAY: GAME IS OVER\n";}
-
-
 
         ChessMove targetMove = MoveInterpreter.translateMove(params[0]);
         ChessGame.TeamColor currentColor = game.getTeamTurn();
@@ -118,10 +106,7 @@ public class GameClient {
                     currentGame.blackUsername(), currentGame.gameName(), game);
             server.updateGame(updatedGameData);
 
-            wb.makeMove(auth,gameID,updatedGameData, username);
-
-
-
+            wb.makeMove(auth,gameID,game, username);
             if (currentColor.equals(ChessGame.TeamColor.WHITE)) {return VisualizeBoard.produceWhiteBoard(game, null);}
             else {return VisualizeBoard.produceBlackBoard(game,null);}
 

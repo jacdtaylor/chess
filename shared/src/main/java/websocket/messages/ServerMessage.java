@@ -11,15 +11,11 @@ import java.util.Objects;
  * Note: You can add to this class, but you should not alter the existing
  * methods.
  */
-public abstract class ServerMessage {
+public class ServerMessage {
     ServerMessageType serverMessageType;
     String message;
     GameData chessGame;
     String username;
-
-    public abstract GameData getGame();
-    public abstract String getMessage();
-    public abstract String getError();
 
     public enum ServerMessageType {
         LOAD_GAME,
@@ -35,6 +31,17 @@ public abstract class ServerMessage {
         return this.serverMessageType;
     }
 
+    public void addMessage(String message) {this.message = message;}
+
+    public String getMessage() {return this.message;}
+
+    public void setChessGame(GameData chessGame) {
+        this.chessGame = chessGame;
+    }
+
+    public GameData getChessGame() {
+        return chessGame;
+    }
 
     public void setUsername(String username) {
         this.username = username;
