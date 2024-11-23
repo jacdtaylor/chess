@@ -26,7 +26,6 @@ public class ConnectionManager {
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
 
-//
                 if (!c.visitorName.equals(excludeVisitorName) && c.currentID == targetID) {
                     c.send(new Gson().toJson(notification));
                 }

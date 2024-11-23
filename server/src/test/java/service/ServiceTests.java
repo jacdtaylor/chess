@@ -116,7 +116,7 @@ public class ServiceTests {
     @Test
     @DisplayName("Register Test +")
     void registerTestWorking() throws DataAccessException {
-        UserData user = new UserData("Sample1", "P");
+        UserData user = new UserData("Sample1", "P", "E");
         userService.register(user);
         assertEquals(userDAO.getUser("Sample1"), user);
         }
@@ -124,7 +124,7 @@ public class ServiceTests {
     @Test
     @DisplayName("Register Test -")
     void registerTestBroken() throws DataAccessException {
-        UserData user = new UserData("Sample1", "P");
+        UserData user = new UserData("Sample1", "P","E");
         userService.register(user);
         assertThrows(GameManagerError.class, ()->{userService.register(user);});
     }
@@ -133,7 +133,7 @@ public class ServiceTests {
     @Test
     @DisplayName("Login Test +")
     void loginTestWorking() throws DataAccessException {
-        UserData user = new UserData("Sample1", "P");
+        UserData user = new UserData("Sample1", "P","E");
         AuthData token = userService.register(user);
         userService.logout(token.authToken());
         AuthData token2 = userService.login(user);
@@ -143,7 +143,7 @@ public class ServiceTests {
     @Test
     @DisplayName("Login Test -")
     void loginTestBroken() throws DataAccessException {
-        UserData user = new UserData("Sample1", "P");
+        UserData user = new UserData("Sample1", "P","E");
         assertThrows(DataAccessException.class , ()->{ AuthData token2 = userService.login(user);
         ;});
     }
@@ -160,7 +160,7 @@ public class ServiceTests {
     @Test
     @DisplayName("Logout Test +")
     void logoutTestWorking() throws DataAccessException {
-        UserData user = new UserData("Sample1", "P");
+        UserData user = new UserData("Sample1", "P","E");
         AuthData token = userService.register(user);
         userService.logout(token.authToken());
 

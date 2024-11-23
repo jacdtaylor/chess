@@ -9,6 +9,8 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.UserGameCommand;
+import websocket.messages.LoadGame;
+import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -33,49 +35,60 @@ public class WebSocketHandler {
     }
 
     private void connectUser(String auth, int id, Session session, String username) throws IOException {
+
+
         connections.add(auth,session,id);
         String mess = username + " JOINED THE GAME";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-
-        serverMess.addMessage(mess);
+        Notification serverMess = new Notification(mess);
         connections.broadcast(auth, serverMess, id);
     }
 
     private void connectObserver(String auth, int id, Session session, String username) throws IOException {
         connections.add(auth,session,id);
         String mess = username + " JOINED THE GAME AS AN OBSERVER";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-
-        serverMess.addMessage(mess);
+        Notification serverMess = new Notification(mess);
         connections.broadcast(auth, serverMess, id);
     }
 
 
     private void makeMove(String auth, int id, GameData game, String username) throws IOException {
-        ServerMessage loadGameNoti = new ServerMessage(ServerMessage.ServerMessageType.LOAD_GAME);
-        loadGameNoti.setChessGame(game);
+        LoadGame loadGameNoti = new LoadGame(game);
         connections.broadcast(auth,loadGameNoti,id);
-        String mess = username + " MADE A MOVE";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-        serverMess.addMessage(mess);
 
+        String mess = username + " MADE A MOVE";
+        Notification serverMess = new Notification(mess);
         connections.broadcast(auth, serverMess, id);
+
+        ChessGame currentGame = game.game();
+        if (currentGame.isInCheckmate(ChessGame.TeamColor.WHITE)) {
+            String winMess = game.blackUsername() + " WINS!!!";
+            Notification victoryNotif = new Notification(winMess);
+            connections.broadcast(null, victoryNotif, id);
+        }
+        else if (currentGame.isInCheckmate(ChessGame.TeamColor.BLACK)) {
+            String winMess = game.whiteUsername() + " WINS!!!";
+            Notification victoryNotif = new Notification(winMess);
+            connections.broadcast(null, victoryNotif, id);
+        }
+        else if (currentGame.isInStalemate(ChessGame.TeamColor.WHITE)) {
+            String winMess = "THE GAME IS OVER: STALEMATE D:";
+            Notification victoryNotif = new Notification(winMess);
+            connections.broadcast(null, victoryNotif, id);
+        }
 
     }
 
     private void leaveUser(String auth, int id, String username) throws IOException {
         connections.remove(auth);
         String mess = username + " LEFT THE GAME";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-        serverMess.addMessage(mess);
+        Notification serverMess = new Notification(mess);
 
         connections.broadcast(auth, serverMess, id);
     }
 
     private void resignUser(String auth, int id, String username) throws IOException {
         String mess = username + " RESIGNED";
-        ServerMessage serverMess = new ServerMessage(ServerMessage.ServerMessageType.NOTIFICATION);
-        serverMess.addMessage(mess);
+        Notification serverMess = new Notification(mess);
 
         connections.broadcast(auth, serverMess, id);
     }
