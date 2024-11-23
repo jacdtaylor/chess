@@ -46,19 +46,23 @@ public class WebSocketFacade extends Endpoint {
         }
     }
 
-    public void joinGame(String auth, int gameID, String user) throws ResponseException {
+    public void joinGame(String auth, int gameID,GameData game, String user) throws ResponseException {
         try {
             var action = new UserGameCommand(UserGameCommand.CommandType.CONNECT, auth, gameID);
             action.setUsername(user);
+            action.setChessGame(game);
+
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex) {
             throw new ResponseException(ex.getMessage());
         }
     }
 
-    public void observeGame(String auth, int gameID, String user) throws ResponseException {
+    public void observeGame(String auth, int gameID,GameData game, String user) throws ResponseException {
         try {
             var action = new UserGameCommand(UserGameCommand.CommandType.OBSERVE, auth, gameID);
+            action.setChessGame(game);
+
             action.setUsername(user);
             this.session.getBasicRemote().sendText(new Gson().toJson(action));
         } catch (IOException ex) {

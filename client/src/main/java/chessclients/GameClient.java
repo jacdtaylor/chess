@@ -34,11 +34,13 @@ public class GameClient {
         if (auth != null) {
         username = server.getUser(auth);}
         if (gameID != null && !observerCheck(server.getGame(gameID))) {
-            wb.joinGame(auth,gameID, username);
+            GameData currentGame = server.getGame(gameID);
+            wb.joinGame(auth,gameID,currentGame, username);
             System.out.print(printBoard());
         }
         else if (gameID != null && observerCheck(server.getGame(gameID))) {
-            wb.observeGame(auth,gameID,username);
+            GameData currentGame = server.getGame(gameID);
+            wb.observeGame(auth,gameID,currentGame, username);
             System.out.print(printBoard());
 
 
@@ -106,7 +108,7 @@ public class GameClient {
                     currentGame.blackUsername(), currentGame.gameName(), game);
             server.updateGame(updatedGameData);
 
-            wb.makeMove(auth,gameID,game, username);
+            wb.makeMove(auth,gameID,updatedGameData, username);
             if (currentColor.equals(ChessGame.TeamColor.WHITE)) {return VisualizeBoard.produceWhiteBoard(game, null);}
             else {return VisualizeBoard.produceBlackBoard(game,null);}
 

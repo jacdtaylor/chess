@@ -21,13 +21,15 @@ public class ConnectionManager {
         connections.remove(visitorName);
     }
 
-    public void broadcast(String excludeVisitorName, ServerMessage notification, int targetID) throws IOException {
+    public void broadcast(String excludeVisitorName, ServerMessage notification, int targetID, boolean self) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
-
+                if (self && c.visitorName.equals(excludeVisitorName)) {
+                    c.send(new Gson().toJson(notification));
+                }
 //
-                if (!c.visitorName.equals(excludeVisitorName) && c.currentID == targetID) {
+                if (!self && !c.visitorName.equals(excludeVisitorName) && c.currentID == targetID) {
                     c.send(new Gson().toJson(notification));
                 }
             } else {

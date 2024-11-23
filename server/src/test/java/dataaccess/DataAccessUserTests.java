@@ -32,7 +32,7 @@ public class DataAccessUserTests {
     @Test
     @DisplayName("Clear Test")
     void clearTest() throws DataAccessException {
-        userDAO.createUser(new UserData("username","password"));
+        userDAO.createUser(new UserData("username","password", "e"));
         userDAO.clear();
         UserData data = userDAO.getUser("username");
         assertNull(data);
@@ -43,15 +43,15 @@ public class DataAccessUserTests {
     @Test
     @DisplayName("Create User -")
     void createUserNeg() throws DataAccessException {
-        userDAO.createUser(new UserData("username","password"));
-        assertThrows(Exception.class, ()->{userDAO.createUser(new UserData("username","password"));});
+        userDAO.createUser(new UserData("username","password", "e"));
+        assertThrows(Exception.class, ()->{userDAO.createUser(new UserData("username","password", "e"));});
 
     }
 
     @Test
     @DisplayName("Create User +")
     void createUserPos() throws DataAccessException {
-        userDAO.createUser(new UserData("username","password"));
+        userDAO.createUser(new UserData("username","password","e"));
         assertNotNull(userDAO.getUser("username"));
 
     }
@@ -59,7 +59,7 @@ public class DataAccessUserTests {
     @Test
     @DisplayName("Get Username +")
     void getUsernamePos() throws DataAccessException {
-        userDAO.createUser(new UserData("username","password"));
+        userDAO.createUser(new UserData("username","password", "e"));
         UserData data = userDAO.getUser("username");
         assertTrue(BCrypt.checkpw("password", data.password()));
     }
@@ -74,22 +74,22 @@ public class DataAccessUserTests {
     @Test
     @DisplayName("Validate Credentials +")
     void validatePos() throws DataAccessException {
-        userDAO.createUser(new UserData("username","password"));
-        assertTrue(userDAO.validateCredentials(new UserData("username","password")));
+        userDAO.createUser(new UserData("username","password", "e"));
+        assertTrue(userDAO.validateCredentials(new UserData("username","password", "e")));
 
     }
 
     @Test
     @DisplayName("Validate Credentials +")
     void validateNeg() throws DataAccessException {
-        userDAO.createUser(new UserData("username","password"));
-        assertFalse(userDAO.validateCredentials(new UserData("username","fake")));
+        userDAO.createUser(new UserData("username","password", "e"));
+        assertFalse(userDAO.validateCredentials(new UserData("username","fake", "e")));
     }
 
     @Test
     @DisplayName("Confirm Username +")
     void confirmUserPos() throws DataAccessException {
-        userDAO.createUser(new UserData("username","password"));
+        userDAO.createUser(new UserData("username","password","e"));
         assertTrue(userDAO.confirmUsername("username"));
     }
 
