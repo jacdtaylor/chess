@@ -14,7 +14,7 @@ import java.util.Objects;
 public class ServerMessage {
     ServerMessageType serverMessageType;
     String message;
-    GameData chessGame;
+    GameData game;
     String username;
 
     public enum ServerMessageType {
@@ -36,11 +36,11 @@ public class ServerMessage {
     public String getMessage() {return this.message;}
 
     public void setChessGame(GameData chessGame) {
-        this.chessGame = chessGame;
+        this.game = chessGame;
     }
 
     public GameData getChessGame() {
-        return chessGame;
+        return game;
     }
 
     public void setUsername(String username) {
