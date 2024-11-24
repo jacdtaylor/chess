@@ -165,11 +165,11 @@ public class WebSocketHandler {
         }
         catch (DataAccessException ex) {
             connections.add(auth,session,id);
-            ErrorMessage error = new ErrorMessage("ERROR");
+            ErrorMessage error = new ErrorMessage("ERROR: " + ex.getMessage());
             connections.broadcast(auth, new Gson().toJson(error),id, true );
         connections.remove(auth);
         } catch (Exception e) {
-            ErrorMessage error = new ErrorMessage("ERROR");
+            ErrorMessage error = new ErrorMessage("ERROR: INVALID MOVE");
             connections.broadcast(auth, new Gson().toJson(error),id, true );}
     }
 
@@ -197,7 +197,7 @@ public class WebSocketHandler {
         connections.broadcast(auth, new Gson().toJson(serverMess), id, false);}
         catch (Exception e) {
 
-            ErrorMessage error = new ErrorMessage("ERROR");
+            ErrorMessage error = new ErrorMessage("ERROR: " +e.getMessage() );
             connections.broadcast(auth, new Gson().toJson(error),id, true );}
     }
 
