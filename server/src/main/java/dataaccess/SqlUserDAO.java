@@ -24,7 +24,7 @@ public class SqlUserDAO implements UserDAO{
             CREATE TABLE IF NOT EXISTS  user (
               `username` varchar(256) NOT NULL,
               `password` varchar(256) NOT NULL,
-              `email` varchar(256) NULL,
+          
               `json` TEXT DEFAULT NULL,
               PRIMARY KEY (`username`),
               INDEX(username)
