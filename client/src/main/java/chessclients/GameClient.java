@@ -23,7 +23,7 @@ public class GameClient {
     private int gameID;
     private final String auth;
     String username;
-    public GameClient(ServerFacade server, String auth, Integer gameID, NotificationHandler notificationHandler) {
+    public GameClient(ServerFacade server, String auth, Integer gameID, NotificationHandler notificationHandler, String color) {
         this.server = server;
         this.notif = notificationHandler;
         this.wb = new WebSocketFacade(server.getServerUrl(), notif);
@@ -34,13 +34,12 @@ public class GameClient {
         if (auth != null) {
         username = server.getUser(auth);}
         if (gameID != null && !observerCheck(server.getGame(gameID))) {
-            GameData currentGame = server.getGame(gameID);
-            wb.joinGame(auth,gameID,currentGame, username);
+            wb.joinGame(auth,gameID, color);
 
         }
         else if (gameID != null && observerCheck(server.getGame(gameID))) {
             GameData currentGame = server.getGame(gameID);
-            wb.observeGame(auth,gameID,currentGame, username);
+            wb.observeGame(auth,gameID);
 
 
         }
@@ -72,53 +71,14 @@ public class GameClient {
 
 
     public String leaveGame() {
-        GameData currentGame = server.getGame(gameID);
-
-        if (username.equals(currentGame.whiteUsername())) {
-            currentGame = new GameData(currentGame.gameID(),null, currentGame.blackUsername(), currentGame.gameName(), currentGame.game());
-            server.updateGame(currentGame);
-        }
-        else if (username.equals(currentGame.blackUsername())) {
-            currentGame = new GameData(currentGame.gameID(), currentGame.whiteUsername(), null, currentGame.gameName(), currentGame.game());
-            server.updateGame(currentGame);
-        }
-        wb.leaveGame(auth,gameID,username);
+        wb.leaveGame(auth,gameID);
         return "GOODBYE\n";
     }
 
     public String takeAMove(String... params) throws Exception {
-        GameData currentGame = server.getGame(gameID);
-
-        ChessGame game = currentGame.game();
-
         ChessMove targetMove = MoveInterpreter.translateMove(params[0]);
-        ChessGame.TeamColor currentColor = game.getTeamTurn();
-
-        if (!Objects.equals(username, currentGame.whiteUsername()) && !Objects.equals(username, currentGame.blackUsername()))
-        {return "OBSERVERS CANNOT MAKE MOVES\n";}
-        if (username.equals(currentGame.whiteUsername()) && currentColor.equals(ChessGame.TeamColor.BLACK))
-        {return "NOT YOUR TURN\n";}
-        if (username.equals(currentGame.blackUsername()) && currentColor.equals(ChessGame.TeamColor.WHITE))
-        {return "NOT YOUR TURN\n";}
-        try {
-
-            game.makeMove(targetMove);
-            GameData updatedGameData = new GameData(currentGame.gameID(), currentGame.whiteUsername(),
-                    currentGame.blackUsername(), currentGame.gameName(), game);
-            server.updateGame(updatedGameData);
-
-            wb.makeMove(auth,gameID,updatedGameData, username);
-            if (currentColor.equals(ChessGame.TeamColor.WHITE)) {return VisualizeBoard.produceWhiteBoard(game, null);}
-            else {return VisualizeBoard.produceBlackBoard(game,null);}
-
-        }
-        catch (Exception ex) {
-            return "INVALID MOVE";
-        }
-
-
-
-
+        wb.makeMove(auth,gameID,targetMove);
+        return "";
     }
 
     public String printBoard() {
@@ -161,26 +121,9 @@ public class GameClient {
     }
 
     public String resign() {
-        GameData currentGame = server.getGame(gameID);
-        String winner;
-        GameData updatedGame;
-        if (username.equals(currentGame.whiteUsername())) {
-            updatedGame = new GameData(currentGame.gameID(),"RESIGNED", currentGame.blackUsername(), currentGame.gameName(),currentGame.game());
+        wb.resignGame(auth, gameID);
+        return "";
 
-
-            winner = currentGame.blackUsername();
-        }
-        else if (username.equals(currentGame.blackUsername())) {
-            updatedGame = new GameData(currentGame.gameID(), currentGame.whiteUsername(), "RESIGNED", currentGame.gameName(),currentGame.game());
-
-            winner = currentGame.whiteUsername();
-        }
-        else {
-            return "CANNOT RESIGN";}
-
-        server.updateGame(updatedGame);
-        wb.resignGame(auth, gameID, username);
-        return "Resigned from Game:";
     }
 
     private boolean observerCheck(GameData currentGame) {
@@ -188,12 +131,4 @@ public class GameClient {
     }
 
 
-
-
-    private GameData getCurrentGame(int id)
-        {Collection<GameData> allGames = server.listGames(auth);
-        GameData[] gameArray = allGames.toArray(new GameData[0]);
-        GameData currentGame = gameArray[id - 1];
-        return currentGame;
-        }
 }

@@ -25,29 +25,15 @@ public void baseNotifier(String notification) {
     printPrompt();}
 
 
-
-public void loadGameNotifier(GameData gameData) {
-    ChessGame currentGame = gameData.game();
-
-    if (currentGame.getTeamTurn().equals(ChessGame.TeamColor.WHITE)){
-        System.out.print("\n" + VisualizeBoard.produceWhiteBoard(currentGame,null));
-        printPrompt();
-    }
-
-    else {
-        System.out.print("\n" + VisualizeBoard.produceBlackBoard(currentGame,null));}
-
-    if (currentGame.isInCheckmate(ChessGame.TeamColor.WHITE)) {
-        System.out.print(gameData.blackUsername() + " WINS" );
-    }
-    else if (currentGame.isInCheckmate(ChessGame.TeamColor.BLACK)) {
-        System.out.print(gameData.whiteUsername() + " WINS" );
-    }
-    else if (currentGame.isInStalemate(ChessGame.TeamColor.WHITE)) {
-        System.out.print("THE GAME IS OVER: STALEMATE" );
-    }
+public void loadGameNotifierWhite(GameData gameData) {
+    System.out.print("\n" + VisualizeBoard.produceWhiteBoard(gameData.game(),null));
+    printPrompt();
 }
 
+public void loadGameNotifierBlack(GameData gameData) {
+    System.out.print("\n" + VisualizeBoard.produceBlackBoard(gameData.game(),null));
+    printPrompt();
+}
 
 
     private void printPrompt() {

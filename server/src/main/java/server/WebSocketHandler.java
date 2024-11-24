@@ -4,6 +4,7 @@ package server;
 import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
+import com.sun.nio.sctp.NotificationHandler;
 import exception.DataAccessException;
 import model.GameData;
 import model.UserData;
@@ -50,16 +51,15 @@ public class WebSocketHandler {
             String user = Server.userService.getUser(auth);
             GameData realGame = Server.gameService.getGameData(id);
 
-        String mess = user + " JOINED THE GAME";
+        String mess = user + " JOINED THE GAME AS " + color;
 
-        if (!user.equals(realGame.blackUsername()) && !user.equals(realGame.whiteUsername())) {
-            mess += " AS AN OBSERVER";
-        }
+
         Notification serverMess = new Notification(mess);
 
         connections.broadcast(auth, new Gson().toJson(serverMess), id, false);
 
         LoadGame loadGameNoti = new LoadGame(realGame);
+        loadGameNoti.setColor(color.toUpperCase());
         connections.broadcast(auth,new Gson().toJson(loadGameNoti),id, true); }
 
         catch (Exception e) {
@@ -75,9 +75,14 @@ public class WebSocketHandler {
 
     private void makeMove(String auth, int id, ChessMove move, Session session) throws IOException {
         try {
+            String selfCol = "BLACK";
+            String otherCol = "WHITE";
             String user = Server.userService.getUser(auth);
             GameData newGame = Server.gameService.getGameData(id);
-
+            if (newGame.game().getTeamTurn().equals(ChessGame.TeamColor.WHITE)) {
+                selfCol = "WHITE";
+                otherCol = "BLACK";
+            }
             if (newGame.game().isGameOver()) {
                 ErrorMessage errorResign = new ErrorMessage("ERROR: GAME IS ALREADY OVER");
                 connections.broadcast(auth, new Gson().toJson(errorResign),id, true );
@@ -105,7 +110,14 @@ public class WebSocketHandler {
             Server.gameService.updateGame(newGame);
 
         LoadGame loadGameNoti = new LoadGame(newGame);
-        connections.broadcast(null,new Gson().toJson(loadGameNoti),id, false);
+        loadGameNoti.setColor(otherCol);
+        connections.broadcast(auth,new Gson().toJson(loadGameNoti),id, false);
+
+        LoadGame loadGameSelf = new LoadGame(newGame);
+        loadGameSelf.setColor(selfCol);
+        connections.broadcast(auth,new Gson().toJson(loadGameSelf),id, true);
+
+
         String mess = user + " MADE A MOVE";
         Notification serverMess = new Notification(mess);
         connections.broadcast(auth, new Gson().toJson(serverMess), id, false);

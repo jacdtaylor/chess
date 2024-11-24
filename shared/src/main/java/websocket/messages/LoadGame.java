@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public class LoadGame extends ServerMessage{
     GameData game;
+    String color;
+
     public LoadGame(GameData game) {
         super(ServerMessageType.LOAD_GAME);
         this.game = game;
@@ -13,6 +15,14 @@ public class LoadGame extends ServerMessage{
 
     public GameData game() {
         return game;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     @Override

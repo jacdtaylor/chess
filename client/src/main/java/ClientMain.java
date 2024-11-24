@@ -15,7 +15,7 @@ public class ClientMain {
         }
 
         new ChessRepl(new ServerFacade(serverUrl), null, null, new NotificationHandler() {
-        }).run("prelogin");
+        }, null).run("prelogin");
     }
 
 

@@ -17,20 +17,21 @@ import static ui.EscapeSequences.*;
 
 public class ChessRepl {
 String auth;
+String color;
 PreLoginClient preLoginClient;
 LoginClient loginClient;
 GameClient gameClient;
 Integer gameID;
 NotificationHandler notif;
 private final ServerFacade server;
-    public ChessRepl(ServerFacade server, String authToken, Integer gameID, NotificationHandler notif) {
+    public ChessRepl(ServerFacade server, String authToken, Integer gameID, NotificationHandler notif, String color) {
         this.notif = notif;
         auth = authToken;
         this.gameID = gameID;
         this.server = server;
         preLoginClient = new PreLoginClient(server);
         loginClient = new LoginClient(server, auth);
-        gameClient = new GameClient(server, auth, gameID, notif);
+        gameClient = new GameClient(server, auth, gameID, notif, color);
 
 
     }
@@ -57,17 +58,17 @@ private final ServerFacade server;
                     default -> result = preLoginClient.eval(line);
                 }
                 if (ValidUUID.isValidUUID(result)) {
-                    new ChessRepl(server, result, gameID, notif).run("postLogin");}
+                    new ChessRepl(server, result, gameID, notif, null).run("postLogin");}
 
                 else if (result.contains("Join Game")) {
                     String numberString = result.replaceAll("[^0-9]", "");
                     int newID = Integer.parseInt(numberString);
-                    new ChessRepl(server, auth, newID, notif).run("gameLogin");
+                    new ChessRepl(server, auth, newID, notif, result.substring(result.length() - 5)).run("gameLogin");
                 }
                 else if (result.contains("Observe Game")) {
                     String numberString = result.replaceAll("[^0-9]", "");
                     int newID = Integer.parseInt(numberString);
-                    new ChessRepl(server, auth, newID, notif).run("gameLogin");
+                    new ChessRepl(server, auth, newID, notif, null).run("gameLogin");
                 }
 
                 else {System.out.print(SET_TEXT_COLOR_BLUE + result + RESET_TEXT_COLOR);}

@@ -136,7 +136,7 @@ public class LoginClient {
         server.joinGame(req, auth);
 
 
-            return "Join Game " + params[1];
+            return "Join Game " + params[1] + " " + params[0];
 
 
 
