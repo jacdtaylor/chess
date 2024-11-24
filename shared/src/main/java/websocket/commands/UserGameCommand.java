@@ -32,8 +32,7 @@ public class UserGameCommand {
         CONNECT,
         MAKE_MOVE,
         LEAVE,
-        RESIGN,
-        OBSERVE
+        RESIGN
     }
 
     public CommandType getCommandType() {
@@ -48,16 +47,7 @@ public class UserGameCommand {
         return gameID;
     }
 
-    public void setChessGame(GameData chessGame) {
-        this.chessGame = chessGame;
-    }
-    public GameData getChessGame() {return chessGame;}
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getUsername() {return username;}
 
     @Override
     public boolean equals(Object o) {

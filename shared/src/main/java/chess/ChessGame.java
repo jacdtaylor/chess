@@ -15,6 +15,7 @@ import static chess.ChessPiece.pieceMoves;
 public class ChessGame {
     private ChessGame.TeamColor turn;
     private ChessBoard board;
+    private boolean gameStatus = false;
 
 
     public ChessGame() {
@@ -24,6 +25,13 @@ public class ChessGame {
     }
 
 
+    public boolean isGameOver() {
+        return gameStatus;
+    }
+
+    public void endGame() {
+        gameStatus = true;
+    }
 
     /**
      * @return Which team's turn it is
