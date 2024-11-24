@@ -125,7 +125,6 @@ public class WebSocketHandler {
         loadGameSelf.setColor(selfCol);
         connections.broadcast(auth,new Gson().toJson(loadGameSelf),id, true);
 
-
         String mess = user + " MADE A MOVE";
         Notification serverMess = new Notification(mess);
         connections.broadcast(auth, new Gson().toJson(serverMess), id, false);
