@@ -35,14 +35,14 @@ public class WebSocketHandler {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
 
         switch (command.getCommandType()) {
-            case CONNECT -> connectUser(command.getAuthToken(), command.getGameID(), session);
+            case CONNECT -> connectUser(command.getAuthToken(), command.getGameID(), session, command.getColor());
             case LEAVE -> leaveUser(command.getAuthToken(), command.getGameID());
             case RESIGN -> resignUser(command.getAuthToken(), command.getGameID());
         }
         }
     }
 
-    private void connectUser(String auth, int id, Session session) throws IOException {
+    private void connectUser(String auth, int id, Session session, String color) throws IOException {
         connections.add(auth,session,id);
         try {
             String user = Server.userService.getUser(auth);
@@ -73,14 +73,87 @@ public class WebSocketHandler {
 
     private void makeMove(String auth, int id, ChessMove move ) throws IOException {
         try {
+
             String user = Server.userService.getUser(auth);
             GameData newGame = Server.gameService.getGameData(id);
+
+            if (newGame.game().isGameOver()) {
+                ErrorMessage errorResign = new ErrorMessage("ERROR: GAME IS ALREADY OVER");
+                connections.broadcast(auth, new Gson().toJson(errorResign),id, true );
+                return;
+            }
+
+            if ((newGame.game().getTeamTurn().equals(ChessGame.TeamColor.WHITE) &&
+                    !user.equals(newGame.whiteUsername()))
+            | (newGame.game().getTeamTurn().equals(ChessGame.TeamColor.BLACK) &&
+                    !user.equals(newGame.blackUsername()))) {
+                ErrorMessage errorResign = new ErrorMessage("ERROR: NOT YOUR TURN");
+                connections.broadcast(auth, new Gson().toJson(errorResign),id, true );
+                return;
+            }
+
+            if (!user.equals(newGame.blackUsername()) && !user.equals(newGame.whiteUsername())) {
+                ErrorMessage errorResign = new ErrorMessage("ERROR: OBSERVERS CANNOT PLAY");
+                connections.broadcast(auth, new Gson().toJson(errorResign),id, true );
+                return;
+            }
+
+
+
+            newGame.game().makeMove(move);
+            Server.gameService.updateGame(newGame);
+
         LoadGame loadGameNoti = new LoadGame(newGame);
-        connections.broadcast(auth,new Gson().toJson(loadGameNoti),id, false);
+        connections.broadcast(null,new Gson().toJson(loadGameNoti),id, false);
         String mess = user + " MADE A MOVE";
         Notification serverMess = new Notification(mess);
+        connections.broadcast(auth, new Gson().toJson(serverMess), id, false);
 
-        connections.broadcast(auth, new Gson().toJson(serverMess), id, false);}
+
+            if (newGame.game().isInCheckmate(ChessGame.TeamColor.WHITE))
+            {
+                String check = newGame.blackUsername() + " WINS!!!!";
+                Notification checkNoti = new Notification(check);
+                connections.broadcast(null, new Gson().toJson(checkNoti), id, false);
+                newGame.game().endGame();
+                Server.gameService.updateGame(newGame);
+            }
+            else if (newGame.game().isInCheckmate(ChessGame.TeamColor.BLACK))
+            {
+                String check = newGame.whiteUsername() + " WINS!!!!";
+                Notification checkNoti = new Notification(check);
+                connections.broadcast(null, new Gson().toJson(checkNoti), id, false);
+                newGame.game().endGame();
+                Server.gameService.updateGame(newGame);
+            }
+            else if (newGame.game().isInStalemate(ChessGame.TeamColor.BLACK) | newGame.game().isInStalemate(ChessGame.TeamColor.WHITE) )
+            {
+                String check = "GAME IS OVER: STALEMATE";
+                Notification checkNoti = new Notification(check);
+                connections.broadcast(null, new Gson().toJson(checkNoti), id, false);
+                newGame.game().endGame();
+                Server.gameService.updateGame(newGame);
+            }
+
+            else if (newGame.game().isInCheck(ChessGame.TeamColor.WHITE))
+            {
+                String check = newGame.whiteUsername() + " IS IN CHECK";
+                Notification checkNoti = new Notification(check);
+                connections.broadcast(null, new Gson().toJson(checkNoti), id, false);
+            }
+            else if (newGame.game().isInCheck(ChessGame.TeamColor.BLACK))
+            {
+                String check = newGame.blackUsername() + " IS IN CHECK";
+                Notification checkNoti = new Notification(check);
+                connections.broadcast(null, new Gson().toJson(checkNoti), id, false);
+            }
+
+
+        }
+
+
+
+
         catch (Exception e) {
             ErrorMessage error = new ErrorMessage("ERROR");
             connections.broadcast(auth, new Gson().toJson(error),id, true );}
@@ -121,7 +194,7 @@ public class WebSocketHandler {
 
             String user = Server.userService.getUser(auth);
             GameData game = Server.gameService.getGameData(id);
-            ChessGame chessGame = game.game();
+
         if (!user.equals(game.blackUsername()) && !user.equals(game.whiteUsername())) {
             ErrorMessage error = new ErrorMessage("ERROR: OBSERVERS CANNOT RESIGN");
             connections.broadcast(auth, new Gson().toJson(error),id, true );
@@ -134,11 +207,9 @@ public class WebSocketHandler {
         }
 
         String mess = user + " RESIGNED";
-        chessGame.endGame();
-        GameData resignedGameData = new GameData(game.gameID(),game.whiteUsername(),game.blackUsername()
-        ,game.gameName(),chessGame);
 
-        Server.gameService.updateGame(resignedGameData);
+        game.game().endGame();
+        Server.gameService.updateGame(game);
 
         Notification serverMess = new Notification(mess);
         connections.broadcast(null, new Gson().toJson(serverMess), id, false);}
