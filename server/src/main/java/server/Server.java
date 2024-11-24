@@ -9,7 +9,6 @@ import model.AuthData;
 import model.GameData;
 import model.JoinGameReq;
 import model.UserData;
-import server.websocket.WebSocketHandler;
 import service.GameService;
 import service.UserService;
 import spark.*;
@@ -17,16 +16,19 @@ import spark.*;
 import java.util.Map;
 
 public class Server {
-    private final GameService gameService;
-    private final UserService userService;
-    UserDAO userDAO = new SqlUserDAO();
-    AuthDAO authDAO = new SqlAuthDAO();
-    GameDAO gameDAO = new SqlGameDAO();
+    static GameService gameService;
+    static UserService userService;
+
     private final WebSocketHandler webSocketHandler;
     public Server() {
+        UserDAO userDAO = new SqlUserDAO();
+        AuthDAO authDAO = new SqlAuthDAO();
+        GameDAO gameDAO = new SqlGameDAO();
+
+
         webSocketHandler = new WebSocketHandler();
-        this.gameService = new GameService(userDAO, authDAO, gameDAO);
-        this.userService = new UserService(userDAO, authDAO);
+        gameService = new GameService(userDAO, authDAO, gameDAO);
+        userService = new UserService(userDAO, authDAO);
     }
 
 

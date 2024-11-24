@@ -21,16 +21,16 @@ public class ConnectionManager {
         connections.remove(visitorName);
     }
 
-    public void broadcast(String excludeVisitorName, ServerMessage notification, int targetID, boolean self) throws IOException {
+    public void broadcast(String excludeVisitorName, String notification, int targetID, boolean self) throws IOException {
         var removeList = new ArrayList<Connection>();
         for (var c : connections.values()) {
             if (c.session.isOpen()) {
                 if (self && c.visitorName.equals(excludeVisitorName)) {
-                    c.send(new Gson().toJson(notification));
+                    c.send(notification);
                 }
 
                 if (!self && !c.visitorName.equals(excludeVisitorName) && c.currentID == targetID) {
-                    c.send(new Gson().toJson(notification));
+                    c.send(notification);
                 }
             } else {
                 removeList.add(c);

@@ -36,7 +36,9 @@ public class WebSocketFacade extends Endpoint {
             this.session.addMessageHandler(new MessageHandler.Whole<String>() {
                 @Override
                 public void onMessage(String message) {
-                        if (message.contains("ERROR")) {
+                    System.out.println(message);
+
+                    if (message.contains("ERROR")) {
                             ErrorMessage serverMessage = new Gson().fromJson(message, ErrorMessage.class);
                             notificationHandler.errorNotifier(serverMessage.getErrorMessage());
 
@@ -46,7 +48,7 @@ public class WebSocketFacade extends Endpoint {
 
                         } else {
                             LoadGame serverMessage = new Gson().fromJson(message, LoadGame.class);
-                            GameData game = serverMessage.getGame();
+                            GameData game = serverMessage.game();
                             notificationHandler.loadGameNotifier(game);
                         }
 
@@ -118,6 +120,8 @@ public class WebSocketFacade extends Endpoint {
             throw new ResponseException(ex.getMessage());
         }
     }
+
+
 
 
     @Override
