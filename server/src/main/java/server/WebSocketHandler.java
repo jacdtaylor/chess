@@ -38,18 +38,26 @@ public class WebSocketHandler {
         UserGameCommand command = new Gson().fromJson(message, UserGameCommand.class);
 
         switch (command.getCommandType()) {
-            case CONNECT -> connectUser(command.getAuthToken(), command.getGameID(), session, command.getColor());
+            case CONNECT -> connectUser(command.getAuthToken(), command.getGameID(), session);
             case LEAVE -> leaveUser(command.getAuthToken(), command.getGameID());
             case RESIGN -> resignUser(command.getAuthToken(), command.getGameID());
         }
         }
     }
 
-    private void connectUser(String auth, int id, Session session, String color) throws IOException {
+    private void connectUser(String auth, int id, Session session) throws IOException {
         connections.add(auth,session,id);
         try {
+
+            String color;
             String user = Server.userService.getUser(auth);
             GameData realGame = Server.gameService.getGameData(id);
+
+            if (user.equals(realGame.whiteUsername()))
+            {color = "WHITE";}
+            else if (user.equals(realGame.blackUsername()))
+                {color = "BLACK";}
+            else {color = "OBSERVER";}
 
         String mess = user + " JOINED THE GAME AS " + color;
 
@@ -231,7 +239,5 @@ public class WebSocketHandler {
             ErrorMessage error = new ErrorMessage("ERROR");
             connections.broadcast(auth, new Gson().toJson(error),id, true );}
     }
-
-
 
 }
