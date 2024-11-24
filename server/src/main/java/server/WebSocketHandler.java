@@ -4,6 +4,7 @@ package server;
 import chess.ChessGame;
 import chess.ChessMove;
 import com.google.gson.Gson;
+import exception.DataAccessException;
 import model.GameData;
 import model.UserData;
 import org.eclipse.jetty.websocket.api.Session;
@@ -16,6 +17,7 @@ import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGame;
 import websocket.messages.Notification;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 
 @WebSocket
@@ -28,7 +30,7 @@ public class WebSocketHandler {
 
         if (message.contains("move")) {
             MakeMove moveCommand = new Gson().fromJson(message, MakeMove.class);
-            makeMove(moveCommand.getAuthToken(), moveCommand.getGameID(), moveCommand.getMove());
+            makeMove(moveCommand.getAuthToken(), moveCommand.getGameID(), moveCommand.getMove(), session);
 
         }
         else {
@@ -71,9 +73,8 @@ public class WebSocketHandler {
 
 
 
-    private void makeMove(String auth, int id, ChessMove move ) throws IOException {
+    private void makeMove(String auth, int id, ChessMove move, Session session) throws IOException {
         try {
-
             String user = Server.userService.getUser(auth);
             GameData newGame = Server.gameService.getGameData(id);
 
@@ -134,7 +135,6 @@ public class WebSocketHandler {
                 newGame.game().endGame();
                 Server.gameService.updateGame(newGame);
             }
-
             else if (newGame.game().isInCheck(ChessGame.TeamColor.WHITE))
             {
                 String check = newGame.whiteUsername() + " IS IN CHECK";
@@ -149,15 +149,16 @@ public class WebSocketHandler {
             }
 
 
+
         }
-
-
-
-
-        catch (Exception e) {
+        catch (DataAccessException ex) {
+            connections.add(auth,session,id);
+            ErrorMessage error = new ErrorMessage("ERROR");
+            connections.broadcast(auth, new Gson().toJson(error),id, true );
+        connections.remove(auth);
+        } catch (Exception e) {
             ErrorMessage error = new ErrorMessage("ERROR");
             connections.broadcast(auth, new Gson().toJson(error),id, true );}
-
     }
 
     private void leaveUser(String auth, int id) throws IOException {
@@ -183,6 +184,7 @@ public class WebSocketHandler {
 
         connections.broadcast(auth, new Gson().toJson(serverMess), id, false);}
         catch (Exception e) {
+
             ErrorMessage error = new ErrorMessage("ERROR");
             connections.broadcast(auth, new Gson().toJson(error),id, true );}
     }
