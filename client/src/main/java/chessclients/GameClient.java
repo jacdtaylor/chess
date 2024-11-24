@@ -55,11 +55,11 @@ public class GameClient {
         try {
             return switch (cmd) {
                 case "move" -> takeAMove(params);
-                case "print" -> printBoard();
+                case "redraw" -> printBoard();
                 case "quit" -> leaveGame();
                 case "display" -> checkPiece(params);
                 case "resign" -> resign();
-                default -> "HELP";
+                default -> getHelp();
             };
         } catch (Exception ex) {
             return ex.getMessage();
@@ -69,6 +69,17 @@ public class GameClient {
 
     }
 
+
+    public String getHelp() {
+        return """
+                move <MOVE (A2A3)>
+                redraw
+                quit
+                display <POSITION (A2)>
+                resign
+                help
+                """;
+    }
 
     public String leaveGame() {
         wb.leaveGame(auth,gameID);
